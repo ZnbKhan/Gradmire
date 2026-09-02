@@ -33,7 +33,9 @@ function getDb() {
     globalForDb.gradmireDb ??
     postgres(connectionString, {
       prepare: false,
-      max: 10,
+      // Serverless functions each hold their own pool, so keep it small and
+      // let Supavisor do the real pooling. Override for other runtimes.
+      max: Number(process.env.DATABASE_POOL_MAX ?? 10),
       idle_timeout: 20,
       connect_timeout: 10,
     });

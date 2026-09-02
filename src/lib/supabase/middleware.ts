@@ -1,5 +1,6 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import { SUPABASE_ANON_KEY, SUPABASE_URL, isSupabaseConfigured } from "./config";
 
 /**
  * Refreshes the Supabase session on every request and gates the two authed
@@ -9,10 +10,24 @@ import { NextResponse, type NextRequest } from "next/server";
  */
 export async function updateSession(request: NextRequest) {
   let response = NextResponse.next({ request });
+  const { pathname } = request.nextUrl;
+
+  // Without Supabase there is no way to authenticate anyone, so the gated
+  // areas must stay shut. Everything else — the whole public site — is
+  // served normally rather than 500-ing on a missing env var.
+  if (!isSupabaseConfigured()) {
+    if (pathname.startsWith("/portal") || pathname.startsWith("/admin")) {
+      const redirect = request.nextUrl.clone();
+      redirect.pathname = "/login";
+      redirect.search = "?error=auth_unavailable";
+      return NextResponse.redirect(redirect);
+    }
+    return response;
+  }
 
   const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    SUPABASE_URL!,
+    SUPABASE_ANON_KEY!,
     {
       cookies: {
         getAll() {
@@ -37,7 +52,6 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const { pathname } = request.nextUrl;
   const isPortal = pathname.startsWith("/portal");
   const isAdmin = pathname.startsWith("/admin");
   const isAuthRoute = pathname.startsWith("/login") || pathname.startsWith("/auth");

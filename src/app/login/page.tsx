@@ -10,13 +10,23 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
+/** Sign-in failures the callback and middleware can hand back. */
+const ERRORS: Record<string, string> = {
+  missing_code: "That sign-in link was incomplete. Request a fresh one below.",
+  invalid_link:
+    "That sign-in link has expired or was already used. Request a fresh one below.",
+  auth_unavailable:
+    "Sign-in is temporarily unavailable. Please try again shortly, or email your counselor.",
+};
+
 export default async function LoginPage({
   searchParams,
 }: {
-  searchParams: Promise<{ next?: string }>;
+  searchParams: Promise<{ next?: string; error?: string }>;
 }) {
-  const { next } = await searchParams;
+  const { next, error } = await searchParams;
   const nextPath = safeNextPath(next);
+  const errorMessage = error ? ERRORS[error] : undefined;
 
   return (
     <>
@@ -31,6 +41,15 @@ export default async function LoginPage({
             Enter the email address you gave your counselor. We&rsquo;ll send a sign-in
             link — no password to remember.
           </p>
+          {errorMessage && (
+            <p
+              role="alert"
+              className="mb-6 rounded-lg border border-destructive/30 bg-destructive/5 px-4 py-3 text-[13.5px] text-destructive"
+            >
+              {errorMessage}
+            </p>
+          )}
+
           <LoginForm nextPath={nextPath} />
         </div>
       </main>

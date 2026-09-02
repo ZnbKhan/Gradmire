@@ -5,7 +5,7 @@ import { SiteFooter } from "@/components/brand/site-footer";
 import { DepartureBoard } from "@/components/brand/departure-board";
 import { CoursePassCard } from "@/components/brand/course-pass-card";
 import { getDestinations, getCourseHubs, getBoardRows } from "@/lib/queries";
-import { createClient } from "@/lib/supabase/server";
+import { getSessionUser } from "@/lib/supabase/server";
 
 /** V1 ships the UK only; other destinations render as coming-soon stamps. */
 const PRIMARY_DESTINATION = "uk";
@@ -40,15 +40,12 @@ const WHY_UK = [
 ];
 
 export default async function HomePage() {
-  const [destinations, hubs, boardRows, supabase] = await Promise.all([
+  const [destinations, hubs, boardRows, user] = await Promise.all([
     getDestinations(),
     getCourseHubs(PRIMARY_DESTINATION),
     getBoardRows(PRIMARY_DESTINATION),
-    createClient(),
+    getSessionUser(),
   ]);
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
 
   const liveHubCount = hubs.filter((h) => h.status === "live").length;
 
@@ -211,7 +208,7 @@ export default async function HomePage() {
                   code={hub.code}
                   name={hub.name}
                   description={hub.oneLiner}
-                  universityCount={hub.universities.length}
+                  universityCount={hub.universityCount}
                   isStub={hub.status === "stub"}
                   href={`/${PRIMARY_DESTINATION}/courses/${hub.slug}`}
                 />

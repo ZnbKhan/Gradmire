@@ -1,7 +1,7 @@
 import "server-only";
 import { cache } from "react";
 import { unstable_cache } from "next/cache";
-import { asc, eq, and } from "drizzle-orm";
+import { asc, eq, and, inArray, sql } from "drizzle-orm";
 import { db, schema } from "@/db";
 
 /**
@@ -49,13 +49,34 @@ export const getCourseHubs = cache((destinationSlug: string) =>
       });
       if (!destination) return [];
 
-      return db.query.courseHubs.findMany({
+      const hubs = await db.query.courseHubs.findMany({
         where: eq(schema.courseHubs.destinationId, destination.id),
         orderBy: [asc(schema.courseHubs.sortOrder)],
         with: {
+          // Only the top-ranked one is rendered, but the *count* below is
+          // taken from an aggregate — reading `universities.length` here
+          // would report 1 for every hub.
           universities: { orderBy: [asc(schema.universities.sortOrder)], limit: 1 },
         },
       });
+      if (hubs.length === 0) return [];
+
+      const counts = await db
+        .select({
+          hubId: schema.universities.courseHubId,
+          total: sql<number>`count(*)::int`,
+        })
+        .from(schema.universities)
+        .where(
+          inArray(
+            schema.universities.courseHubId,
+            hubs.map((h) => h.id),
+          ),
+        )
+        .groupBy(schema.universities.courseHubId);
+
+      const byHub = new Map(counts.map((c) => [c.hubId, c.total]));
+      return hubs.map((h) => ({ ...h, universityCount: byHub.get(h.id) ?? 0 }));
     },
     ["course-hubs", destinationSlug],
     { tags: [CONTENT_TAG], revalidate: REVALIDATE_SECONDS },

@@ -122,7 +122,7 @@ export default async function DestinationPage({
                   code={hub.code}
                   name={hub.name}
                   description={hub.oneLiner}
-                  universityCount={hub.universities.length}
+                  universityCount={hub.universityCount}
                   isStub={hub.status === "stub"}
                   href={`/${country}/courses/${hub.slug}`}
                 />

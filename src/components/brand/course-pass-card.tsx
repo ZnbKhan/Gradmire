@@ -47,7 +47,9 @@ export function CoursePassCard({
       <div className="mt-auto flex items-center justify-between p-5 pt-4">
         <div className="font-mono">
           <b className="block text-[15px] font-semibold text-ink">
-            {isStub ? "—" : `${universityCount} unis`}
+            {isStub
+              ? "—"
+              : `${universityCount} ${universityCount === 1 ? "university" : "universities"}`}
           </b>
           <span className="text-[10px] uppercase tracking-[0.08em] text-ink-soft">
             {isStub ? "Guide soon" : "Ranked hub"}

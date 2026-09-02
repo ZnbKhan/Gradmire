@@ -15,6 +15,11 @@ export function LoginForm({ nextPath }: { nextPath?: string }) {
     setError(null);
 
     const supabase = createClient();
+    if (!supabase) {
+      setStatus("error");
+      setError("Sign-in is temporarily unavailable. Please try again later.");
+      return;
+    }
     const redirectTo = new URL(
       `/auth/callback${nextPath ? `?next=${encodeURIComponent(nextPath)}` : ""}`,
       window.location.origin,

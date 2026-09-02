@@ -5,7 +5,7 @@ import { eq, desc } from "drizzle-orm";
 import { ArrowRight } from "lucide-react";
 import { SiteHeader } from "@/components/brand/site-header";
 import { SiteFooter } from "@/components/brand/site-footer";
-import { createClient } from "@/lib/supabase/server";
+import { getSessionUser } from "@/lib/supabase/server";
 import { db, schema } from "@/db";
 import { STAGES, stageIndex, stageLabel } from "@/lib/stages";
 
@@ -56,11 +56,7 @@ function StageTrack({ stage }: { stage: string }) {
 }
 
 export default async function PortalPage() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
+  const user = await getSessionUser();
   if (!user) redirect("/login?next=/portal");
 
   const applicant = await db.query.applicants.findFirst({

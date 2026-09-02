@@ -1,0 +1,181 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * Gradmire — departure-board visual system.
+ * Palette and type roles are the client-approved direction in
+ * /design-reference. Brand tokens are the source of truth; the shadcn
+ * semantic tokens below are mapped onto them so existing UI primitives
+ * inherit the identity without being rewritten.
+ */
+
+@layer base {
+  :root {
+    /* ---- Brand tokens ---- */
+    --ink: 232 48% 12%;
+    --ink-2: 233 48% 18%;
+    --ink-3: 234 46% 27%;
+    --paper: 48 38% 97%;
+    --paper-dim: 46 32% 92%;
+    --line: 47 22% 83%;
+
+    --coral: 12 88% 47%;
+    /*
+     * Coral at #E4390E scores 4.11:1 on paper and 4.29:1 behind white
+     * button text — both below the 4.5:1 AA floor, and it is used almost
+     * entirely at 11–13px. This darker cut clears AA; the brighter one is
+     * reserved for large display type and decorative fills.
+     */
+    --coral-text: 13 95% 37%;
+    --coral-dim: 17 90% 92%;
+
+    --gold: 42 63% 48%;
+    --brand-green: 160 61% 27%;
+    --brand-green-dim: 148 32% 90%;
+
+    --ink-soft: 232 20% 38%;
+
+    /* Perforation fill for boarding-pass cards. Each section that hosts a
+       pass overrides this to its own background so the notches read as holes. */
+    --perf-bg: var(--paper);
+
+    /* ---- shadcn semantic layer, mapped onto the brand ---- */
+    --background: var(--paper);
+    --foreground: var(--ink);
+    --card: 0 0% 100%;
+    --card-foreground: var(--ink);
+    --popover: 0 0% 100%;
+    --popover-foreground: var(--ink);
+    --primary: var(--ink);
+    --primary-foreground: var(--paper);
+    --secondary: var(--paper-dim);
+    --secondary-foreground: var(--ink);
+    --muted: var(--paper-dim);
+    --muted-foreground: var(--ink-soft);
+    --accent: var(--coral-dim);
+    --accent-foreground: var(--coral-text);
+    --destructive: 0 72% 42%;
+    --destructive-foreground: 0 0% 100%;
+    --border: var(--line);
+    --input: var(--line);
+    --ring: var(--coral);
+    --radius: 0.875rem;
+
+    --warning: 38 92% 40%;
+    --warning-foreground: 30 80% 18%;
+    --success: var(--brand-green);
+    --success-foreground: 0 0% 100%;
+  }
+
+  .dark {
+    --paper: 232 40% 9%;
+    --paper-dim: 233 38% 13%;
+    --line: 233 25% 24%;
+    --ink: 45 30% 96%;
+    --ink-soft: 235 15% 68%;
+    --coral: 12 88% 60%;
+    --coral-text: 12 90% 68%;
+    --coral-dim: 12 40% 20%;
+    --gold: 42 70% 62%;
+    --brand-green: 160 45% 45%;
+    --brand-green-dim: 160 30% 18%;
+
+    --perf-bg: var(--paper);
+
+    --background: var(--paper);
+    --foreground: var(--ink);
+    --card: 233 38% 13%;
+    --card-foreground: var(--ink);
+    --popover: 233 38% 13%;
+    --popover-foreground: var(--ink);
+    --primary: var(--ink);
+    --primary-foreground: 232 40% 9%;
+    --secondary: 233 30% 18%;
+    --secondary-foreground: var(--ink);
+    --muted: 233 30% 18%;
+    --muted-foreground: var(--ink-soft);
+    --accent: var(--coral-dim);
+    --accent-foreground: var(--coral-text);
+    --destructive: 0 62% 52%;
+    --destructive-foreground: 0 0% 100%;
+    --border: var(--line);
+    --input: var(--line);
+    --ring: var(--coral);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "cv02", "cv03", "cv04";
+  }
+
+  h1, h2, h3, h4 {
+    @apply font-display tracking-tight;
+    text-wrap: balance;
+  }
+
+  /*
+   * The prototype shipped with no focus styles at all. This is the floor:
+   * every interactive element gets a visible ring, keyboard-only.
+   */
+  :focus-visible {
+    @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
+    border-radius: 3px;
+  }
+
+  /* Figures line up in the fee, ranking and salary tables. */
+  table, .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+@layer components {
+  /* Mono eyebrow used above every section heading. */
+  .eyebrow {
+    @apply flex items-center gap-2.5 font-mono text-[12.5px] font-medium uppercase tracking-[0.14em] text-coral-text;
+  }
+  .eyebrow::before {
+    content: "";
+    @apply inline-block h-[7px] w-[7px] shrink-0 rounded-full bg-coral;
+  }
+
+  /*
+   * Boarding-pass perforation. The notches are filled from --perf-bg rather
+   * than a hardcoded colour so a pass can sit on any section background.
+   */
+  .perforation {
+    @apply relative h-0 border-t-2 border-dashed border-line;
+  }
+  .perforation::before,
+  .perforation::after {
+    content: "";
+    @apply absolute h-[18px] w-[18px] rounded-full;
+    top: -9px;
+    background: hsl(var(--perf-bg));
+  }
+  .perforation::before { left: -9px; }
+  .perforation::after { right: -9px; }
+
+  /* Flip-flap tile on the departures board. */
+  .flap {
+    @apply inline-block w-full rounded-[5px] bg-ink-2 px-2 py-1.5 font-mono text-[13px] font-medium tracking-[0.03em] text-white;
+    box-shadow: inset 0 -1px 0 rgb(255 255 255 / 0.07), inset 0 1px 0 rgb(0 0 0 / 0.35);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

@@ -7,7 +7,11 @@ import { SiteFooter } from "@/components/brand/site-footer";
 import { CoursePassCard } from "@/components/brand/course-pass-card";
 import { getDestination, getDestinations, getCourseHubs } from "@/lib/queries";
 import { isDatabaseConfigured } from "@/db";
+import { PRIMARY_DESTINATION } from "@/config/site";
 
+// Next requires route segment config to be a literal it can statically
+// extract, so this cannot reference CONTENT_REVALIDATE_SECONDS directly.
+// Keep it equal to that constant in @/config/site.
 export const revalidate = 3600;
 
 export async function generateStaticParams() {
@@ -53,6 +57,9 @@ export default async function DestinationPage({
    * content and are excluded from indexing.
    */
   if (destination.status !== "live") {
+    const primary = await getDestination(PRIMARY_DESTINATION);
+    const primaryHubs = primary ? await getCourseHubs(primary.slug) : [];
+
     return (
       <>
         <SiteHeader />
@@ -65,18 +72,23 @@ export default async function DestinationPage({
             <h1 className="mb-4 mt-3 text-[clamp(30px,4vw,44px)] font-semibold">
               {destination.name} guides are in research
             </h1>
-            <p className="mb-8 text-[16px] text-ink-soft">
-              We build one destination at a time so each subject guide carries real
-              ranking, fee and deadline data rather than a directory listing. The
-              United Kingdom is live now with eight subject hubs.
-            </p>
-            <Link
-              href="/uk"
-              className="inline-flex items-center gap-2 rounded-pill bg-ink px-6 py-3.5 text-[15px] font-semibold text-paper transition-colors hover:bg-coral"
-            >
-              Explore UK courses
-              <ArrowRight size={15} aria-hidden="true" />
-            </Link>
+            {primary && (
+              <p className="mb-8 text-[16px] text-ink-soft">
+                We build one destination at a time so each subject guide carries
+                real ranking, fee and deadline data rather than a directory
+                listing. {primary.name} is live now with {primaryHubs.length}{" "}
+                subject {primaryHubs.length === 1 ? "hub" : "hubs"}.
+              </p>
+            )}
+            {primary && (
+              <Link
+                href={`/${primary.slug}`}
+                className="inline-flex items-center gap-2 rounded-pill bg-ink px-6 py-3.5 text-[15px] font-semibold text-paper transition-colors hover:bg-coral"
+              >
+                Explore {primary.name} courses
+                <ArrowRight size={15} aria-hidden="true" />
+              </Link>
+            )}
           </div>
         </main>
         <SiteFooter />

@@ -3,6 +3,8 @@ import { cache } from "react";
 import { unstable_cache } from "next/cache";
 import { asc, eq, and, inArray, sql } from "drizzle-orm";
 import { db, schema } from "@/db";
+import { formatMoneyRange } from "@/lib/money";
+import { BOARD_ROW_LIMIT, CONTENT_REVALIDATE_SECONDS } from "@/config/site";
 
 /**
  * Content reads are cached at two levels:
@@ -13,7 +15,7 @@ import { db, schema } from "@/db";
  */
 
 export const CONTENT_TAG = "content";
-const REVALIDATE_SECONDS = 3600;
+const REVALIDATE_SECONDS = CONTENT_REVALIDATE_SECONDS;
 
 export type HubWithChildren = Awaited<ReturnType<typeof getCourseHub>>;
 
@@ -134,18 +136,20 @@ export const getAllHubPaths = cache(
   ),
 );
 
-/** Rows for the departures board: live hubs first, stubs marked "soon". */
+/**
+ * Rows for the departures board: live hubs first, stubs marked "soon".
+ *
+ * `topUniversity` is null rather than a placeholder dash — how a missing
+ * value reads is the board's decision, not this layer's.
+ */
 export const getBoardRows = cache((destinationSlug: string) =>
   unstable_cache(
     async () => {
       const hubs = await getCourseHubs(destinationSlug);
-      return hubs.slice(0, 6).map((h) => ({
+      return hubs.slice(0, BOARD_ROW_LIMIT).map((h) => ({
         code: h.code,
         subject: h.name,
-        topUniversity:
-          h.status === "live"
-            ? h.universities[0]?.name ?? "—"
-            : "— guide in progress",
+        topUniversity: h.status === "live" ? h.universities[0]?.name ?? null : null,
         status: h.status === "live" ? ("open" as const) : ("soon" as const),
       }));
     },
@@ -154,20 +158,17 @@ export const getBoardRows = cache((destinationSlug: string) =>
   )(),
 );
 
-/** Formats a stored integer range the way the content spec writes it. */
+/**
+ * Formats a stored integer range the way the content spec writes it.
+ *
+ * `currency` comes from the owning course hub, not a default, so a hub
+ * priced in dollars never renders in sterling.
+ */
 export function formatRange(
   min: number | null,
   max: number | null,
-  opts: { currency?: string; suffix?: string; compact?: boolean } = {},
+  currency: string,
+  opts: { suffix?: string; compact?: boolean } = {},
 ) {
-  if (min == null && max == null) return null;
-  const { currency = "£", suffix = "", compact = false } = opts;
-  const fmt = (n: number) =>
-    compact && n >= 1000
-      ? `${currency}${(n / 1000).toFixed(n % 1000 === 0 ? 0 : 1)}k`
-      : `${currency}${n.toLocaleString("en-GB")}`;
-  if (min != null && max != null && min !== max) {
-    return `${fmt(min)}–${fmt(max)}${suffix}`;
-  }
-  return `${fmt((min ?? max)!)}${suffix}`;
+  return formatMoneyRange({ min, max, currency }, opts);
 }

@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
+import { SITE_URL } from "@/config/site";
 
-const base = process.env.NEXT_PUBLIC_SITE_URL ?? "https://gradmire.com";
+const base = SITE_URL;
 
 export default function robots(): MetadataRoute.Robots {
   return {

@@ -4,6 +4,8 @@ import { unstable_cache } from "next/cache";
 import { asc, eq } from "drizzle-orm";
 import { db, schema } from "@/db";
 import { CONTENT_TAG } from "@/lib/queries";
+import { formatMoneyRange } from "@/lib/money";
+import { CONTENT_REVALIDATE_SECONDS } from "@/config/site";
 import type { CourseHub } from "@/data/courses";
 
 /**
@@ -11,15 +13,10 @@ import type { CourseHub } from "@/data/courses";
  * against, so the Comparator, ROI Calculator, Course Finder and Deadline
  * Tracker all read the same figures an admin edits — rather than the static
  * seed file they originally imported.
+ *
+ * Both the formatted range (for display) and the raw min/max (for the ROI
+ * calculator's arithmetic) are included — see the CourseHub numeric fields.
  */
-function money(min: number | null, max: number | null, suffix: string) {
-  if (min == null && max == null) return undefined;
-  const f = (n: number) => `£${n.toLocaleString("en-GB")}`;
-  return min != null && max != null && min !== max
-    ? `${f(min)}–${f(max)}${suffix}`
-    : `${f((min ?? max)!)}${suffix}`;
-}
-
 export const getHubsForTools = cache(
   unstable_cache(
     async (): Promise<CourseHub[]> => {
@@ -46,15 +43,32 @@ export const getHubsForTools = cache(
           notableFor: u.notableFor ?? "",
           subjectRank: u.subjectRank ?? undefined,
         })),
-        tuitionRange: money(h.tuitionMin, h.tuitionMax, "/year"),
-        livingCosts: money(h.livingCostMin, h.livingCostMax, "/month"),
+        currency: h.currency,
+        tuitionMin: h.tuitionMin ?? undefined,
+        tuitionMax: h.tuitionMax ?? undefined,
+        tuitionRange:
+          formatMoneyRange(
+            { min: h.tuitionMin, max: h.tuitionMax, currency: h.currency },
+            { suffix: "/year" },
+          ) ?? undefined,
+        livingCostMin: h.livingCostMin ?? undefined,
+        livingCostMax: h.livingCostMax ?? undefined,
+        livingCosts:
+          formatMoneyRange(
+            { min: h.livingCostMin, max: h.livingCostMax, currency: h.currency },
+            { suffix: "/month" },
+          ) ?? undefined,
         entryRequirements: h.entryRequirements ?? [],
         applicationDeadlines: h.deadlines.map((d) => ({
           label: d.label,
           detail: d.detail ?? "",
         })),
         deadlineWarning: h.deadlines.find((d) => d.warning)?.warning ?? undefined,
-        medianSalaryRange: money(h.salaryMin, h.salaryMax, ""),
+        salaryMin: h.salaryMin ?? undefined,
+        salaryMax: h.salaryMax ?? undefined,
+        medianSalaryRange:
+          formatMoneyRange({ min: h.salaryMin, max: h.salaryMax, currency: h.currency }) ??
+          undefined,
         topSectors: h.topSectors ?? [],
         commonEmployers: h.commonEmployers ?? [],
         visaNotes: h.visaNotes ?? [],
@@ -63,6 +77,6 @@ export const getHubsForTools = cache(
       }));
     },
     ["tool-hubs"],
-    { tags: [CONTENT_TAG], revalidate: 3600 },
+    { tags: [CONTENT_TAG], revalidate: CONTENT_REVALIDATE_SECONDS },
   ),
 );

@@ -25,16 +25,11 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { getAllCountries } from "@/data/countries";
 import type { CourseHub } from "@/data/courses";
+import { PRIMARY_DESTINATION } from "@/config/site";
 
 const iconMap: Record<string, React.ElementType> = {
   Briefcase, Cpu, Wrench, Heart, Scale, PenTool, TrendingUp, Brain,
 };
-
-const subjectOptions = [
-  { value: "business", label: "Business & Management", icon: "Briefcase" },
-  { value: "cs", label: "Computer Science, AI & Data Science", icon: "Cpu" },
-  { value: "engineering", label: "Engineering & Technology", icon: "Wrench" },
-];
 
 const gradeOptions = [
   { value: "first", label: "First Class (70%+) or GPA 3.7+" },
@@ -65,28 +60,18 @@ type Answers = {
   priority: string;
 };
 
+/**
+ * `answers.subject` is a hub slug directly — the quiz's radio options are
+ * generated from the same `hubs` list this matches against, so there is no
+ * separate label-to-slug table to keep in sync as hubs are added or renamed.
+ */
 function matchCourses(answers: Answers, hubs: CourseHub[]): CourseHub[] {
-  const allHubs = hubs;
-  const slugMap: Record<string, string> = {
-    business: "business-management",
-    cs: "computer-science-ai-data-science",
-    engineering: "engineering-technology",
-  };
+  const matched = hubs.filter((h) => h.slug === answers.subject);
 
-  const targetSlug = slugMap[answers.subject];
-  const matched = allHubs.filter((h) => h.slug === targetSlug);
+  // No match (or the quiz was skipped): fall back to the first two hubs.
+  if (matched.length === 0) return hubs.slice(0, 2);
 
-  // If subject doesn't match, recommend based on priority
-  if (matched.length === 0) {
-    // Fallback: recommend top 2 by salary if career-focused
-    if (answers.priority === "career") {
-      return allHubs.slice(0, 2);
-    }
-    return allHubs.slice(0, 2);
-  }
-
-  // Add a secondary recommendation
-  const secondary = allHubs.find((h) => h.slug !== targetSlug);
+  const secondary = hubs.find((h) => h.slug !== answers.subject);
   const results = [...matched];
   if (secondary) results.push(secondary);
 
@@ -95,18 +80,25 @@ function matchCourses(answers: Answers, hubs: CourseHub[]): CourseHub[] {
 
 const TOTAL_STEPS = 5;
 
+const initialAnswers: Answers = {
+  subject: "",
+  grade: "",
+  budget: "",
+  destinations: [PRIMARY_DESTINATION],
+  priority: "",
+};
+
 export default function CourseFinderPage({ hubs }: { hubs: CourseHub[] }) {
   const [step, setStep] = useState(0);
-  const [answers, setAnswers] = useState<Answers>({
-    subject: "",
-    grade: "",
-    budget: "",
-    destinations: ["uk"],
-    priority: "",
-  });
+  const [answers, setAnswers] = useState<Answers>(initialAnswers);
   const [showResults, setShowResults] = useState(false);
 
-  // V1 ships the UK only.
+  // Live hubs only — a stub has no content to recommend into yet.
+  const subjectOptions = hubs
+    .filter((h) => !h.isStub)
+    .map((h) => ({ value: h.slug, label: h.name, icon: h.icon }));
+
+  // V1 ships one destination live at a time.
   const countries = getAllCountries().filter((c) => c.live);
 
   const canProceed = () => {
@@ -190,7 +182,7 @@ export default function CourseFinderPage({ hubs }: { hubs: CourseHub[] }) {
             <ArrowLeft className="h-4 w-4" />
             Back
           </Button>
-          <Button variant="outline" onClick={() => { setStep(0); setShowResults(false); setAnswers({ subject: "", grade: "", budget: "", destinations: ["uk"], priority: "" }); }}>
+          <Button variant="outline" onClick={() => { setStep(0); setShowResults(false); setAnswers(initialAnswers); }}>
             Start Over
           </Button>
           <Button asChild className="gap-2">

@@ -7,6 +7,9 @@ import { SiteFooter } from "@/components/brand/site-footer";
 import { getCourseHub, getAllHubPaths, formatRange } from "@/lib/queries";
 import { isDatabaseConfigured } from "@/db";
 
+// Next requires route segment config to be a literal it can statically
+// extract, so this cannot reference CONTENT_REVALIDATE_SECONDS directly.
+// Keep it equal to that constant in @/config/site.
 export const revalidate = 3600;
 
 export async function generateStaticParams() {
@@ -24,7 +27,9 @@ export async function generateMetadata({
   const hub = await getCourseHub(country, slug);
   if (!hub) return {};
 
-  const tuition = formatRange(hub.tuitionMin, hub.tuitionMax, { suffix: "/year" });
+  const tuition = formatRange(hub.tuitionMin, hub.tuitionMax, hub.currency, {
+    suffix: "/year",
+  });
   return {
     title: `${hub.name} in the ${hub.destination.name}`,
     description:
@@ -55,12 +60,16 @@ export default async function CourseHubPage({
   const hub = await getCourseHub(country, slug);
   if (!hub) notFound();
 
-  const tuition = formatRange(hub.tuitionMin, hub.tuitionMax, { compact: true });
-  const living = formatRange(hub.livingCostMin, hub.livingCostMax, {
+  const tuition = formatRange(hub.tuitionMin, hub.tuitionMax, hub.currency, {
+    compact: true,
+  });
+  const living = formatRange(hub.livingCostMin, hub.livingCostMax, hub.currency, {
     compact: true,
     suffix: "/mo",
   });
-  const salary = formatRange(hub.salaryMin, hub.salaryMax, { compact: true });
+  const salary = formatRange(hub.salaryMin, hub.salaryMax, hub.currency, {
+    compact: true,
+  });
   const ielts =
     hub.ieltsMin && hub.ieltsMax && hub.ieltsMin !== hub.ieltsMax
       ? `${hub.ieltsMin}–${hub.ieltsMax}`

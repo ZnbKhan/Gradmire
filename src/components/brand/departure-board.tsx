@@ -3,9 +3,13 @@ import { cn } from "@/lib/utils";
 export type BoardRow = {
   code: string;
   subject: string;
-  topUniversity: string;
+  /** Null when the hub has no researched universities yet. */
+  topUniversity: string | null;
   status: "open" | "soon";
 };
+
+/** How a hub with no top university yet reads on the board. */
+const NO_UNIVERSITY_YET = "— guide in progress";
 
 /**
  * The signature hero element — an airport departures board of course subjects.
@@ -17,10 +21,13 @@ export type BoardRow = {
 export function DepartureBoard({
   rows,
   intake,
+  destinationLabel,
   className,
 }: {
   rows: BoardRow[];
   intake: string;
+  /** Shown in the board header and its screen-reader caption, e.g. "UK". */
+  destinationLabel: string;
   className?: string;
 }) {
   return (
@@ -34,7 +41,8 @@ export function DepartureBoard({
 
       <div className="mb-1 flex items-center justify-between border-b border-dashed border-white/20 px-1.5 pb-4">
         <span className="font-mono text-[12.5px] uppercase tracking-[0.12em] text-white">
-          Gradmire <span className="font-semibold text-gold">Departures</span> · UK
+          Gradmire <span className="font-semibold text-gold">Departures</span> ·{" "}
+          {destinationLabel}
         </span>
         <span className="flex items-center gap-1.5 font-mono text-[11px] text-[#8fe3b6]">
           <span
@@ -48,8 +56,8 @@ export function DepartureBoard({
       <div className="overflow-x-auto">
         <table className="w-full border-separate border-spacing-y-1">
           <caption className="sr-only">
-            Course subjects with their top-ranked UK university and whether
-            applications are currently open.
+            Course subjects with their top-ranked {destinationLabel} university
+            and whether applications are currently open.
           </caption>
           <thead>
             <tr className="font-mono text-[10.5px] uppercase tracking-[0.1em] text-white/50">
@@ -74,7 +82,9 @@ export function DepartureBoard({
                   <span className="flap">{row.subject}</span>
                 </td>
                 <td className="w-[40%] px-1 py-0.5">
-                  <span className="flap">{row.topUniversity}</span>
+                  <span className="flap">
+                    {row.topUniversity ?? NO_UNIVERSITY_YET}
+                  </span>
                 </td>
                 <td className="w-[16%] px-1 py-0.5 font-mono text-[13px] font-semibold text-gold">
                   {row.code}

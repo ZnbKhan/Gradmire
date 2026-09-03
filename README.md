@@ -19,22 +19,47 @@ Canada and Australia render as coming-soon destinations.
 
 ## Getting started
 
+1. Create a project at [supabase.com/dashboard](https://supabase.com/dashboard)
+   (region closest to your users; save the database password).
+2. **Project Settings → API** gives `NEXT_PUBLIC_SUPABASE_URL`,
+   `NEXT_PUBLIC_SUPABASE_ANON_KEY` and `SUPABASE_SERVICE_ROLE_KEY`.
+3. **Project Settings → Database → Connection string → URI** gives the
+   Postgres URLs. Use the *Transaction pooler* (port 6543) for `DATABASE_URL`
+   and the *Session pooler / direct* (port 5432) for `DIRECT_URL`.
+4. **Authentication → URL Configuration**: set Site URL to
+   `http://localhost:3000` and add `http://localhost:3000/auth/callback` to
+   Redirect URLs (add the production origin too, when there is one).
+5. **Authentication → Providers → Email**: enable it, leave "Confirm email"
+   on, and turn *off* "Allow new users to sign up" — applicants are created
+   by a counselor, and the sign-in form passes `shouldCreateUser: false`.
+
+Then:
+
 ```bash
 npm install
-cp .env.example .env.local     # fill in Supabase credentials
-npm run db:push                # apply the schema
-npm run db:seed                # load UK content from src/data
-npm run dev
+cp .env.example .env.local     # fill in Supabase + Postgres values from above
+npm run db:migrate
+npm run db:seed
+psql "$DIRECT_URL" -f drizzle/rls.sql   # row-level security, once
+npm run dev                             # http://localhost:3000
 ```
 
-Then apply row-level security once:
+To make yourself staff, insert a row into `staff` with your email and set the
+matching auth user's `app_metadata.gradmire_role` to `admin` (Authentication →
+Users → the user → metadata). Middleware checks the claim; `requireStaff()`
+re-checks the `staff` table, so both must agree.
 
-```bash
-psql "$DIRECT_URL" -f drizzle/rls.sql
-```
+### Auth is optional
 
-`DATABASE_URL` is required — the app fails loudly rather than building an
-empty site if it is missing.
+Supabase gates only the applicant portal and the staff admin. When the keys
+are absent the app does **not** crash: `isSupabaseConfigured()` makes every
+visitor anonymous, middleware refuses `/portal` and `/admin` with
+`?error=auth_unavailable`, and the rest of the site serves normally. A
+misconfigured deploy therefore degrades to a read-only marketing site rather
+than a 500 on every route.
+
+`DATABASE_URL`, by contrast, is genuinely required — there is no content
+without it.
 
 ## Scripts
 
@@ -43,7 +68,8 @@ empty site if it is missing.
 | `npm run dev` | Local dev server |
 | `npm run build` | Production build (type + lint errors fail it) |
 | `npm run db:generate` | Generate a migration from `src/db/schema.ts` |
-| `npm run db:push` | Apply schema to the database |
+| `npm run db:migrate` | Apply generated migrations (use this) |
+| `npm run db:push` | Push the schema directly, without a migration (dev only) |
 | `npm run db:seed` | Seed destinations and course hubs (idempotent) |
 | `npm run db:studio` | Browse data in Drizzle Studio |
 | `npm run verify:schema` | Apply migrations to in-process Postgres and assert relations |

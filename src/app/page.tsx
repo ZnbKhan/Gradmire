@@ -4,13 +4,13 @@ import { SiteHeader } from "@/components/brand/site-header";
 import { SiteFooter } from "@/components/brand/site-footer";
 import { DepartureBoard } from "@/components/brand/departure-board";
 import { CoursePassCard } from "@/components/brand/course-pass-card";
-import { getDestinations, getCourseHubs, getBoardRows } from "@/lib/queries";
+import { getDestinations, getCourseHubs, getBoardRows, getDestination } from "@/lib/queries";
 import { getSessionUser } from "@/lib/supabase/server";
+import { PRIMARY_DESTINATION, currentIntake } from "@/config/site";
 
-/** V1 ships the UK only; other destinations render as coming-soon stamps. */
-const PRIMARY_DESTINATION = "uk";
-const INTAKE = "September 2026";
-
+// Next requires route segment config to be a literal it can statically
+// extract, so this cannot reference CONTENT_REVALIDATE_SECONDS directly.
+// Keep it equal to that constant in @/config/site.
 export const revalidate = 3600;
 
 const STEPS = [
@@ -40,11 +40,12 @@ const WHY_UK = [
 ];
 
 export default async function HomePage() {
-  const [destinations, hubs, boardRows, user] = await Promise.all([
+  const [destinations, hubs, boardRows, user, primaryDestination] = await Promise.all([
     getDestinations(),
     getCourseHubs(PRIMARY_DESTINATION),
     getBoardRows(PRIMARY_DESTINATION),
     getSessionUser(),
+    getDestination(PRIMARY_DESTINATION),
   ]);
 
   const liveHubCount = hubs.filter((h) => h.status === "live").length;
@@ -89,7 +90,11 @@ export default async function HomePage() {
               </p>
             </div>
 
-            <DepartureBoard rows={boardRows} intake={INTAKE} />
+            <DepartureBoard
+              rows={boardRows}
+              intake={currentIntake()}
+              destinationLabel={primaryDestination?.stampLabel ?? primaryDestination?.name ?? ""}
+            />
           </div>
         </section>
 

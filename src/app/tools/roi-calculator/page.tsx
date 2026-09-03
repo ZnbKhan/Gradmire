@@ -9,6 +9,9 @@ export const metadata: Metadata = {
   alternates: { canonical: "/tools/roi-calculator" },
 };
 
+// Next requires route segment config to be a literal it can statically
+// extract, so this cannot reference CONTENT_REVALIDATE_SECONDS directly.
+// Keep it equal to that constant in @/config/site.
 export const revalidate = 3600;
 
 export default async function Page() {

@@ -5,7 +5,10 @@ import { useFormStatus } from "react-dom";
 import { usePathname } from "next/navigation";
 import { CheckCircle2, ArrowRight } from "lucide-react";
 import { submitConsultation, type FormState } from "@/lib/actions/consultation";
+import { upcomingIntakes } from "@/config/site";
 import { cn } from "@/lib/utils";
+
+const INTAKE_OPTIONS = upcomingIntakes();
 
 const initial: FormState = { ok: false };
 
@@ -143,9 +146,11 @@ export function ConsultationForm({ courses }: { courses: CourseOption[] }) {
             className="w-full rounded-lg border border-line bg-white px-3.5 py-2.5 text-[14.5px] text-ink"
           >
             <option value="">No preference</option>
-            <option value="September 2026">September 2026</option>
-            <option value="January 2027">January 2027</option>
-            <option value="September 2027">September 2027</option>
+            {INTAKE_OPTIONS.map((intake) => (
+              <option key={intake} value={intake}>
+                {intake}
+              </option>
+            ))}
           </select>
         </div>
       </div>

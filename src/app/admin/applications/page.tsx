@@ -3,6 +3,7 @@ import { db, schema } from "@/db";
 import { ActionForm } from "@/components/admin/action-form";
 import { updateApplicationStage, createApplication } from "@/lib/actions/admin";
 import { STAGES, stageLabel } from "@/lib/stages";
+import { currentIntake } from "@/config/site";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Applications" };
@@ -45,7 +46,7 @@ export default async function ApplicationsPage() {
             </div>
             <div>
               <label htmlFor="new-intake" className="mb-1 block text-[12.5px] font-medium">Intake</label>
-              <input id="new-intake" name="intake" className={inputCls} placeholder="September 2026" />
+              <input id="new-intake" name="intake" className={inputCls} placeholder={currentIntake()} />
             </div>
             <div>
               <label htmlFor="new-university" className="mb-1 block text-[12.5px] font-medium">University</label>

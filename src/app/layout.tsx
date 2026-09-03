@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Fraunces, Inter, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
+import { SITE_URL } from "@/config/site";
 
 /** Headlines only — a diploma register without tipping into ceremony. */
 const display = Fraunces({
@@ -26,10 +27,8 @@ const mono = IBM_Plex_Mono({
   display: "swap",
 });
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://gradmire.com";
-
 export const metadata: Metadata = {
-  metadataBase: new URL(siteUrl),
+  metadataBase: new URL(SITE_URL),
   title: {
     default: "Gradmire — Find your course. Then find the UK around it.",
     template: "%s | Gradmire",
@@ -47,7 +46,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     siteName: "Gradmire",
-    url: siteUrl,
+    url: SITE_URL,
     title: "Gradmire — Find your course. Then find the UK around it.",
     description:
       "Study abroad organized by subject, not by country. Course-first shortlists for UK master's degrees.",

@@ -3,6 +3,7 @@ import { SiteHeader } from "@/components/brand/site-header";
 import { SiteFooter } from "@/components/brand/site-footer";
 import { ConsultationForm } from "@/components/forms/consultation-form";
 import { getCourseHubs } from "@/lib/queries";
+import { PRIMARY_DESTINATION } from "@/config/site";
 
 export const metadata: Metadata = {
   title: "Book a free consultation",
@@ -11,10 +12,13 @@ export const metadata: Metadata = {
   alternates: { canonical: "/contact" },
 };
 
+// Next requires route segment config to be a literal it can statically
+// extract, so this cannot reference CONTENT_REVALIDATE_SECONDS directly.
+// Keep it equal to that constant in @/config/site.
 export const revalidate = 3600;
 
 export default async function ContactPage() {
-  const hubs = await getCourseHubs("uk");
+  const hubs = await getCourseHubs(PRIMARY_DESTINATION);
   const courses = hubs.map((h) => ({ slug: h.slug, name: h.name }));
 
   return (

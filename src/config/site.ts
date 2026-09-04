@@ -22,9 +22,6 @@ export const PRIMARY_DESTINATION = "uk";
 /** How long cached content reads and ISR pages stay warm. */
 export const CONTENT_REVALIDATE_SECONDS = 3600;
 
-/** Rows on the homepage departures board. */
-export const BOARD_ROW_LIMIT = 6;
-
 /**
  * Where enquiries are sent, and the address shown to a visitor when the
  * lead form itself fails. Mirrors the env var the deploy sets so the two

@@ -4,7 +4,7 @@ import { unstable_cache } from "next/cache";
 import { asc, eq, and, inArray, sql } from "drizzle-orm";
 import { db, schema } from "@/db";
 import { formatMoneyRange } from "@/lib/money";
-import { BOARD_ROW_LIMIT, CONTENT_REVALIDATE_SECONDS } from "@/config/site";
+import { CONTENT_REVALIDATE_SECONDS } from "@/config/site";
 
 /**
  * Content reads are cached at two levels:
@@ -136,25 +136,6 @@ export const getAllHubPaths = cache(
     { tags: [CONTENT_TAG], revalidate: REVALIDATE_SECONDS },
   ),
 );
-
-/**
- * Rows for the departures board: live hubs first, stubs marked "soon".
- *
- * `topUniversity` is null rather than a placeholder dash — how a missing
- * value reads is the board's decision, not this layer's.
- */
-export const getBoardRows = cache(async (destinationSlug: string) => {
-  // Deliberately not wrapped in `unstable_cache`. It reshapes the output of
-  // `getCourseHubs`, which is already cached — nesting one cache inside
-  // another is unsupported and stored the same rows twice.
-  const hubs = await getCourseHubs(destinationSlug);
-  return hubs.slice(0, BOARD_ROW_LIMIT).map((h) => ({
-    code: h.code,
-    subject: h.name,
-    topUniversity: h.status === "live" ? h.universities[0]?.name ?? null : null,
-    status: h.status === "live" ? ("open" as const) : ("soon" as const),
-  }));
-});
 
 /**
  * Formats a stored integer range the way the content spec writes it.

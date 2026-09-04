@@ -83,9 +83,9 @@ const config = {
         },
       },
       fontFamily: {
-        display: ["var(--font-display)", "Georgia", "serif"],
-        sans: ["var(--font-body)", "system-ui", "sans-serif"],
-        mono: ["var(--font-mono)", "ui-monospace", "monospace"],
+        display: ["var(--font-poppins)", "system-ui", "sans-serif"],
+        sans: ["var(--font-poppins)", "system-ui", "sans-serif"],
+        mono: ["var(--font-poppins)", "system-ui", "sans-serif"],
       },
       boxShadow: {
         card: "0 1px 0 rgb(16 20 46 / 0.05), 0 12px 24px -16px rgb(16 20 46 / 0.25)",

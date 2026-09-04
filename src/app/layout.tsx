@@ -1,29 +1,17 @@
 import type { Metadata } from "next";
-import { Fraunces, Inter, IBM_Plex_Mono } from "next/font/google";
+import { Poppins } from "next/font/google";
 import "./globals.css";
-import { cn } from "@/lib/utils";
 import { SITE_URL } from "@/config/site";
 
-/** Headlines only — a diploma register without tipping into ceremony. */
-const display = Fraunces({
+/**
+ * One typeface, Poppins, across the whole site. All three roles (display,
+ * body, mono) point at the same font family so `font-display`/`font-sans`/
+ * `font-mono` keep working everywhere without touching every call site.
+ */
+const poppins = Poppins({
   subsets: ["latin"],
-  variable: "--font-display",
-  weight: ["400", "500", "600", "700"],
-  display: "swap",
-});
-
-/** Everything else. */
-const body = Inter({
-  subsets: ["latin"],
-  variable: "--font-body",
-  display: "swap",
-});
-
-/** Anything that reads like board or visa-stamp data: fees, deadlines, codes. */
-const mono = IBM_Plex_Mono({
-  subsets: ["latin"],
-  variable: "--font-mono",
-  weight: ["400", "500", "600"],
+  variable: "--font-poppins",
+  weight: ["400", "500", "600", "700", "800"],
   display: "swap",
 });
 
@@ -66,10 +54,7 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html
-      lang="en"
-      className={cn(display.variable, body.variable, mono.variable)}
-    >
+    <html lang="en" className={poppins.variable}>
       <body className="min-h-screen font-sans">
         <a
           href="#main"

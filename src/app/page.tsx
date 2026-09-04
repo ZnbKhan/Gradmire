@@ -2,10 +2,9 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { SiteHeader } from "@/components/brand/site-header";
 import { SiteFooter } from "@/components/brand/site-footer";
-import { DepartureBoard } from "@/components/brand/departure-board";
 import { CoursePassCard } from "@/components/brand/course-pass-card";
-import { getDestinations, getCourseHubs, getBoardRows, getDestination } from "@/lib/queries";
-import { PRIMARY_DESTINATION, currentIntake } from "@/config/site";
+import { getDestinations, getCourseHubs } from "@/lib/queries";
+import { PRIMARY_DESTINATION } from "@/config/site";
 
 // Next requires route segment config to be a literal it can statically
 // extract, so this cannot reference CONTENT_REVALIDATE_SECONDS directly.
@@ -45,11 +44,9 @@ export default async function HomePage() {
   // applications"; that single cookie read made the whole route dynamic, and
   // it was the only page on the site that missed the cache. The header
   // resolves the session in the browser now — see `SiteNav`.
-  const [destinations, hubs, boardRows, primaryDestination] = await Promise.all([
+  const [destinations, hubs] = await Promise.all([
     getDestinations(),
     getCourseHubs(PRIMARY_DESTINATION),
-    getBoardRows(PRIMARY_DESTINATION),
-    getDestination(PRIMARY_DESTINATION),
   ]);
 
   const liveHubCount = hubs.filter((h) => h.status === "live").length;
@@ -61,8 +58,8 @@ export default async function HomePage() {
       <main id="main">
         {/* ---------- Hero ---------- */}
         <section className="px-7 pb-10 pt-16">
-          <div className="mx-auto grid max-w-[1180px] items-center gap-14 lg:grid-cols-[1.05fr_0.95fr]">
-            <div>
+          <div className="mx-auto max-w-[1180px]">
+            <div className="max-w-[640px]">
               <span className="eyebrow">Study abroad, reordered</span>
               <h1 className="my-[18px] max-w-[15ch] text-[clamp(34px,4.6vw,58px)] font-semibold leading-[1.05]">
                 Find your course. Then find{" "}
@@ -93,12 +90,6 @@ export default async function HomePage() {
                 research
               </p>
             </div>
-
-            <DepartureBoard
-              rows={boardRows}
-              intake={currentIntake()}
-              destinationLabel={primaryDestination?.stampLabel ?? primaryDestination?.name ?? ""}
-            />
           </div>
         </section>
 

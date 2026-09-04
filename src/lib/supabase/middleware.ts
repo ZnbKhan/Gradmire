@@ -54,7 +54,10 @@ export async function updateSession(request: NextRequest) {
 
   const isPortal = pathname.startsWith("/portal");
   const isAdmin = pathname.startsWith("/admin");
-  const isAuthRoute = pathname.startsWith("/login") || pathname.startsWith("/auth");
+  const isAuthRoute =
+    pathname.startsWith("/login") ||
+    pathname.startsWith("/signup") ||
+    pathname.startsWith("/auth");
 
   if ((isPortal || isAdmin) && !user) {
     const redirect = request.nextUrl.clone();

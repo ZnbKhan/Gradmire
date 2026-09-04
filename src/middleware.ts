@@ -12,5 +12,11 @@ export const config = {
    * public page an edge invocation — which also stopped fully static pages
    * being served straight from the CDN.
    */
-  matcher: ["/portal/:path*", "/admin/:path*", "/login/:path*", "/auth/:path*"],
+  matcher: [
+    "/portal/:path*",
+    "/admin/:path*",
+    "/login/:path*",
+    "/signup/:path*",
+    "/auth/:path*",
+  ],
 };

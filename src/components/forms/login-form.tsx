@@ -39,7 +39,7 @@ export function LoginForm({ nextPath }: { nextPath?: string }) {
       setStatus("error");
       setError(
         error.message.toLowerCase().includes("signups not allowed")
-          ? "We don't have an application under that email yet. Book a consultation first and your counselor will set it up."
+          ? "We don't recognize that email yet. Create an account to get started."
           : "We couldn't send the link just now. Try again in a moment.",
       );
       return;

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { SiteHeader } from "@/components/brand/site-header";
 import { SiteFooter } from "@/components/brand/site-footer";
 import { LoginForm } from "@/components/forms/login-form";
@@ -38,8 +39,8 @@ export default async function LoginPage({
             Check your application status
           </h1>
           <p className="mb-8 text-[15px] text-ink-soft">
-            Enter the email address you gave your counselor. We&rsquo;ll send a sign-in
-            link — no password to remember.
+            Enter the email on your account. We&rsquo;ll send a sign-in link — no
+            password to remember.
           </p>
           {errorMessage && (
             <p
@@ -51,6 +52,13 @@ export default async function LoginPage({
           )}
 
           <LoginForm nextPath={nextPath} />
+
+          <p className="mt-6 text-center text-[13.5px] text-ink-soft">
+            New here?{" "}
+            <Link href="/signup" className="font-medium text-ink underline underline-offset-2">
+              Create an account
+            </Link>
+          </p>
         </div>
       </main>
       <SiteFooter />

@@ -63,7 +63,7 @@ function SubmitButton() {
     <button
       type="submit"
       disabled={pending}
-      className="inline-flex w-full items-center justify-center gap-2 rounded-pill bg-coral px-6 py-3.5 text-[15px] font-semibold text-white transition-all hover:-translate-y-0.5 disabled:translate-y-0 disabled:opacity-70"
+      className="inline-flex w-full items-center justify-center gap-2 rounded-pill bg-coral px-6 py-3.5 text-[15px] font-semibold text-white transition-[transform,opacity] duration-150 ease-out hover:-translate-y-0.5 disabled:translate-y-0 disabled:opacity-70"
     >
       {pending ? "Booking…" : "Book free consultation"}
       {!pending && <ArrowRight size={15} aria-hidden="true" />}

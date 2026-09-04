@@ -6,11 +6,11 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: [
-    /*
-     * Everything except static assets and image files — the session cookie
-     * only needs refreshing on document requests.
-     */
-    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|woff2?)$).*)",
-  ],
+  /*
+   * Only the gated areas and the auth routes. `updateSession` is a no-op on
+   * every other path, so running it site-wide bought nothing and cost every
+   * public page an edge invocation — which also stopped fully static pages
+   * being served straight from the CDN.
+   */
+  matcher: ["/portal/:path*", "/admin/:path*", "/login/:path*", "/auth/:path*"],
 };

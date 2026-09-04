@@ -44,15 +44,20 @@ export const getDestination = cache((slug: string) =>
 /** Every hub for a destination, live and stub, in display order. */
 export const getCourseHubs = cache((destinationSlug: string) =>
   unstable_cache(
-    async () => {
-      const destination = await db.query.destinations.findFirst({
-        where: eq(schema.destinations.slug, destinationSlug),
-        columns: { id: true },
-      });
-      if (!destination) return [];
-
-      const hubs = await db.query.courseHubs.findMany({
-        where: eq(schema.courseHubs.destinationId, destination.id),
+    async () =>
+      // One round trip. This was three sequential queries — look up the
+      // destination id, then the hubs, then a separate count aggregate — so
+      // every cache miss paid three round trips to Supabase. The destination
+      // is now matched by subquery and the count comes back as a correlated
+      // aggregate. A missing destination simply yields no rows.
+      db.query.courseHubs.findMany({
+        where: inArray(
+          schema.courseHubs.destinationId,
+          db
+            .select({ id: schema.destinations.id })
+            .from(schema.destinations)
+            .where(eq(schema.destinations.slug, destinationSlug)),
+        ),
         orderBy: [asc(schema.courseHubs.sortOrder)],
         with: {
           // Only the top-ranked one is rendered, but the *count* below is
@@ -60,26 +65,18 @@ export const getCourseHubs = cache((destinationSlug: string) =>
           // would report 1 for every hub.
           universities: { orderBy: [asc(schema.universities.sortOrder)], limit: 1 },
         },
-      });
-      if (hubs.length === 0) return [];
-
-      const counts = await db
-        .select({
-          hubId: schema.universities.courseHubId,
-          total: sql<number>`count(*)::int`,
-        })
-        .from(schema.universities)
-        .where(
-          inArray(
-            schema.universities.courseHubId,
-            hubs.map((h) => h.id),
-          ),
-        )
-        .groupBy(schema.universities.courseHubId);
-
-      const byHub = new Map(counts.map((c) => [c.hubId, c.total]));
-      return hubs.map((h) => ({ ...h, universityCount: byHub.get(h.id) ?? 0 }));
-    },
+        extras: {
+          // The inner table is aliased by hand. Interpolating
+          // `schema.universities.courseHubId` here would be rewritten to the
+          // *outer* alias, producing `courseHubs.course_hub_id` — a column
+          // that does not exist.
+          universityCount: sql<number>`(
+            select count(*)::int
+            from "universities" "uc"
+            where "uc"."course_hub_id" = ${schema.courseHubs.id}
+          )`.as("university_count"),
+        },
+      }),
     ["course-hubs", destinationSlug],
     { tags: [CONTENT_TAG], revalidate: REVALIDATE_SECONDS },
   )(),
@@ -88,24 +85,28 @@ export const getCourseHubs = cache((destinationSlug: string) =>
 export const getCourseHub = cache((destinationSlug: string, hubSlug: string) =>
   unstable_cache(
     async () => {
-      const destination = await db.query.destinations.findFirst({
-        where: eq(schema.destinations.slug, destinationSlug),
-      });
-      if (!destination) return null;
-
+      // One round trip, where this was two. The destination is matched by
+      // subquery and comes back through its own relation rather than from a
+      // prior lookup, so the shape (`hub.destination`) is unchanged.
       const hub = await db.query.courseHubs.findFirst({
         where: and(
-          eq(schema.courseHubs.destinationId, destination.id),
           eq(schema.courseHubs.slug, hubSlug),
+          inArray(
+            schema.courseHubs.destinationId,
+            db
+              .select({ id: schema.destinations.id })
+              .from(schema.destinations)
+              .where(eq(schema.destinations.slug, destinationSlug)),
+          ),
         ),
         with: {
+          destination: true,
           universities: { orderBy: [asc(schema.universities.sortOrder)] },
           deadlines: { orderBy: [asc(schema.deadlines.sortOrder)] },
         },
       });
-      if (!hub) return null;
 
-      return { ...hub, destination };
+      return hub ?? null;
     },
     ["course-hub", destinationSlug, hubSlug],
     { tags: [CONTENT_TAG], revalidate: REVALIDATE_SECONDS },
@@ -142,21 +143,18 @@ export const getAllHubPaths = cache(
  * `topUniversity` is null rather than a placeholder dash — how a missing
  * value reads is the board's decision, not this layer's.
  */
-export const getBoardRows = cache((destinationSlug: string) =>
-  unstable_cache(
-    async () => {
-      const hubs = await getCourseHubs(destinationSlug);
-      return hubs.slice(0, BOARD_ROW_LIMIT).map((h) => ({
-        code: h.code,
-        subject: h.name,
-        topUniversity: h.status === "live" ? h.universities[0]?.name ?? null : null,
-        status: h.status === "live" ? ("open" as const) : ("soon" as const),
-      }));
-    },
-    ["board-rows", destinationSlug],
-    { tags: [CONTENT_TAG], revalidate: REVALIDATE_SECONDS },
-  )(),
-);
+export const getBoardRows = cache(async (destinationSlug: string) => {
+  // Deliberately not wrapped in `unstable_cache`. It reshapes the output of
+  // `getCourseHubs`, which is already cached — nesting one cache inside
+  // another is unsupported and stored the same rows twice.
+  const hubs = await getCourseHubs(destinationSlug);
+  return hubs.slice(0, BOARD_ROW_LIMIT).map((h) => ({
+    code: h.code,
+    subject: h.name,
+    topUniversity: h.status === "live" ? h.universities[0]?.name ?? null : null,
+    status: h.status === "live" ? ("open" as const) : ("soon" as const),
+  }));
+});
 
 /**
  * Formats a stored integer range the way the content spec writes it.

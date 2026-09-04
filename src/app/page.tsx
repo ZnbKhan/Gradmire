@@ -5,7 +5,6 @@ import { SiteFooter } from "@/components/brand/site-footer";
 import { DepartureBoard } from "@/components/brand/departure-board";
 import { CoursePassCard } from "@/components/brand/course-pass-card";
 import { getDestinations, getCourseHubs, getBoardRows, getDestination } from "@/lib/queries";
-import { getSessionUser } from "@/lib/supabase/server";
 import { PRIMARY_DESTINATION, currentIntake } from "@/config/site";
 
 // Next requires route segment config to be a literal it can statically
@@ -40,11 +39,16 @@ const WHY_UK = [
 ];
 
 export default async function HomePage() {
-  const [destinations, hubs, boardRows, user, primaryDestination] = await Promise.all([
+  // Nothing here reads cookies or headers, which is what keeps this page
+  // statically rendered and served from the CDN. `getSessionUser()` used to
+  // sit in this list to tell the header whether to say "Sign in" or "My
+  // applications"; that single cookie read made the whole route dynamic, and
+  // it was the only page on the site that missed the cache. The header
+  // resolves the session in the browser now — see `SiteNav`.
+  const [destinations, hubs, boardRows, primaryDestination] = await Promise.all([
     getDestinations(),
     getCourseHubs(PRIMARY_DESTINATION),
     getBoardRows(PRIMARY_DESTINATION),
-    getSessionUser(),
     getDestination(PRIMARY_DESTINATION),
   ]);
 
@@ -52,7 +56,7 @@ export default async function HomePage() {
 
   return (
     <>
-      <SiteHeader signedIn={Boolean(user)} />
+      <SiteHeader />
 
       <main id="main">
         {/* ---------- Hero ---------- */}

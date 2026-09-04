@@ -81,7 +81,8 @@ export function CoursePassCard({
       href={href}
       className={cn(
         shell,
-        "transition-transform duration-200 hover:-translate-y-1 hover:shadow-2xl",
+        // Both properties, or the shadow snaps while the lift eases.
+        "transition-[transform,box-shadow] duration-200 ease-out hover:-translate-y-1 hover:shadow-2xl",
       )}
     >
       {inner}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import {
   Menu,
@@ -21,6 +21,7 @@ import {
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
 import { TOOLS, COMPANY_LINKS } from "@/config/site";
+import { createClient } from "@/lib/supabase/client";
 import type { Navigation } from "@/lib/nav";
 import { cn } from "@/lib/utils";
 
@@ -40,6 +41,42 @@ const TOOL_ICONS: Record<string, LucideIcon> = {
 
 const triggerCls =
   "group flex items-center gap-1 rounded-pill px-3 py-2 text-[14.5px] font-medium text-ink outline-none transition-colors hover:text-coral-text data-[state=open]:text-coral-text";
+
+/**
+ * Whether someone is signed in, resolved in the browser.
+ *
+ * The server deliberately does not read the auth cookie to render the chrome.
+ * Doing so made every page carrying a header per-user, which opted the
+ * homepage out of static rendering entirely — it was the only route on the
+ * site that missed the CDN cache. Starting at `false` means a signed-in
+ * visitor sees "Sign in" for a moment before it swaps, which is a cosmetic
+ * cost for a page that now serves from the edge.
+ *
+ * This gates a label, not access: /portal and /admin are enforced in the
+ * middleware and again on the server.
+ */
+function useSignedIn() {
+  const [signedIn, setSignedIn] = useState(false);
+
+  useEffect(() => {
+    const supabase = createClient();
+    if (!supabase) return;
+
+    // Reads the cached session locally — no request to Supabase.
+    void supabase.auth.getSession().then(({ data }) => {
+      setSignedIn(Boolean(data.session));
+    });
+
+    // Keeps the label honest when the user signs out in another tab.
+    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSignedIn(Boolean(session));
+    });
+
+    return () => listener.subscription.unsubscribe();
+  }, []);
+
+  return signedIn;
+}
 
 function Chevron() {
   return (
@@ -89,16 +126,15 @@ function NavMenu({
 
 export function SiteNav({
   nav,
-  signedIn = false,
   primaryDestination,
 }: {
   nav: Navigation;
-  signedIn?: boolean;
   /** Where "Destinations" and "Courses" point when their menus are empty. */
   primaryDestination: string;
 }) {
   const [open, setOpen] = useState(false);
   const [mobileSection, setMobileSection] = useState<string | null>(null);
+  const signedIn = useSignedIn();
 
   function toggleMobileSection(label: string) {
     setMobileSection((current) => (current === label ? null : label));
@@ -107,8 +143,13 @@ export function SiteNav({
   const destinationsHref = `/${primaryDestination}`;
   const coursesHref = `/${primaryDestination}#courses`;
 
+  // The header is opaque on purpose. It used to be translucent over a
+  // blurred backdrop, and a full-width sticky backdrop filter makes the
+  // browser re-blur the strip behind it on every scroll frame — the largest
+  // single cause of scroll jank here. At 90% opacity it was barely visible.
+  // (Written without the utility name so Tailwind stops emitting the class.)
   return (
-    <header className="sticky top-0 z-50 border-b border-line bg-paper/90 backdrop-blur-md">
+    <header className="sticky top-0 z-50 border-b border-line bg-paper">
       <div className="mx-auto flex max-w-[1180px] items-center justify-between px-7 py-4">
         <Link
           href="/"
@@ -244,7 +285,7 @@ export function SiteNav({
           </Link>
           <Link
             href="/contact"
-            className="inline-flex items-center gap-2 rounded-pill bg-ink px-5 py-2.5 text-[14px] font-semibold text-paper transition-all hover:-translate-y-0.5 hover:bg-coral"
+            className="inline-flex items-center gap-2 rounded-pill bg-ink px-5 py-2.5 text-[14px] font-semibold text-paper transition-[transform,background-color] duration-150 ease-out hover:-translate-y-0.5 hover:bg-coral"
           >
             Book consultation
             <ArrowRight size={14} aria-hidden="true" />
@@ -263,12 +304,28 @@ export function SiteNav({
         </div>
       </div>
 
+      {/*
+        A grid whose single row animates between 0fr and 1fr. That transitions
+        the panel open without animating `height`, which would reflow the page
+        on every frame, and without `hidden`, which snapped it open instantly.
+      */}
       <div
         id="mobile-nav"
-        hidden={!open}
-        className="border-t border-line bg-paper px-7 pb-6 pt-2 lg:hidden"
+        className={cn(
+          "grid overflow-hidden border-line bg-paper transition-[grid-template-rows] duration-200 ease-out lg:hidden",
+          open ? "grid-rows-[1fr] border-t" : "grid-rows-[0fr]",
+        )}
       >
-        <nav aria-label="Mobile" className="flex flex-col">
+        {/*
+          A collapsed grid row still contains focusable links, so `inert`
+          takes them out of the tab order and the a11y tree — the job the
+          `hidden` attribute used to do.
+        */}
+        <nav
+          aria-label="Mobile"
+          inert={!open}
+          className="flex min-h-0 flex-col px-7 pb-6 pt-2"
+        >
           {nav.destinations.length > 0 && (
             <MobileSection
               label="Destinations"
@@ -400,10 +457,23 @@ function MobileSection({
         <ChevronDown
           size={16}
           aria-hidden="true"
-          className={cn("transition-transform", expanded && "rotate-180")}
+          className={cn(
+            "transition-transform duration-200 ease-out",
+            expanded && "rotate-180",
+          )}
         />
       </button>
-      {expanded && <div className="pb-3 pl-1">{children}</div>}
+      {/* Same 0fr/1fr reveal as the panel above, for the same reasons. */}
+      <div
+        className={cn(
+          "grid overflow-hidden transition-[grid-template-rows] duration-200 ease-out",
+          expanded ? "grid-rows-[1fr]" : "grid-rows-[0fr]",
+        )}
+      >
+        <div inert={!expanded} className="min-h-0 pb-3 pl-1">
+          {children}
+        </div>
+      </div>
     </div>
   );
 }

@@ -42,10 +42,12 @@ function getDb() {
 
   const instance = drizzle(client, { schema });
 
-  if (process.env.NODE_ENV !== "production") {
-    globalForDb.gradmireDb = client;
-    globalForDb.gradmireDrizzle = instance;
-  }
+  // Memoized in every environment, production included. Caching only in dev
+  // meant each property access on the proxy below built a fresh pool — a new
+  // TLS handshake to Supabase per query, and sockets that were never closed.
+  globalForDb.gradmireDb = client;
+  globalForDb.gradmireDrizzle = instance;
+
   return instance;
 }
 

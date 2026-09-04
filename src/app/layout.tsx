@@ -68,7 +68,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={cn("scroll-smooth", display.variable, body.variable, mono.variable)}
+      className={cn(display.variable, body.variable, mono.variable)}
     >
       <body className="min-h-screen font-sans">
         <a

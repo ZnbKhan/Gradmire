@@ -75,7 +75,7 @@ export default async function PortalPage() {
 
   return (
     <>
-      <SiteHeader signedIn />
+      <SiteHeader />
       <main id="main" className="px-7 py-14">
         <div className="mx-auto max-w-[1180px]">
           <span className="eyebrow">Applicant portal</span>

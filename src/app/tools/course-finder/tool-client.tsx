@@ -141,7 +141,10 @@ export default function CourseFinderPage({ hubs }: { hubs: CourseHub[] }) {
           {results.map((course) => {
             const Icon = iconMap[course.icon] || BookOpen;
             return (
-              <Card key={course.slug} className="transition-all hover:shadow-lg">
+              <Card
+                key={course.slug}
+                className="transition-shadow duration-150 ease-out hover:shadow-lg"
+              >
                 <CardContent className="p-6">
                   <div className="flex items-start gap-4">
                     <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-primary/10">
@@ -215,10 +218,15 @@ export default function CourseFinderPage({ hubs }: { hubs: CourseHub[] }) {
           <span>Step {step + 1} of {TOTAL_STEPS}</span>
           <span>{Math.round(((step + 1) / TOTAL_STEPS) * 100)}%</span>
         </div>
-        <div className="h-2 rounded-full bg-muted">
+        {/*
+          Scaled rather than resized: animating `width` reflowed the bar on
+          every frame, where a transform is composited. The track is
+          `overflow-hidden` so the rounded ends stay rounded under scale.
+        */}
+        <div className="h-2 overflow-hidden rounded-full bg-muted">
           <div
-            className="h-2 rounded-full gradient-primary transition-all duration-500"
-            style={{ width: `${((step + 1) / TOTAL_STEPS) * 100}%` }}
+            className="h-2 origin-left rounded-full gradient-primary transition-transform duration-500 ease-out"
+            style={{ transform: `scaleX(${(step + 1) / TOTAL_STEPS})` }}
           />
         </div>
       </div>

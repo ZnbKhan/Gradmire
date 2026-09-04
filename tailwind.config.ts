@@ -98,6 +98,22 @@ const config = {
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
+      /*
+       * Motion vocabulary. Tailwind's default easing is a symmetric
+       * ease-in-out, which makes hover states feel like they hesitate before
+       * they start. Interface motion should leave immediately and settle
+       * gently, so the default here is a decelerating curve and every
+       * transition in the app inherits it without naming a class.
+       */
+      transitionTimingFunction: {
+        DEFAULT: "cubic-bezier(0, 0, 0.2, 1)",
+      },
+      transitionDuration: {
+        // Hover, colour, focus — fast enough to feel instant.
+        DEFAULT: "150ms",
+        // Panels and disclosures, which move further and need to be followed.
+        panel: "200ms",
+      },
       keyframes: {
         "pulse-dot": {
           "0%, 100%": { opacity: "1" },

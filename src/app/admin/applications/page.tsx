@@ -21,6 +21,7 @@ export default async function ApplicationsPage() {
     db.query.courseHubs.findMany({
       orderBy: [asc(schema.courseHubs.sortOrder)],
       columns: { id: true, name: true },
+      limit: 200,
     }),
   ]);
 

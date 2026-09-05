@@ -6,6 +6,7 @@ import { SiteHeader } from "@/components/brand/site-header";
 import { SiteFooter } from "@/components/brand/site-footer";
 import { CoursePassCard } from "@/components/brand/course-pass-card";
 import { getDestination, getDestinations, getCourseHubs } from "@/lib/queries";
+import { optionalContent } from "@/lib/safe-query";
 import { isDatabaseConfigured } from "@/db";
 import { PRIMARY_DESTINATION } from "@/config/site";
 
@@ -58,7 +59,13 @@ export default async function DestinationPage({
    */
   if (destination.status !== "live") {
     const primary = await getDestination(PRIMARY_DESTINATION);
-    const primaryHubs = primary ? await getCourseHubs(primary.slug) : [];
+    const primaryHubs = primary
+      ? await optionalContent(
+          "coming-soon teaser hubs",
+          () => getCourseHubs(primary.slug),
+          [],
+        )
+      : [];
 
     return (
       <>
@@ -96,7 +103,11 @@ export default async function DestinationPage({
     );
   }
 
-  const hubs = await getCourseHubs(country);
+  const hubs = await optionalContent(
+    `${country} course hubs`,
+    () => getCourseHubs(country),
+    [],
+  );
 
   return (
     <>
@@ -116,6 +127,7 @@ export default async function DestinationPage({
           </div>
         </section>
 
+        {hubs.length > 0 && (
         <section
           id="courses"
           className="bg-ink px-7 py-[70px] text-paper [--perf-bg:var(--ink)]"
@@ -142,6 +154,7 @@ export default async function DestinationPage({
             </div>
           </div>
         </section>
+        )}
       </main>
       <SiteFooter />
     </>

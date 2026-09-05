@@ -70,6 +70,9 @@ export default async function PortalPage() {
         with: {
           events: { orderBy: [desc(schema.applicationEvents.createdAt)], limit: 5 },
         },
+        // Bounded in practice by "one applicant's own applications", but not
+        // by anything the query itself enforces.
+        limit: 50,
       })
     : [];
 

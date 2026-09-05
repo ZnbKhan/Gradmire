@@ -3,6 +3,7 @@ import { SiteHeader } from "@/components/brand/site-header";
 import { SiteFooter } from "@/components/brand/site-footer";
 import { ConsultationForm } from "@/components/forms/consultation-form";
 import { getCourseHubs } from "@/lib/queries";
+import { optionalContent } from "@/lib/safe-query";
 import { PRIMARY_DESTINATION } from "@/config/site";
 
 export const metadata: Metadata = {
@@ -18,7 +19,13 @@ export const metadata: Metadata = {
 export const revalidate = 3600;
 
 export default async function ContactPage() {
-  const hubs = await getCourseHubs(PRIMARY_DESTINATION);
+  // The form is the point of this page, and it submits fine without a course
+  // pre-selected — so a database outage must not take the page down with it.
+  const hubs = await optionalContent(
+    "contact course list",
+    () => getCourseHubs(PRIMARY_DESTINATION),
+    [],
+  );
   const courses = hubs.map((h) => ({ slug: h.slug, name: h.name }));
 
   return (

@@ -6,6 +6,7 @@ import { CoursePassCard } from "@/components/brand/course-pass-card";
 import { Reveal } from "@/components/motion/reveal";
 import { CountUp } from "@/components/motion/count-up";
 import { getDestinations, getCourseHubs } from "@/lib/queries";
+import { optionalContent } from "@/lib/safe-query";
 import { PRIMARY_DESTINATION } from "@/config/site";
 
 // Next requires route segment config to be a literal it can statically
@@ -46,9 +47,11 @@ export default async function HomePage() {
   // applications"; that single cookie read made the whole route dynamic, and
   // it was the only page on the site that missed the cache. The header
   // resolves the session in the browser now — see `SiteNav`.
+  // Both lists are supporting content: the page still sells without them, so
+  // a database outage degrades the sections rather than serving a crash page.
   const [destinations, hubs] = await Promise.all([
-    getDestinations(),
-    getCourseHubs(PRIMARY_DESTINATION),
+    optionalContent("homepage destinations", () => getDestinations(), []),
+    optionalContent("homepage course hubs", () => getCourseHubs(PRIMARY_DESTINATION), []),
   ]);
 
   const liveHubCount = hubs.filter((h) => h.status === "live").length;
@@ -87,10 +90,12 @@ export default async function HomePage() {
                   Take the quiz
                 </Link>
               </div>
-              <p className="text-[13.5px] text-ink-soft">
-                {liveHubCount} UK subject hubs live · {hubs.length - liveHubCount} in
-                research
-              </p>
+              {hubs.length > 0 && (
+                <p className="text-[13.5px] text-ink-soft">
+                  {liveHubCount} UK subject hubs live · {hubs.length - liveHubCount} in
+                  research
+                </p>
+              )}
             </div>
           </div>
         </section>
@@ -115,6 +120,7 @@ export default async function HomePage() {
         </section>
 
         {/* ---------- Destinations ---------- */}
+        {destinations.length > 0 && (
         <section id="destinations" className="px-7 py-[70px]">
           <div className="mx-auto max-w-[1180px]">
             <Reveal group className="mb-10 flex flex-wrap items-end justify-between gap-6">
@@ -185,8 +191,10 @@ export default async function HomePage() {
             </Reveal>
           </div>
         </section>
+        )}
 
         {/* ---------- Courses ---------- */}
+        {hubs.length > 0 && (
         <section
           id="courses"
           className="bg-ink px-7 py-[70px] text-paper [--perf-bg:var(--ink)]"
@@ -221,6 +229,7 @@ export default async function HomePage() {
             </Reveal>
           </div>
         </section>
+        )}
 
         {/* ---------- How it works ---------- */}
         <section className="px-7 py-[74px]">

@@ -13,6 +13,9 @@ export default async function AdminCoursesPage() {
   const hubs = await db.query.courseHubs.findMany({
     orderBy: [asc(schema.courseHubs.sortOrder)],
     with: { universities: { columns: { id: true } } },
+    // Well above the current row count; here so the page cannot silently
+    // become a full-table scan as content grows.
+    limit: 200,
   });
 
   return (

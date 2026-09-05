@@ -16,6 +16,7 @@ export default async function AdminOverview() {
       db.query.courseHubs.findMany({
         where: eq(schema.courseHubs.status, "live"),
         columns: { id: true, name: true, dataVerifiedAt: true },
+        limit: 200,
       }),
       db.query.leads.findMany({
         orderBy: [desc(schema.leads.createdAt)],

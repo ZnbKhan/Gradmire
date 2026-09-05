@@ -34,10 +34,15 @@ export async function updateLeadStatus(
 
   if (!parsed.success) return { ok: false, message: "Invalid status change." };
 
-  await db
-    .update(schema.leads)
-    .set({ status: parsed.data.status, updatedAt: new Date() })
-    .where(eq(schema.leads.id, parsed.data.leadId));
+  try {
+    await db
+      .update(schema.leads)
+      .set({ status: parsed.data.status, updatedAt: new Date() })
+      .where(eq(schema.leads.id, parsed.data.leadId));
+  } catch (error) {
+    console.error("[admin] updateLeadStatus failed", error);
+    return { ok: false, message: "Couldn't update that lead. Try again." };
+  }
 
   revalidatePath("/admin/leads");
   return { ok: true, message: "Lead updated." };
@@ -72,23 +77,28 @@ export async function updateApplicationStage(
 
   const { applicationId, stage, note, applicantNote } = parsed.data;
 
-  await db.transaction(async (tx) => {
-    await tx
-      .update(schema.applications)
-      .set({
-        stage,
-        applicantNote: applicantNote || null,
-        updatedAt: new Date(),
-      })
-      .where(eq(schema.applications.id, applicationId));
+  try {
+    await db.transaction(async (tx) => {
+      await tx
+        .update(schema.applications)
+        .set({
+          stage,
+          applicantNote: applicantNote || null,
+          updatedAt: new Date(),
+        })
+        .where(eq(schema.applications.id, applicationId));
 
-    await tx.insert(schema.applicationEvents).values({
-      applicationId,
-      stage,
-      note: note || null,
-      createdByStaffId: staff.id,
+      await tx.insert(schema.applicationEvents).values({
+        applicationId,
+        stage,
+        note: note || null,
+        createdByStaffId: staff.id,
+      });
     });
-  });
+  } catch (error) {
+    console.error("[admin] updateApplicationStage failed", error);
+    return { ok: false, message: "Couldn't move that application. Try again." };
+  }
 
   revalidatePath("/admin/applications");
   revalidatePath("/portal");
@@ -201,22 +211,27 @@ export async function updateCourseHub(
 
   const markVerified = formData.get("markVerified") === "on";
 
-  await db
-    .update(schema.courseHubs)
-    .set({
-      status: parsed.data.status,
-      oneLiner: (formData.get("oneLiner") as string) || null,
-      overview: (formData.get("overview") as string) || null,
-      tuitionMin: num(formData.get("tuitionMin")),
-      tuitionMax: num(formData.get("tuitionMax")),
-      livingCostMin: num(formData.get("livingCostMin")),
-      livingCostMax: num(formData.get("livingCostMax")),
-      salaryMin: num(formData.get("salaryMin")),
-      salaryMax: num(formData.get("salaryMax")),
-      ...(markVerified ? { dataVerifiedAt: new Date() } : {}),
-      updatedAt: new Date(),
-    })
-    .where(eq(schema.courseHubs.id, parsed.data.hubId));
+  try {
+    await db
+      .update(schema.courseHubs)
+      .set({
+        status: parsed.data.status,
+        oneLiner: (formData.get("oneLiner") as string) || null,
+        overview: (formData.get("overview") as string) || null,
+        tuitionMin: num(formData.get("tuitionMin")),
+        tuitionMax: num(formData.get("tuitionMax")),
+        livingCostMin: num(formData.get("livingCostMin")),
+        livingCostMax: num(formData.get("livingCostMax")),
+        salaryMin: num(formData.get("salaryMin")),
+        salaryMax: num(formData.get("salaryMax")),
+        ...(markVerified ? { dataVerifiedAt: new Date() } : {}),
+        updatedAt: new Date(),
+      })
+      .where(eq(schema.courseHubs.id, parsed.data.hubId));
+  } catch (error) {
+    console.error("[admin] updateCourseHub failed", error);
+    return { ok: false, message: "Couldn't save those changes. Try again." };
+  }
 
   // Content is cached by tag across requests; drop it so the public pages
   // pick the edit up on their next request rather than after the TTL.

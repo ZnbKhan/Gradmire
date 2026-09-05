@@ -67,6 +67,7 @@ without it.
 | --- | --- |
 | `npm run dev` | Local dev server |
 | `npm run build` | Production build (type + lint errors fail it) |
+| `npm test` | Run the test suite once (`npm run test:watch` to watch) |
 | `npm run db:generate` | Generate a migration from `src/db/schema.ts` |
 | `npm run db:migrate` | Apply generated migrations (use this) |
 | `npm run db:push` | Push the schema directly, without a migration (dev only) |

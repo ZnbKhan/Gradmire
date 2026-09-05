@@ -56,6 +56,17 @@ export default function RootLayout({
   return (
     <html lang="en" className={poppins.variable}>
       <body className="min-h-screen font-sans">
+        {/*
+          Marks the document as scripted before the rest of the body parses,
+          which is what lets globals.css hide the entrance-animated sections
+          without blanking the page for a visitor whose JavaScript never runs.
+          Inline and first, or the sections flash at full opacity.
+        */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: 'document.documentElement.classList.add("js")',
+          }}
+        />
         <a
           href="#main"
           className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100] focus:rounded-pill focus:bg-ink focus:px-5 focus:py-2.5 focus:text-sm focus:font-semibold focus:text-paper"

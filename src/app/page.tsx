@@ -3,6 +3,8 @@ import { ArrowRight } from "lucide-react";
 import { SiteHeader } from "@/components/brand/site-header";
 import { SiteFooter } from "@/components/brand/site-footer";
 import { CoursePassCard } from "@/components/brand/course-pass-card";
+import { Reveal } from "@/components/motion/reveal";
+import { CountUp } from "@/components/motion/count-up";
 import { getDestinations, getCourseHubs } from "@/lib/queries";
 import { PRIMARY_DESTINATION } from "@/config/site";
 
@@ -96,23 +98,26 @@ export default async function HomePage() {
         {/* ---------- Why the UK ---------- */}
         <section className="px-7 py-16">
           <div className="mx-auto max-w-[1180px]">
-            <div className="grid gap-px overflow-hidden rounded-2xl border border-line bg-line sm:grid-cols-2 lg:grid-cols-4">
+            {/* Revealed as one block, not per tile: the grid's gaps are its
+                own background showing through, so fading the tiles
+                individually would flash a bare line-coloured slab. */}
+            <Reveal className="grid gap-px overflow-hidden rounded-2xl border border-line bg-line sm:grid-cols-2 lg:grid-cols-4">
               {WHY_UK.map((item) => (
                 <div key={item.stat} className="bg-paper p-6">
                   <p className="font-display text-[28px] font-semibold text-ink">
-                    {item.stat}
+                    <CountUp value={item.stat} />
                   </p>
                   <p className="mt-1.5 text-[13.5px] text-ink-soft">{item.label}</p>
                 </div>
               ))}
-            </div>
+            </Reveal>
           </div>
         </section>
 
         {/* ---------- Destinations ---------- */}
         <section id="destinations" className="px-7 py-[70px]">
           <div className="mx-auto max-w-[1180px]">
-            <div className="mb-10 flex flex-wrap items-end justify-between gap-6">
+            <Reveal group className="mb-10 flex flex-wrap items-end justify-between gap-6">
               <div>
                 <span className="eyebrow">Study destinations</span>
                 <h2 className="mt-2.5 max-w-[20ch] text-[clamp(26px,3vw,36px)] font-semibold">
@@ -123,9 +128,9 @@ export default async function HomePage() {
                 We&rsquo;re building the most comprehensive course-first platform, one
                 destination at a time. The UK is live now.
               </p>
-            </div>
+            </Reveal>
 
-            <div className="grid gap-4.5 md:grid-cols-2 lg:grid-cols-[1.3fr_repeat(3,1fr)]">
+            <Reveal group className="grid gap-4.5 md:grid-cols-2 lg:grid-cols-[1.3fr_repeat(3,1fr)]">
               {destinations.map((d) =>
                 d.status === "live" ? (
                   <Link
@@ -177,7 +182,7 @@ export default async function HomePage() {
                   </div>
                 ),
               )}
-            </div>
+            </Reveal>
           </div>
         </section>
 
@@ -187,7 +192,7 @@ export default async function HomePage() {
           className="bg-ink px-7 py-[70px] text-paper [--perf-bg:var(--ink)]"
         >
           <div className="mx-auto max-w-[1180px]">
-            <div className="mb-10 flex flex-wrap items-end justify-between gap-6">
+            <Reveal group className="mb-10 flex flex-wrap items-end justify-between gap-6">
               <div>
                 <span className="eyebrow !text-gold before:!bg-gold">
                   Browse by course
@@ -199,9 +204,9 @@ export default async function HomePage() {
               <p className="max-w-[38ch] text-[15px] text-paper/60">
                 Every hub carries subject rankings, fees, deadlines and career outcomes.
               </p>
-            </div>
+            </Reveal>
 
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <Reveal group step={55} className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               {hubs.map((hub) => (
                 <CoursePassCard
                   key={hub.id}
@@ -213,21 +218,21 @@ export default async function HomePage() {
                   href={`/${PRIMARY_DESTINATION}/courses/${hub.slug}`}
                 />
               ))}
-            </div>
+            </Reveal>
           </div>
         </section>
 
         {/* ---------- How it works ---------- */}
         <section className="px-7 py-[74px]">
           <div className="mx-auto max-w-[1180px]">
-            <div className="mb-10">
+            <Reveal group className="mb-10">
               <span className="eyebrow">The journey</span>
               <h2 className="mt-2.5 max-w-[20ch] text-[clamp(26px,3vw,36px)] font-semibold">
                 Four stages, one boarding pass
               </h2>
-            </div>
+            </Reveal>
             {/* Numbered because this is a real sequence — each stage depends on the last. */}
-            <ol className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+            <Reveal as="ol" group step={110} className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
               {STEPS.map((step, i) => (
                 <li key={step.title}>
                   <div className="mb-5 flex h-[68px] w-[68px] items-center justify-center rounded-full border-[1.5px] border-ink font-display text-[22px]">
@@ -237,14 +242,14 @@ export default async function HomePage() {
                   <p className="text-[13.5px] text-ink-soft">{step.body}</p>
                 </li>
               ))}
-            </ol>
+            </Reveal>
           </div>
         </section>
 
         {/* ---------- Final CTA ---------- */}
         <section className="px-7 pb-[90px] pt-5">
           <div className="mx-auto max-w-[1180px]">
-            <div className="relative overflow-hidden rounded-3xl bg-ink px-8 py-14 text-center">
+            <Reveal className="relative overflow-hidden rounded-3xl bg-ink px-8 py-14 text-center">
               <span className="eyebrow justify-center !text-gold before:!bg-gold">
                 Ready when you are
               </span>
@@ -270,7 +275,7 @@ export default async function HomePage() {
                   Try course finder
                 </Link>
               </div>
-            </div>
+            </Reveal>
           </div>
         </section>
       </main>

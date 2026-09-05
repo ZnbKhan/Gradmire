@@ -188,3 +188,29 @@
     scroll-behavior: auto !important;
   }
 }
+
+/*
+ * Entrance-animation starting state, for the components in
+ * components/motion. Declared here rather than applied by the animation
+ * because an effect cannot run before the first paint — hiding these in
+ * JavaScript would show the finished layout and then blank it.
+ *
+ * Gated behind `.js`, added by the inline script in the root layout, so a
+ * visitor without JavaScript is served the page unhidden rather than empty.
+ */
+.js [data-reveal],
+.js [data-reveal-group] > * {
+  opacity: 0;
+}
+
+/*
+ * The global block above neutralises transitions, but these elements are
+ * hidden by a rule rather than moved by one, so reduced motion has to put
+ * them back or the section never appears at all.
+ */
+@media (prefers-reduced-motion: reduce) {
+  .js [data-reveal],
+  .js [data-reveal-group] > * {
+    opacity: 1;
+  }
+}

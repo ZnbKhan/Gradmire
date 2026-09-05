@@ -24,6 +24,8 @@ import { TOOLS, COMPANY_LINKS } from "@/config/site";
 import { createClient } from "@/lib/supabase/client";
 import type { Navigation } from "@/lib/nav";
 import { cn } from "@/lib/utils";
+import { Container } from "@/components/ui/container";
+import { Cta } from "@/components/ui/cta";
 
 /**
  * The interactive half of the header. Nav content arrives as props from the
@@ -150,7 +152,7 @@ export function SiteNav({
   // (Written without the utility name so Tailwind stops emitting the class.)
   return (
     <header className="sticky top-0 z-50 border-b border-line bg-paper">
-      <div className="mx-auto flex max-w-[1180px] items-center justify-between px-7 py-4">
+      <Container className="mx-auto flex items-center justify-between px-7 py-4">
         <Link
           href="/"
           className="flex items-center gap-2.5 font-display text-[21px] font-semibold text-ink"
@@ -180,7 +182,7 @@ export function SiteNav({
                         <span className="block text-[12px] text-ink-soft">{d.detail}</span>
                       )}
                     </span>
-                    <span className="mt-0.5 rounded-pill bg-brandgreen-dim px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-ink">
+                    <span className="mt-0.5 rounded-pill bg-brandgreen-dim px-2 py-0.5 font-mono text-micro uppercase tracking-wider text-ink">
                       Live
                     </span>
                   </Link>
@@ -198,7 +200,7 @@ export function SiteNav({
                       <span className="block text-[12px] text-ink-soft/70">{d.detail}</span>
                     )}
                   </span>
-                  <span className="mt-0.5 rounded-pill bg-paper-dim px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-ink-soft">
+                  <span className="mt-0.5 rounded-pill bg-paper-dim px-2 py-0.5 font-mono text-micro uppercase tracking-wider text-ink-soft">
                     Soon
                   </span>
                 </DropdownMenuItem>
@@ -279,17 +281,14 @@ export function SiteNav({
         <div className="flex items-center gap-2">
           <Link
             href={signedIn ? "/portal" : "/login"}
-            className="hidden rounded-pill px-4 py-2.5 text-[14px] font-medium text-ink transition-colors hover:text-coral-text sm:inline-flex"
+            className="hidden rounded-pill px-4 py-2.5 text-ui font-medium text-ink transition-colors hover:text-coral-text sm:inline-flex"
           >
             {signedIn ? "My applications" : "Sign in"}
           </Link>
-          <Link
-            href="/contact"
-            className="inline-flex items-center gap-2 rounded-pill bg-ink px-5 py-2.5 text-[14px] font-semibold text-paper transition-[transform,background-color] duration-150 ease-out hover:-translate-y-0.5 hover:bg-coral"
-          >
+          <Cta href="/contact" size="md">
             Book consultation
             <ArrowRight size={14} aria-hidden="true" />
-          </Link>
+          </Cta>
 
           <button
             type="button"
@@ -302,7 +301,7 @@ export function SiteNav({
             {open ? <X size={20} aria-hidden="true" /> : <Menu size={20} aria-hidden="true" />}
           </button>
         </div>
-      </div>
+      </Container>
 
       {/*
         A grid whose single row animates between 0fr and 1fr. That transitions
@@ -338,18 +337,18 @@ export function SiteNav({
                     key={d.slug}
                     href={`/${d.slug}`}
                     onClick={() => setOpen(false)}
-                    className="flex items-center gap-2.5 py-2 text-[14px] text-ink"
+                    className="flex items-center gap-2.5 py-2 text-ui text-ink"
                   >
                     {d.flagEmoji && <span aria-hidden="true">{d.flagEmoji}</span>}
                     {d.name}
-                    <span className="ml-auto font-mono text-[10px] uppercase tracking-wider text-ink-soft">
+                    <span className="ml-auto font-mono text-micro uppercase tracking-wider text-ink-soft">
                       Live
                     </span>
                   </Link>
                 ) : (
                   <span
                     key={d.slug}
-                    className="flex items-center gap-2.5 py-2 text-[14px] text-ink-soft"
+                    className="flex items-center gap-2.5 py-2 text-ui text-ink-soft"
                   >
                     {d.flagEmoji && (
                       <span aria-hidden="true" className="opacity-60">
@@ -357,7 +356,7 @@ export function SiteNav({
                       </span>
                     )}
                     {d.name}
-                    <span className="ml-auto font-mono text-[10px] uppercase tracking-wider">
+                    <span className="ml-auto font-mono text-micro uppercase tracking-wider">
                       Soon
                     </span>
                   </span>
@@ -378,14 +377,14 @@ export function SiteNav({
                     key={hub.slug}
                     href={hub.href}
                     onClick={() => setOpen(false)}
-                    className="block py-2 text-[14px] text-ink"
+                    className="block py-2 text-ui text-ink"
                   >
                     {hub.name}
                   </Link>
                 ) : (
-                  <span key={hub.slug} className="block py-2 text-[14px] text-ink-soft">
+                  <span key={hub.slug} className="block py-2 text-ui text-ink-soft">
                     {hub.name}{" "}
-                    <span className="font-mono text-[10px] uppercase tracking-wider">
+                    <span className="font-mono text-micro uppercase tracking-wider">
                       In research
                     </span>
                   </span>
@@ -404,7 +403,7 @@ export function SiteNav({
                 key={tool.href}
                 href={tool.href}
                 onClick={() => setOpen(false)}
-                className="block py-2 text-[14px] text-ink"
+                className="block py-2 text-ui text-ink"
               >
                 {tool.label}
               </Link>
@@ -416,7 +415,7 @@ export function SiteNav({
               key={l.href}
               href={l.href}
               onClick={() => setOpen(false)}
-              className="border-b border-line/60 py-3.5 text-[15px] font-medium text-ink"
+              className="border-b border-line/60 py-3.5 text-lede font-medium text-ink"
             >
               {l.label}
             </Link>
@@ -424,7 +423,7 @@ export function SiteNav({
           <Link
             href={signedIn ? "/portal" : "/login"}
             onClick={() => setOpen(false)}
-            className="py-3.5 text-[15px] font-medium text-coral-text"
+            className="py-3.5 text-lede font-medium text-coral-text"
           >
             {signedIn ? "My applications" : "Sign in"}
           </Link>
@@ -451,7 +450,7 @@ function MobileSection({
         type="button"
         onClick={onToggle}
         aria-expanded={expanded}
-        className="flex w-full items-center justify-between py-3.5 text-[15px] font-medium text-ink"
+        className="flex w-full items-center justify-between py-3.5 text-lede font-medium text-ink"
       >
         {label}
         <ChevronDown

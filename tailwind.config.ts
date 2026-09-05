@@ -43,10 +43,12 @@ const config = {
         warning: {
           DEFAULT: "hsl(var(--warning))",
           foreground: "hsl(var(--warning-foreground))",
+          "on-dark": "hsl(var(--warning-on-dark))",
         },
         success: {
           DEFAULT: "hsl(var(--success))",
           foreground: "hsl(var(--success-foreground))",
+          "on-dark": "hsl(var(--success-on-dark))",
         },
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -81,6 +83,27 @@ const config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+      },
+      /*
+       * The de-facto type scale, promoted from arbitrary values. These sizes
+       * were already in use — text-[13.5px] alone appeared 35 times — but
+       * were declared nowhere, so every new component re-guessed them.
+       *
+       * Deliberately named outside Tailwind's own scale. Redefining `sm` or
+       * `base` here would silently restyle every shadcn primitive that uses
+       * `text-sm` (button, badge, table, ...), so the defaults are left alone
+       * and these sit beside them.
+       *
+       * Size only, no paired line-height: `text-[13.5px]` never set one, so
+       * adding one here would silently reflow every line these replace.
+       */
+      fontSize: {
+        micro: "10px",
+        mini: "11px",
+        meta: "12.5px",
+        body: "13.5px",
+        ui: "14px",
+        lede: "15px",
       },
       fontFamily: {
         display: ["var(--font-poppins)", "system-ui", "sans-serif"],

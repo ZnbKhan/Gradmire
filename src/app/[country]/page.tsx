@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowRight } from "lucide-react";
 import { SiteHeader } from "@/components/brand/site-header";
@@ -9,6 +8,8 @@ import { getDestination, getDestinations, getCourseHubs } from "@/lib/queries";
 import { optionalContent } from "@/lib/safe-query";
 import { isDatabaseConfigured } from "@/db";
 import { PRIMARY_DESTINATION } from "@/config/site";
+import { Container } from "@/components/ui/container";
+import { Cta } from "@/components/ui/cta";
 
 // Next requires route segment config to be a literal it can statically
 // extract, so this cannot reference CONTENT_REVALIDATE_SECONDS directly.
@@ -88,13 +89,10 @@ export default async function DestinationPage({
               </p>
             )}
             {primary && (
-              <Link
-                href={`/${primary.slug}`}
-                className="inline-flex items-center gap-2 rounded-pill bg-ink px-6 py-3.5 text-[15px] font-semibold text-paper transition-colors hover:bg-coral"
-              >
+              <Cta href={`/${primary.slug}`}>
                 Explore {primary.name} courses
                 <ArrowRight size={15} aria-hidden="true" />
-              </Link>
+              </Cta>
             )}
           </div>
         </main>
@@ -114,7 +112,7 @@ export default async function DestinationPage({
       <SiteHeader />
       <main id="main">
         <section className="px-7 pb-12 pt-16">
-          <div className="mx-auto max-w-[1180px]">
+          <Container>
             <span className="eyebrow">Study destination</span>
             <h1 className="my-4 max-w-[16ch] text-[clamp(34px,4.6vw,54px)] font-semibold leading-[1.06]">
               Study in the {destination.name}
@@ -124,7 +122,7 @@ export default async function DestinationPage({
               subject-level rankings, real fee ranges, deadline windows and graduate
               salary bands.
             </p>
-          </div>
+          </Container>
         </section>
 
         {hubs.length > 0 && (
@@ -132,7 +130,7 @@ export default async function DestinationPage({
           id="courses"
           className="bg-ink px-7 py-[70px] text-paper [--perf-bg:var(--ink)]"
         >
-          <div className="mx-auto max-w-[1180px]">
+          <Container>
             <div className="mb-10">
               <span className="eyebrow !text-gold before:!bg-gold">Browse by course</span>
               <h2 className="mt-2.5 text-[clamp(26px,3vw,36px)] font-semibold text-white">
@@ -152,7 +150,7 @@ export default async function DestinationPage({
                 />
               ))}
             </div>
-          </div>
+          </Container>
         </section>
         )}
       </main>

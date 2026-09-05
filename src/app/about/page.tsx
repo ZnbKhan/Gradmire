@@ -119,7 +119,7 @@ function AboutPageContent() {
                 <p className="mt-2 text-sm text-muted-foreground">
                   {person.desc}
                 </p>
-                <p className="mt-2 text-[10px] uppercase tracking-wider text-muted-foreground/50">
+                <p className="mt-2 text-micro uppercase tracking-wider text-muted-foreground/50">
                   Placeholder profile
                 </p>
               </CardContent>

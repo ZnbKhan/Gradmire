@@ -20,14 +20,14 @@ export default function SignupPage() {
           <h1 className="mb-3 mt-3 text-[clamp(28px,3.6vw,38px)] font-semibold">
             Start tracking your application
           </h1>
-          <p className="mb-8 text-[15px] text-ink-soft">
+          <p className="mb-8 text-lede text-ink-soft">
             Tell us your name and email — we&rsquo;ll send a sign-in link, no password
             to remember.
           </p>
 
           <SignupForm />
 
-          <p className="mt-6 text-center text-[13.5px] text-ink-soft">
+          <p className="mt-6 text-center text-body text-ink-soft">
             Already have an account?{" "}
             <Link href="/login" className="font-medium text-ink underline underline-offset-2">
               Sign in

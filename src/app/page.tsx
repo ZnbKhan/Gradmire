@@ -8,6 +8,8 @@ import { CountUp } from "@/components/motion/count-up";
 import { getDestinations, getCourseHubs } from "@/lib/queries";
 import { optionalContent } from "@/lib/safe-query";
 import { PRIMARY_DESTINATION } from "@/config/site";
+import { Container } from "@/components/ui/container";
+import { Cta } from "@/components/ui/cta";
 
 // Next requires route segment config to be a literal it can statically
 // extract, so this cannot reference CONTENT_REVALIDATE_SECONDS directly.
@@ -63,7 +65,7 @@ export default async function HomePage() {
       <main id="main">
         {/* ---------- Hero ---------- */}
         <section className="px-7 pb-10 pt-16">
-          <div className="mx-auto max-w-[1180px]">
+          <Container>
             <div className="max-w-[640px]">
               <span className="eyebrow">Study abroad, reordered</span>
               <h1 className="my-[18px] max-w-[15ch] text-[clamp(34px,4.6vw,58px)] font-semibold leading-[1.05]">
@@ -76,33 +78,31 @@ export default async function HomePage() {
                 first, then the universities and cities built around them.
               </p>
               <div className="mb-[34px] flex flex-wrap gap-3.5">
-                <Link
+                <Cta
                   href="#courses"
-                  className="inline-flex items-center gap-2 rounded-pill bg-coral px-6 py-3.5 text-[15px] font-semibold text-white shadow-[0_10px_22px_-10px_rgba(228,57,14,0.55)] transition-transform hover:-translate-y-0.5"
+                  variant="coral"
+                  className="shadow-[0_10px_22px_-10px_rgba(228,57,14,0.55)]"
                 >
                   Find my course
                   <ArrowRight size={15} aria-hidden="true" />
-                </Link>
-                <Link
-                  href="/tools/course-finder"
-                  className="inline-flex items-center gap-2 rounded-pill border-[1.5px] border-ink px-6 py-3.5 text-[15px] font-semibold text-ink transition-colors hover:bg-ink hover:text-paper"
-                >
+                </Cta>
+                <Cta href="/tools/course-finder" variant="outline">
                   Take the quiz
-                </Link>
+                </Cta>
               </div>
               {hubs.length > 0 && (
-                <p className="text-[13.5px] text-ink-soft">
+                <p className="text-body text-ink-soft">
                   {liveHubCount} UK subject hubs live · {hubs.length - liveHubCount} in
                   research
                 </p>
               )}
             </div>
-          </div>
+          </Container>
         </section>
 
         {/* ---------- Why the UK ---------- */}
         <section className="px-7 py-16">
-          <div className="mx-auto max-w-[1180px]">
+          <Container>
             {/* Revealed as one block, not per tile: the grid's gaps are its
                 own background showing through, so fading the tiles
                 individually would flash a bare line-coloured slab. */}
@@ -112,17 +112,17 @@ export default async function HomePage() {
                   <p className="font-display text-[28px] font-semibold text-ink">
                     <CountUp value={item.stat} />
                   </p>
-                  <p className="mt-1.5 text-[13.5px] text-ink-soft">{item.label}</p>
+                  <p className="mt-1.5 text-body text-ink-soft">{item.label}</p>
                 </div>
               ))}
             </Reveal>
-          </div>
+          </Container>
         </section>
 
         {/* ---------- Destinations ---------- */}
         {destinations.length > 0 && (
         <section id="destinations" className="px-7 py-[70px]">
-          <div className="mx-auto max-w-[1180px]">
+          <Container>
             <Reveal group className="mb-10 flex flex-wrap items-end justify-between gap-6">
               <div>
                 <span className="eyebrow">Study destinations</span>
@@ -130,7 +130,7 @@ export default async function HomePage() {
                   Where will you study?
                 </h2>
               </div>
-              <p className="max-w-[38ch] text-[15px] text-ink-soft">
+              <p className="max-w-[38ch] text-lede text-ink-soft">
                 We&rsquo;re building the most comprehensive course-first platform, one
                 destination at a time. The UK is live now.
               </p>
@@ -154,11 +154,11 @@ export default async function HomePage() {
                         {d.flagEmoji}
                       </div>
                       <h3 className="mb-1.5 text-[23px] font-semibold">{d.name}</h3>
-                      <p className="max-w-[26ch] text-[13.5px] opacity-85">
+                      <p className="max-w-[26ch] text-body opacity-85">
                         {d.tagline}. Live now — {hubs.length} subject hubs.
                       </p>
                     </div>
-                    <span className="mt-4 inline-flex items-center gap-2 text-[13.5px] font-semibold">
+                    <span className="mt-4 inline-flex items-center gap-2 text-body font-semibold">
                       Explore courses
                       <ArrowRight size={13} aria-hidden="true" />
                     </span>
@@ -178,18 +178,18 @@ export default async function HomePage() {
                         {d.flagEmoji}
                       </div>
                       <h3 className="mb-1.5 text-[23px] font-semibold">{d.name}</h3>
-                      <p className="max-w-[26ch] text-[13.5px] text-ink-soft">
+                      <p className="max-w-[26ch] text-body text-ink-soft">
                         {d.tagline}
                       </p>
                     </div>
-                    <span className="mt-4 text-[13.5px] font-medium text-ink-soft">
+                    <span className="mt-4 text-body font-medium text-ink-soft">
                       Coming soon
                     </span>
                   </div>
                 ),
               )}
             </Reveal>
-          </div>
+          </Container>
         </section>
         )}
 
@@ -199,7 +199,7 @@ export default async function HomePage() {
           id="courses"
           className="bg-ink px-7 py-[70px] text-paper [--perf-bg:var(--ink)]"
         >
-          <div className="mx-auto max-w-[1180px]">
+          <Container>
             <Reveal group className="mb-10 flex flex-wrap items-end justify-between gap-6">
               <div>
                 <span className="eyebrow !text-gold before:!bg-gold">
@@ -209,7 +209,7 @@ export default async function HomePage() {
                   What do you want to study?
                 </h2>
               </div>
-              <p className="max-w-[38ch] text-[15px] text-paper/60">
+              <p className="max-w-[38ch] text-lede text-paper/60">
                 Every hub carries subject rankings, fees, deadlines and career outcomes.
               </p>
             </Reveal>
@@ -227,13 +227,13 @@ export default async function HomePage() {
                 />
               ))}
             </Reveal>
-          </div>
+          </Container>
         </section>
         )}
 
         {/* ---------- How it works ---------- */}
         <section className="px-7 py-[74px]">
-          <div className="mx-auto max-w-[1180px]">
+          <Container>
             <Reveal group className="mb-10">
               <span className="eyebrow">The journey</span>
               <h2 className="mt-2.5 max-w-[20ch] text-[clamp(26px,3vw,36px)] font-semibold">
@@ -248,16 +248,16 @@ export default async function HomePage() {
                     {String(i + 1).padStart(2, "0")}
                   </div>
                   <h3 className="mb-2 text-[17px] font-semibold">{step.title}</h3>
-                  <p className="text-[13.5px] text-ink-soft">{step.body}</p>
+                  <p className="text-body text-ink-soft">{step.body}</p>
                 </li>
               ))}
             </Reveal>
-          </div>
+          </Container>
         </section>
 
         {/* ---------- Final CTA ---------- */}
         <section className="px-7 pb-[90px] pt-5">
-          <div className="mx-auto max-w-[1180px]">
+          <Container>
             <Reveal className="relative overflow-hidden rounded-3xl bg-ink px-8 py-14 text-center">
               <span className="eyebrow justify-center !text-gold before:!bg-gold">
                 Ready when you are
@@ -265,27 +265,29 @@ export default async function HomePage() {
               <h2 className="mx-auto mb-4 mt-3 max-w-[16ch] text-[clamp(28px,3.6vw,42px)] font-semibold text-white">
                 Ready to find your course?
               </h2>
-              <p className="mx-auto mb-8 max-w-[42ch] text-[15px] text-paper/60">
+              <p className="mx-auto mb-8 max-w-[42ch] text-lede text-paper/60">
                 Book a free consultation. We&rsquo;ll help you shortlist the right
                 programmes and guide you through every step, deadline to visa.
               </p>
               <div className="flex flex-wrap justify-center gap-3.5">
-                <Link
+                <Cta
                   href="/contact"
-                  className="inline-flex items-center gap-2 rounded-pill bg-white px-6 py-3.5 text-[15px] font-semibold text-ink transition-colors hover:bg-gold hover:text-white"
+                  variant="onDark"
+                  className="hover:bg-gold hover:text-white"
                 >
                   Book free consultation
                   <ArrowRight size={15} aria-hidden="true" />
-                </Link>
-                <Link
+                </Cta>
+                <Cta
                   href="/tools/course-finder"
-                  className="inline-flex items-center gap-2 rounded-pill border-[1.5px] border-white/35 px-6 py-3.5 text-[15px] font-semibold text-white transition-colors hover:bg-white/10"
+                  variant="outline"
+                  className="border-white/35 text-white hover:bg-white/10 hover:text-white"
                 >
                   Try course finder
-                </Link>
+                </Cta>
               </div>
             </Reveal>
-          </div>
+          </Container>
         </section>
       </main>
 

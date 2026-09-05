@@ -2,6 +2,7 @@ import Link from "next/link";
 import { NewsletterForm } from "@/components/forms/newsletter-form";
 import { getNavigation } from "@/lib/nav";
 import { TOOLS, COMPANY_LINKS } from "@/config/site";
+import { Container } from "@/components/ui/container";
 
 /** How many live course hubs the footer highlights. */
 const FEATURED_HUB_COUNT = 3;
@@ -54,14 +55,14 @@ export async function SiteFooter() {
 
   return (
     <footer className="bg-ink text-paper/70">
-      <div className="mx-auto max-w-[1180px] px-7">
+      <Container className="px-7">
         <div className="grid grid-cols-2 gap-8 border-b border-white/10 py-[60px] md:grid-cols-3 lg:grid-cols-5">
           <div className="col-span-2 lg:col-span-1">
             <span className="flex items-center gap-2.5 font-display text-[21px] font-semibold text-white">
               <span aria-hidden="true" className="h-[9px] w-[9px] rounded-full bg-coral" />
               Gradmire
             </span>
-            <p className="mt-3 max-w-[30ch] text-[13.5px] text-paper/60">
+            <p className="mt-3 max-w-[30ch] text-body text-paper/60">
               Study abroad, organized by subject — not by flag.
             </p>
             <NewsletterForm className="mt-5" />
@@ -77,7 +78,7 @@ export async function SiteFooter() {
                 <ul className="space-y-2.5">
                   {col.links.map((l) => (
                     <li key={l.label}>
-                      <Link href={l.href} className="text-[13.5px] hover:text-white">
+                      <Link href={l.href} className="text-body hover:text-white">
                         {l.label}
                       </Link>
                     </li>
@@ -87,14 +88,14 @@ export async function SiteFooter() {
             ))}
         </div>
 
-        <div className="flex flex-wrap items-center justify-between gap-3 py-6 text-[12.5px]">
+        <div className="flex flex-wrap items-center justify-between gap-3 py-6 text-meta">
           <span>© {new Date().getFullYear()} Gradmire. All rights reserved.</span>
           <span className="flex gap-5">
             <Link href="/privacy" className="hover:text-white">Privacy</Link>
             <Link href="/terms" className="hover:text-white">Terms</Link>
           </span>
         </div>
-      </div>
+      </Container>
     </footer>
   );
 }

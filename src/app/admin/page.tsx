@@ -44,7 +44,7 @@ export default async function AdminOverview() {
             href={t.href}
             className="rounded-2xl border border-line bg-white p-5 transition-colors hover:border-ink"
           >
-            <span className="block font-mono text-[11px] uppercase tracking-[0.08em] text-ink-soft">
+            <span className="block font-mono text-mini uppercase tracking-[0.08em] text-ink-soft">
               {t.label}
             </span>
             <span className="mt-2 block font-display text-[32px] font-semibold tabular">
@@ -56,10 +56,10 @@ export default async function AdminOverview() {
 
       {unverified.length > 0 && (
         <div className="mb-10 rounded-2xl border-l-[3px] border-coral bg-coral-dim px-5 py-4">
-          <h2 className="mb-1 text-[15px] font-semibold">
+          <h2 className="mb-1 text-lede font-semibold">
             {unverified.length} live {unverified.length === 1 ? "hub carries" : "hubs carry"} unverified figures
           </h2>
-          <p className="text-[13.5px] text-ink-soft">
+          <p className="text-body text-ink-soft">
             Rankings and fees were seeded as placeholders. Verify them against the
             current subject tables, then mark them verified in Course content:{" "}
             {unverified.map((h) => h.name).join(", ")}.
@@ -69,7 +69,7 @@ export default async function AdminOverview() {
 
       <h2 className="mb-4 text-[20px] font-semibold">Latest enquiries</h2>
       {recentLeads.length === 0 ? (
-        <p className="rounded-2xl border border-dashed border-line bg-white p-8 text-center text-[14px] text-ink-soft">
+        <p className="rounded-2xl border border-dashed border-line bg-white p-8 text-center text-ui text-ink-soft">
           No consultation requests yet.
         </p>
       ) : (
@@ -78,7 +78,7 @@ export default async function AdminOverview() {
             <thead>
               <tr className="border-b border-line">
                 {["Name", "Email", "Intake", "Received", "Status"].map((h) => (
-                  <th key={h} scope="col" className="px-4 py-3 text-left font-mono text-[11px] font-medium uppercase tracking-[0.08em] text-ink-soft">
+                  <th key={h} scope="col" className="px-4 py-3 text-left font-mono text-mini font-medium uppercase tracking-[0.08em] text-ink-soft">
                     {h}
                   </th>
                 ))}
@@ -90,11 +90,11 @@ export default async function AdminOverview() {
                   <td className="px-4 py-3 font-medium">{l.fullName}</td>
                   <td className="px-4 py-3 text-ink-soft">{l.email}</td>
                   <td className="px-4 py-3 text-ink-soft">{l.preferredIntake ?? "—"}</td>
-                  <td className="px-4 py-3 font-mono text-[12.5px] text-ink-soft">
+                  <td className="px-4 py-3 font-mono text-meta text-ink-soft">
                     {l.createdAt.toLocaleDateString("en-GB")}
                   </td>
                   <td className="px-4 py-3">
-                    <span className="rounded-pill bg-paper-dim px-2.5 py-1 font-mono text-[11px] uppercase">
+                    <span className="rounded-pill bg-paper-dim px-2.5 py-1 font-mono text-mini uppercase">
                       {l.status}
                     </span>
                   </td>

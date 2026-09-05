@@ -37,7 +37,7 @@ export function NewsletterForm({ className }: { className?: string }) {
           type="email"
           required
           placeholder="you@email.com"
-          className="min-w-0 flex-1 rounded-pill border border-white/20 bg-white/5 px-4 py-2 text-[13.5px] text-white placeholder:text-white/40"
+          className="min-w-0 flex-1 rounded-pill border border-white/20 bg-white/5 px-4 py-2 text-body text-white placeholder:text-white/40"
         />
         {/* Honeypot — hidden from people, tempting to bots. */}
         <input
@@ -54,8 +54,8 @@ export function NewsletterForm({ className }: { className?: string }) {
         <p
           role="status"
           className={cn(
-            "mt-2 text-[12.5px]",
-            state.ok ? "text-[#8fe3b6]" : "text-[#f4c06a]",
+            "mt-2 text-meta",
+            state.ok ? "text-success-on-dark" : "text-warning-on-dark",
           )}
         >
           {state.message}

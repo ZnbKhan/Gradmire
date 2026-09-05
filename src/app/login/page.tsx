@@ -38,14 +38,14 @@ export default async function LoginPage({
           <h1 className="mb-3 mt-3 text-[clamp(28px,3.6vw,38px)] font-semibold">
             Check your application status
           </h1>
-          <p className="mb-8 text-[15px] text-ink-soft">
+          <p className="mb-8 text-lede text-ink-soft">
             Enter the email on your account. We&rsquo;ll send a sign-in link — no
             password to remember.
           </p>
           {errorMessage && (
             <p
               role="alert"
-              className="mb-6 rounded-lg border border-destructive/30 bg-destructive/5 px-4 py-3 text-[13.5px] text-destructive"
+              className="mb-6 rounded-lg border border-destructive/30 bg-destructive/5 px-4 py-3 text-body text-destructive"
             >
               {errorMessage}
             </p>
@@ -53,7 +53,7 @@ export default async function LoginPage({
 
           <LoginForm nextPath={nextPath} />
 
-          <p className="mt-6 text-center text-[13.5px] text-ink-soft">
+          <p className="mt-6 text-center text-body text-ink-soft">
             New here?{" "}
             <Link href="/signup" className="font-medium text-ink underline underline-offset-2">
               Create an account

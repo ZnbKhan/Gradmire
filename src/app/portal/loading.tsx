@@ -1,3 +1,4 @@
+import { Container } from "@/components/ui/container";
 /**
  * `/portal` is force-dynamic and does three sequential round trips before it
  * can render anything. Without a loading state the browser sat on a blank
@@ -6,7 +7,7 @@
 export default function PortalLoading() {
   return (
     <main id="main" className="px-7 py-14">
-      <div className="mx-auto max-w-[1180px]">
+      <Container>
         <div className="h-4 w-40 animate-pulse rounded-pill bg-paper-dim" />
         <div className="mt-4 h-9 w-72 animate-pulse rounded-lg bg-paper-dim" />
 
@@ -21,7 +22,7 @@ export default function PortalLoading() {
             </div>
           ))}
         </div>
-      </div>
+      </Container>
     </main>
   );
 }

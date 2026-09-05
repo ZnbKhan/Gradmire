@@ -21,7 +21,7 @@ export default async function LeadsPage() {
       </p>
 
       {leads.length === 0 ? (
-        <p className="rounded-2xl border border-dashed border-line bg-white p-10 text-center text-[14px] text-ink-soft">
+        <p className="rounded-2xl border border-dashed border-line bg-white p-10 text-center text-ui text-ink-soft">
           No enquiries yet.
         </p>
       ) : (
@@ -31,19 +31,19 @@ export default async function LeadsPage() {
               <div className="mb-3 flex flex-wrap items-start justify-between gap-4">
                 <div>
                   <h2 className="text-[17px] font-semibold">{lead.fullName}</h2>
-                  <p className="text-[13.5px] text-ink-soft">
+                  <p className="text-body text-ink-soft">
                     <a href={`mailto:${lead.email}`} className="underline">
                       {lead.email}
                     </a>
                     {lead.phone && ` · ${lead.phone}`}
                   </p>
                 </div>
-                <span className="font-mono text-[11px] uppercase tracking-wider text-ink-soft">
+                <span className="font-mono text-mini uppercase tracking-wider text-ink-soft">
                   {lead.createdAt.toLocaleString("en-GB")}
                 </span>
               </div>
 
-              <dl className="mb-3 grid gap-2 text-[13.5px] sm:grid-cols-3">
+              <dl className="mb-3 grid gap-2 text-body sm:grid-cols-3">
                 <div>
                   <dt className="font-mono text-[10.5px] uppercase tracking-wider text-ink-soft">Course</dt>
                   <dd>{lead.courseHub?.name ?? "Not sure yet"}</dd>
@@ -59,7 +59,7 @@ export default async function LeadsPage() {
               </dl>
 
               {lead.message && (
-                <p className="mb-3 rounded-lg bg-paper-dim px-4 py-3 text-[13.5px]">
+                <p className="mb-3 rounded-lg bg-paper-dim px-4 py-3 text-body">
                   {lead.message}
                 </p>
               )}

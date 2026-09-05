@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { CheckCircle2, ArrowRight } from "lucide-react";
 import { submitConsultation, type FormState } from "@/lib/actions/consultation";
 import { upcomingIntakes } from "@/config/site";
+import { CtaButton } from "@/components/ui/cta";
 import { cn } from "@/lib/utils";
 
 const INTAKE_OPTIONS = upcomingIntakes();
@@ -32,7 +33,7 @@ function Field({
   const errId = `${id}-error`;
   return (
     <div>
-      <label htmlFor={id} className="mb-1.5 block text-[13.5px] font-medium text-ink">
+      <label htmlFor={id} className="mb-1.5 block text-body font-medium text-ink">
         {label} {required && <span className="text-coral-text">*</span>}
       </label>
       <input
@@ -49,7 +50,7 @@ function Field({
         {...rest}
       />
       {errors && (
-        <p id={errId} className="mt-1.5 text-[12.5px] text-destructive">
+        <p id={errId} className="mt-1.5 text-meta text-destructive">
           {errors[0]}
         </p>
       )}
@@ -60,14 +61,10 @@ function Field({
 function SubmitButton() {
   const { pending } = useFormStatus();
   return (
-    <button
-      type="submit"
-      disabled={pending}
-      className="inline-flex w-full items-center justify-center gap-2 rounded-pill bg-coral px-6 py-3.5 text-[15px] font-semibold text-white transition-[transform,opacity] duration-150 ease-out hover:-translate-y-0.5 disabled:translate-y-0 disabled:opacity-70"
-    >
+    <CtaButton type="submit" disabled={pending} variant="coral" block>
       {pending ? "Booking…" : "Book free consultation"}
       {!pending && <ArrowRight size={15} aria-hidden="true" />}
-    </button>
+    </CtaButton>
   );
 }
 
@@ -135,7 +132,7 @@ export function ConsultationForm({ courses }: { courses: CourseOption[] }) {
         <div>
           <label
             htmlFor="field-preferredIntake"
-            className="mb-1.5 block text-[13.5px] font-medium text-ink"
+            className="mb-1.5 block text-body font-medium text-ink"
           >
             Preferred intake
           </label>
@@ -158,7 +155,7 @@ export function ConsultationForm({ courses }: { courses: CourseOption[] }) {
       <div>
         <label
           htmlFor="field-courseHubSlug"
-          className="mb-1.5 block text-[13.5px] font-medium text-ink"
+          className="mb-1.5 block text-body font-medium text-ink"
         >
           Course of interest
         </label>
@@ -180,7 +177,7 @@ export function ConsultationForm({ courses }: { courses: CourseOption[] }) {
       <div>
         <label
           htmlFor="field-message"
-          className="mb-1.5 block text-[13.5px] font-medium text-ink"
+          className="mb-1.5 block text-body font-medium text-ink"
         >
           Anything else we should know?
         </label>
@@ -194,13 +191,13 @@ export function ConsultationForm({ courses }: { courses: CourseOption[] }) {
       </div>
 
       {state.message && !state.ok && (
-        <p role="alert" className="text-[13.5px] text-destructive">
+        <p role="alert" className="text-body text-destructive">
           {state.message}
         </p>
       )}
 
       <SubmitButton />
-      <p className="text-center text-[12.5px] text-ink-soft">
+      <p className="text-center text-meta text-ink-soft">
         Free, no obligation. We reply within one working day.
       </p>
     </form>

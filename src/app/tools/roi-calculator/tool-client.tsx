@@ -98,7 +98,7 @@ export default function ROICalculatorPage({ hubs }: { hubs: CourseHub[] }) {
                   <span>{c.flagEmoji}</span>
                   {c.shortLabel}
                   {!c.live && (
-                    <Badge variant="secondary" className="ml-1 text-[10px]">
+                    <Badge variant="secondary" className="ml-1 text-micro">
                       Soon
                     </Badge>
                   )}

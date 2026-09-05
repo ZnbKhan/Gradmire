@@ -66,6 +66,12 @@
     --warning-foreground: 30 80% 18%;
     --success: var(--brand-green);
     --success-foreground: 0 0% 100%;
+
+    /* Status text on a permanently-dark surface (the footer). The plain
+       --success/--warning cuts are tuned for contrast against paper and go
+       nearly invisible on ink, so they cannot be reused there. */
+    --success-on-dark: 148 60% 73%;
+    --warning-on-dark: 37 86% 69%;
   }
 
   .dark {
@@ -138,7 +144,7 @@
 @layer components {
   /* Mono eyebrow used above every section heading. */
   .eyebrow {
-    @apply flex items-center gap-2.5 font-mono text-[12.5px] font-medium uppercase tracking-[0.14em] text-coral-text;
+    @apply flex items-center gap-2.5 font-mono text-meta font-medium uppercase tracking-[0.14em] text-coral-text;
   }
   .eyebrow::before {
     content: "";

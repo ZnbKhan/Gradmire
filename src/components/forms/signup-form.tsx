@@ -4,6 +4,7 @@ import { useActionState } from "react";
 import { useFormStatus } from "react-dom";
 import { MailCheck } from "lucide-react";
 import { signUp } from "@/lib/actions/auth";
+import { CtaButton } from "@/components/ui/cta";
 import type { FormState } from "@/lib/actions/consultation";
 
 const initial: FormState = { ok: false };
@@ -11,13 +12,9 @@ const initial: FormState = { ok: false };
 function SubmitButton() {
   const { pending } = useFormStatus();
   return (
-    <button
-      type="submit"
-      disabled={pending}
-      className="w-full rounded-pill bg-ink px-6 py-3.5 text-[15px] font-semibold text-paper transition-colors hover:bg-coral disabled:opacity-70"
-    >
+    <CtaButton type="submit" disabled={pending} block>
       {pending ? "Creating account…" : "Create account"}
-    </button>
+    </CtaButton>
   );
 }
 
@@ -29,7 +26,7 @@ export function SignupForm() {
       <div className="rounded-2xl border border-brandgreen/30 bg-brandgreen-dim p-7 text-center">
         <MailCheck size={30} className="mx-auto mb-3.5 text-brandgreen" aria-hidden="true" />
         <h2 className="mb-2 text-[19px] font-semibold">Check your inbox</h2>
-        <p role="status" className="text-[14px] text-ink-soft">
+        <p role="status" className="text-ui text-ink-soft">
           {state.message}
         </p>
       </div>
@@ -48,7 +45,7 @@ export function SignupForm() {
       />
 
       <div>
-        <label htmlFor="signup-fullName" className="mb-1.5 block text-[13.5px] font-medium">
+        <label htmlFor="signup-fullName" className="mb-1.5 block text-body font-medium">
           Full name
         </label>
         <input
@@ -63,14 +60,14 @@ export function SignupForm() {
           className="w-full rounded-lg border border-line bg-white px-3.5 py-2.5 text-[14.5px]"
         />
         {state.fieldErrors?.fullName && (
-          <p id="signup-fullName-error" className="mt-1.5 text-[12.5px] text-destructive">
+          <p id="signup-fullName-error" className="mt-1.5 text-meta text-destructive">
             {state.fieldErrors.fullName[0]}
           </p>
         )}
       </div>
 
       <div>
-        <label htmlFor="signup-email" className="mb-1.5 block text-[13.5px] font-medium">
+        <label htmlFor="signup-email" className="mb-1.5 block text-body font-medium">
           Email address
         </label>
         <input
@@ -85,14 +82,14 @@ export function SignupForm() {
           className="w-full rounded-lg border border-line bg-white px-3.5 py-2.5 text-[14.5px]"
         />
         {state.fieldErrors?.email && (
-          <p id="signup-email-error" className="mt-1.5 text-[12.5px] text-destructive">
+          <p id="signup-email-error" className="mt-1.5 text-meta text-destructive">
             {state.fieldErrors.email[0]}
           </p>
         )}
       </div>
 
       {!state.ok && state.message && (
-        <p role="alert" className="text-[13.5px] text-destructive">
+        <p role="alert" className="text-body text-destructive">
           {state.message}
         </p>
       )}

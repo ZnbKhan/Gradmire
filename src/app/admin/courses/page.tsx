@@ -1,13 +1,13 @@
 import { asc } from "drizzle-orm";
 import { db, schema } from "@/db";
-import { ActionForm } from "@/components/admin/action-form";
+import { ActionForm, FieldLabel } from "@/components/admin/action-form";
 import { updateCourseHub } from "@/lib/actions/admin";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Course content" };
 
 const inputCls =
-  "w-full rounded-lg border border-line bg-white px-3 py-2 text-[13.5px]";
+  "w-full rounded-lg border border-line bg-white px-3 py-2 text-body";
 
 export default async function AdminCoursesPage() {
   const hubs = await db.query.courseHubs.findMany({
@@ -33,11 +33,11 @@ export default async function AdminCoursesPage() {
           <li key={hub.id} className="rounded-2xl border border-line bg-white p-6">
             <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
               <div>
-                <span className="font-mono text-[11px] uppercase tracking-[0.1em] text-coral-text">
+                <span className="font-mono text-mini uppercase tracking-[0.1em] text-coral-text">
                   {hub.code}
                 </span>
                 <h2 className="text-[18px] font-semibold">{hub.name}</h2>
-                <p className="text-[12.5px] text-ink-soft">
+                <p className="text-meta text-ink-soft">
                   {hub.universities.length} universities ·{" "}
                   {hub.dataVerifiedAt
                     ? `verified ${hub.dataVerifiedAt.toLocaleDateString("en-GB")}`
@@ -45,7 +45,7 @@ export default async function AdminCoursesPage() {
                 </p>
               </div>
               {!hub.dataVerifiedAt && hub.status === "live" && (
-                <span className="rounded-pill bg-coral-dim px-3 py-1.5 font-mono text-[11px] uppercase tracking-wider text-coral-text">
+                <span className="rounded-pill bg-coral-dim px-3 py-1.5 font-mono text-mini uppercase tracking-wider text-coral-text">
                   Unverified
                 </span>
               )}
@@ -56,7 +56,7 @@ export default async function AdminCoursesPage() {
               <div className="grid gap-3">
                 <div className="grid gap-3 sm:grid-cols-4">
                   <div>
-                    <label htmlFor={`status-${hub.id}`} className="mb-1 block text-[12.5px] font-medium">Status</label>
+                    <FieldLabel htmlFor={`status-${hub.id}`}>Status</FieldLabel>
                     <select id={`status-${hub.id}`} name="status" defaultValue={hub.status} className={inputCls}>
                       <option value="live">Live</option>
                       <option value="stub">Stub (hidden)</option>
@@ -71,9 +71,9 @@ export default async function AdminCoursesPage() {
                     ["salaryMax", "Salary max", hub.salaryMax],
                   ] as const).map(([name, label, value]) => (
                     <div key={name}>
-                      <label htmlFor={`${name}-${hub.id}`} className="mb-1 block text-[12.5px] font-medium">
+                      <FieldLabel htmlFor={`${name}-${hub.id}`}>
                         {label}
-                      </label>
+                      </FieldLabel>
                       <input
                         id={`${name}-${hub.id}`}
                         name={name}
@@ -86,9 +86,9 @@ export default async function AdminCoursesPage() {
                 </div>
 
                 <div>
-                  <label htmlFor={`oneLiner-${hub.id}`} className="mb-1 block text-[12.5px] font-medium">
+                  <FieldLabel htmlFor={`oneLiner-${hub.id}`}>
                     One-liner
-                  </label>
+                  </FieldLabel>
                   <textarea
                     id={`oneLiner-${hub.id}`}
                     name="oneLiner"
@@ -98,9 +98,9 @@ export default async function AdminCoursesPage() {
                   />
                 </div>
                 <div>
-                  <label htmlFor={`overview-${hub.id}`} className="mb-1 block text-[12.5px] font-medium">
+                  <FieldLabel htmlFor={`overview-${hub.id}`}>
                     Overview
-                  </label>
+                  </FieldLabel>
                   <textarea
                     id={`overview-${hub.id}`}
                     name="overview"

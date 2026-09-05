@@ -5,6 +5,7 @@ import { ConsultationForm } from "@/components/forms/consultation-form";
 import { getCourseHubs } from "@/lib/queries";
 import { optionalContent } from "@/lib/safe-query";
 import { PRIMARY_DESTINATION } from "@/config/site";
+import { Container } from "@/components/ui/container";
 
 export const metadata: Metadata = {
   title: "Book a free consultation",
@@ -32,7 +33,7 @@ export default async function ContactPage() {
     <>
       <SiteHeader />
       <main id="main" className="px-7 py-16">
-        <div className="mx-auto grid max-w-[1180px] gap-14 lg:grid-cols-[0.9fr_1.1fr]">
+        <Container className="mx-auto grid gap-14 lg:grid-cols-[0.9fr_1.1fr]">
           <div>
             <span className="eyebrow">Talk to a counselor</span>
             <h1 className="mb-4 mt-3 text-[clamp(30px,4vw,46px)] font-semibold leading-[1.08]">
@@ -50,10 +51,10 @@ export default async function ContactPage() {
                 ["No cost to you", "Our consultations are free. We're paid by partner universities once you enrol."],
               ].map(([term, def]) => (
                 <div key={term}>
-                  <dt className="font-mono text-[11px] uppercase tracking-[0.1em] text-coral-text">
+                  <dt className="font-mono text-mini uppercase tracking-[0.1em] text-coral-text">
                     {term}
                   </dt>
-                  <dd className="mt-1.5 max-w-[44ch] text-[14px] text-ink-soft">{def}</dd>
+                  <dd className="mt-1.5 max-w-[44ch] text-ui text-ink-soft">{def}</dd>
                 </div>
               ))}
             </dl>
@@ -62,7 +63,7 @@ export default async function ContactPage() {
           <div className="rounded-3xl border border-line bg-paper-dim p-7 sm:p-9">
             <ConsultationForm courses={courses} />
           </div>
-        </div>
+        </Container>
       </main>
       <SiteFooter />
     </>

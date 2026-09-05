@@ -88,7 +88,7 @@ export default function ComparatorPage({ hubs }: { hubs: CourseHub[] }) {
   ];
 
   return (
-    <div className="mx-auto max-w-5xl px-4 py-16 sm:px-6 lg:px-8">
+    <div className="mx-auto max-w-5xl gutter py-16">
       <div className="text-center mb-10">
         <Badge variant="outline" className="mb-4">
           <GitCompare className="mr-1.5 h-3.5 w-3.5" />
@@ -137,7 +137,13 @@ export default function ComparatorPage({ hubs }: { hubs: CourseHub[] }) {
       {/* Comparison Table */}
       {selectedCourses.length > 0 ? (
         <Card>
-          <div className="overflow-x-auto">
+          {/* tabIndex: the only way to scroll this region by keyboard. */}
+          <div
+            tabIndex={0}
+            role="region"
+            aria-label="Course comparison"
+            className="scroll-x-hint overflow-x-auto"
+          >
             <Table>
               <TableHeader>
                 <TableRow>

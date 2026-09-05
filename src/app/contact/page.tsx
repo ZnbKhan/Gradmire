@@ -32,7 +32,7 @@ export default async function ContactPage() {
   return (
     <>
       <SiteHeader />
-      <main id="main" className="px-7 py-16">
+      <main id="main" className="gutter py-16">
         <Container className="mx-auto grid gap-14 lg:grid-cols-[0.9fr_1.1fr]">
           <div>
             <span className="eyebrow">Talk to a counselor</span>

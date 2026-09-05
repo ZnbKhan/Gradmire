@@ -80,7 +80,7 @@ export default async function PortalPage() {
   return (
     <>
       <SiteHeader />
-      <main id="main" className="px-7 py-14">
+      <main id="main" className="gutter py-14">
         <Container>
           <span className="eyebrow">Applicant portal</span>
           <h1 className="mb-2 mt-3 text-[clamp(28px,3.6vw,40px)] font-semibold">

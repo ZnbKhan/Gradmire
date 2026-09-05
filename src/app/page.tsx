@@ -64,7 +64,7 @@ export default async function HomePage() {
 
       <main id="main">
         {/* ---------- Hero ---------- */}
-        <section className="px-7 pb-10 pt-16">
+        <section className="gutter pb-10 pt-16">
           <Container>
             <div className="max-w-[640px]">
               <span className="eyebrow">Study abroad, reordered</span>
@@ -101,7 +101,7 @@ export default async function HomePage() {
         </section>
 
         {/* ---------- Why the UK ---------- */}
-        <section className="px-7 py-16">
+        <section className="gutter py-16">
           <Container>
             {/* Revealed as one block, not per tile: the grid's gaps are its
                 own background showing through, so fading the tiles
@@ -121,7 +121,7 @@ export default async function HomePage() {
 
         {/* ---------- Destinations ---------- */}
         {destinations.length > 0 && (
-        <section id="destinations" className="px-7 py-[70px]">
+        <section id="destinations" className="gutter py-[70px]">
           <Container>
             <Reveal group className="mb-10 flex flex-wrap items-end justify-between gap-6">
               <div>
@@ -197,7 +197,7 @@ export default async function HomePage() {
         {hubs.length > 0 && (
         <section
           id="courses"
-          className="bg-ink px-7 py-[70px] text-paper [--perf-bg:var(--ink)]"
+          className="bg-ink gutter py-[70px] text-paper [--perf-bg:var(--ink)]"
         >
           <Container>
             <Reveal group className="mb-10 flex flex-wrap items-end justify-between gap-6">
@@ -232,7 +232,7 @@ export default async function HomePage() {
         )}
 
         {/* ---------- How it works ---------- */}
-        <section className="px-7 py-[74px]">
+        <section className="gutter py-[74px]">
           <Container>
             <Reveal group className="mb-10">
               <span className="eyebrow">The journey</span>
@@ -256,7 +256,7 @@ export default async function HomePage() {
         </section>
 
         {/* ---------- Final CTA ---------- */}
-        <section className="px-7 pb-[90px] pt-5">
+        <section className="gutter pb-[90px] pt-5">
           <Container>
             <Reveal className="relative overflow-hidden rounded-3xl bg-ink px-8 py-14 text-center">
               <span className="eyebrow justify-center !text-gold before:!bg-gold">

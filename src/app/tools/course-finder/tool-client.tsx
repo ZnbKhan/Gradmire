@@ -126,7 +126,7 @@ export default function CourseFinderPage({ hubs }: { hubs: CourseHub[] }) {
 
   if (showResults) {
     return (
-      <div className="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-3xl gutter py-16">
         <div className="text-center mb-10">
           <div className="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10 mb-4">
             <Target className="h-8 w-8 text-primary" />
@@ -200,7 +200,7 @@ export default function CourseFinderPage({ hubs }: { hubs: CourseHub[] }) {
   }
 
   return (
-    <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 lg:px-8">
+    <div className="mx-auto max-w-2xl gutter py-16">
       <div className="text-center mb-10">
         <Badge variant="outline" className="mb-4">
           <Search className="mr-1.5 h-3.5 w-3.5" />

@@ -44,7 +44,7 @@ function Field({
         aria-invalid={errors ? true : undefined}
         aria-describedby={errors ? errId : undefined}
         className={cn(
-          "w-full rounded-lg border bg-white px-3.5 py-2.5 text-[14.5px] text-ink placeholder:text-ink-soft/70",
+          "w-full rounded-lg border bg-white px-3.5 py-2.5 text-[16px] sm:text-[14.5px] text-ink placeholder:text-ink-soft/70",
           errors ? "border-destructive" : "border-line",
         )}
         {...rest}
@@ -140,7 +140,7 @@ export function ConsultationForm({ courses }: { courses: CourseOption[] }) {
             id="field-preferredIntake"
             name="preferredIntake"
             defaultValue=""
-            className="w-full rounded-lg border border-line bg-white px-3.5 py-2.5 text-[14.5px] text-ink"
+            className="w-full rounded-lg border border-line bg-white px-3.5 py-2.5 text-[16px] sm:text-[14.5px] text-ink"
           >
             <option value="">No preference</option>
             {INTAKE_OPTIONS.map((intake) => (
@@ -163,7 +163,7 @@ export function ConsultationForm({ courses }: { courses: CourseOption[] }) {
           id="field-courseHubSlug"
           name="courseHubSlug"
           defaultValue=""
-          className="w-full rounded-lg border border-line bg-white px-3.5 py-2.5 text-[14.5px] text-ink"
+          className="w-full rounded-lg border border-line bg-white px-3.5 py-2.5 text-[16px] sm:text-[14.5px] text-ink"
         >
           <option value="">Not sure yet — help me choose</option>
           {courses.map((c) => (
@@ -186,7 +186,7 @@ export function ConsultationForm({ courses }: { courses: CourseOption[] }) {
           name="message"
           rows={4}
           placeholder="Your academic background, target universities, or questions."
-          className="w-full rounded-lg border border-line bg-white px-3.5 py-2.5 text-[14.5px] text-ink placeholder:text-ink-soft/70"
+          className="w-full rounded-lg border border-line bg-white px-3.5 py-2.5 text-[16px] sm:text-[14.5px] text-ink placeholder:text-ink-soft/70"
         />
       </div>
 

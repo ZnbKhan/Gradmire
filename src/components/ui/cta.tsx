@@ -16,7 +16,9 @@ import { cn } from "@/lib/utils";
  * action bar.
  */
 const ctaVariants = cva(
-  "inline-flex items-center justify-center gap-2 rounded-pill font-semibold transition-colors disabled:opacity-70",
+  // whitespace-nowrap: a wrapped label turns the pill into a tall rounded box.
+  // The header CTA did exactly that at 360px, overlapping the logo.
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-pill font-semibold transition-colors disabled:opacity-70",
   {
     variants: {
       variant: {

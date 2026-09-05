@@ -6,7 +6,7 @@ import { Container } from "@/components/ui/container";
  */
 export default function PortalLoading() {
   return (
-    <main id="main" className="px-7 py-14">
+    <main id="main" className="gutter py-14">
       <Container>
         <div className="h-4 w-40 animate-pulse rounded-pill bg-paper-dim" />
         <div className="mt-4 h-9 w-72 animate-pulse rounded-lg bg-paper-dim" />

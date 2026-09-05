@@ -88,7 +88,7 @@ export default async function CourseHubPage({
     return (
       <>
         <SiteHeader />
-        <main id="main" className="px-7 py-24">
+        <main id="main" className="gutter py-24">
           <div className="mx-auto max-w-[52ch] text-center">
             <span className="eyebrow justify-center">Guide in research</span>
             <h1 className="mb-4 mt-3 text-[clamp(30px,4vw,44px)] font-semibold">
@@ -116,7 +116,7 @@ export default async function CourseHubPage({
         {/* Boarding-pass stub breadcrumb */}
         <nav
           aria-label="Breadcrumb"
-          className="border-b border-dashed border-line px-7 py-5"
+          className="border-b border-dashed border-line gutter py-5"
         >
           <ol className="mx-auto flex max-w-[1180px] items-center gap-2.5 font-mono text-xs uppercase tracking-[0.06em] text-ink-soft">
             <li><Link href="/" className="hover:text-ink">Gradmire</Link></li>
@@ -127,7 +127,7 @@ export default async function CourseHubPage({
           </ol>
         </nav>
 
-        <section className="px-7 pb-11 pt-12">
+        <section className="gutter pb-11 pt-12">
           <Container className="mx-auto grid items-end gap-11 lg:grid-cols-[1.5fr_1fr]">
             <div>
               <span className="eyebrow">Course hub · {hub.code}</span>
@@ -160,7 +160,7 @@ export default async function CourseHubPage({
         </section>
 
         {hub.overview && (
-          <section className="px-7 pb-4">
+          <section className="gutter pb-4">
             <Container>
               <p className="max-w-[68ch] text-[16px] leading-relaxed text-ink-soft">
                 {hub.overview}
@@ -171,7 +171,7 @@ export default async function CourseHubPage({
 
         {/* Universities */}
         {hub.universities.length > 0 && (
-          <section className="px-7 py-11">
+          <section className="gutter py-11">
             <Container>
               <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
                 <h2 className="text-[26px] font-semibold">
@@ -181,7 +181,13 @@ export default async function CourseHubPage({
                   Subject-ranked, not overall rank
                 </span>
               </div>
-              <div className="overflow-x-auto rounded-2xl border border-line">
+              {/* tabIndex: the only way to scroll this region by keyboard. */}
+              <div
+                tabIndex={0}
+                role="region"
+                aria-label={`Top universities for ${hub.name}`}
+                className="scroll-x-hint overflow-x-auto rounded-2xl border border-line"
+              >
                 <table className="w-full min-w-[560px] border-collapse text-sm">
                   <thead>
                     <tr>
@@ -227,7 +233,7 @@ export default async function CourseHubPage({
         )}
 
         {/* Fees & entry */}
-        <section className="px-7 py-11">
+        <section className="gutter py-11">
           <Container>
             <h2 className="mb-6 text-[26px] font-semibold">Fees &amp; entry requirements</h2>
             <div className="grid gap-10 lg:grid-cols-2">
@@ -273,7 +279,7 @@ export default async function CourseHubPage({
         </section>
 
         {/* Careers */}
-        <section className="px-7 py-11">
+        <section className="gutter py-11">
           <Container>
             <div className="rounded-3xl bg-ink p-9 text-white">
               <h2 className="text-[26px] font-semibold text-white">Career outcomes</h2>
@@ -328,7 +334,7 @@ export default async function CourseHubPage({
         </section>
 
         {/* CTA */}
-        <section className="px-7 pb-20 pt-4">
+        <section className="gutter pb-20 pt-4">
           <Container>
             <div className="rounded-3xl bg-brandgreen p-10 text-center text-white">
               <h2 className="mb-2.5 text-[28px] font-semibold text-white">

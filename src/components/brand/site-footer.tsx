@@ -55,7 +55,7 @@ export async function SiteFooter() {
 
   return (
     <footer className="bg-ink text-paper/70">
-      <Container className="px-7">
+      <Container className="gutter">
         <div className="grid grid-cols-2 gap-8 border-b border-white/10 py-[60px] md:grid-cols-3 lg:grid-cols-5">
           <div className="col-span-2 lg:col-span-1">
             <span className="flex items-center gap-2.5 font-display text-[21px] font-semibold text-white">
@@ -75,10 +75,15 @@ export async function SiteFooter() {
                 <h2 className="mb-4 font-mono text-xs font-medium uppercase tracking-[0.09em] text-white">
                   {col.title}
                 </h2>
-                <ul className="space-y-2.5">
+                {/* Inline links gave a 19px tap target. On phones each becomes
+                    a full-width block instead; desktop keeps the tighter list. */}
+                <ul className="sm:space-y-2.5">
                   {col.links.map((l) => (
                     <li key={l.label}>
-                      <Link href={l.href} className="text-body hover:text-white">
+                      <Link
+                        href={l.href}
+                        className="block py-3 text-body hover:text-white sm:py-0"
+                      >
                         {l.label}
                       </Link>
                     </li>
@@ -91,8 +96,8 @@ export async function SiteFooter() {
         <div className="flex flex-wrap items-center justify-between gap-3 py-6 text-meta">
           <span>© {new Date().getFullYear()} Gradmire. All rights reserved.</span>
           <span className="flex gap-5">
-            <Link href="/privacy" className="hover:text-white">Privacy</Link>
-            <Link href="/terms" className="hover:text-white">Terms</Link>
+            <Link href="/privacy" className="py-2 hover:text-white">Privacy</Link>
+            <Link href="/terms" className="py-2 hover:text-white">Terms</Link>
           </span>
         </div>
       </Container>

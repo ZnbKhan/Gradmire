@@ -142,6 +142,40 @@
 }
 
 @layer components {
+  /*
+   * The site-wide horizontal gutter. Padding stays on the section rather than
+   * on Container, because sections own their background and need the padding
+   * outside the column — so without this class the one measurement every page
+   * shares would again be spread across ~30 hand-written copies.
+   * 20px on phones so a 360px screen doesn't spend 56px of itself on margins.
+   */
+  .gutter {
+    @apply px-5 sm:px-7;
+  }
+
+  /*
+   * Right-edge fade marking a horizontally scrollable region, and hiding
+   * itself once scrolled to the end. Two layers: a background-attachment:local
+   * pair that scrolls away with the content, over a scroll-fixed pair that
+   * covers them at rest. Without it the wide tables read as clipped rather
+   * than scrollable.
+   */
+  .scroll-x-hint {
+    background:
+      linear-gradient(to right, hsl(var(--paper)), transparent) left center /
+        24px 100% no-repeat local,
+      linear-gradient(to left, hsl(var(--paper)), transparent) right center /
+        24px 100% no-repeat local,
+      radial-gradient(farthest-side at 0 50%, rgba(16, 20, 46, 0.14), transparent)
+        left center / 14px 100% no-repeat scroll,
+      radial-gradient(
+          farthest-side at 100% 50%,
+          rgba(16, 20, 46, 0.14),
+          transparent
+        )
+        right center / 14px 100% no-repeat scroll;
+  }
+
   /* Mono eyebrow used above every section heading. */
   .eyebrow {
     @apply flex items-center gap-2.5 font-mono text-meta font-medium uppercase tracking-[0.14em] text-coral-text;

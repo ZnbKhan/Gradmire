@@ -57,7 +57,7 @@ export function SignupForm() {
           placeholder="Priya Sharma"
           aria-invalid={state.fieldErrors?.fullName ? true : undefined}
           aria-describedby={state.fieldErrors?.fullName ? "signup-fullName-error" : undefined}
-          className="w-full rounded-lg border border-line bg-white px-3.5 py-2.5 text-[14.5px]"
+          className="w-full rounded-lg border border-line bg-white px-3.5 py-2.5 text-[16px] sm:text-[14.5px]"
         />
         {state.fieldErrors?.fullName && (
           <p id="signup-fullName-error" className="mt-1.5 text-meta text-destructive">
@@ -79,7 +79,7 @@ export function SignupForm() {
           placeholder="you@email.com"
           aria-invalid={state.fieldErrors?.email ? true : undefined}
           aria-describedby={state.fieldErrors?.email ? "signup-email-error" : undefined}
-          className="w-full rounded-lg border border-line bg-white px-3.5 py-2.5 text-[14.5px]"
+          className="w-full rounded-lg border border-line bg-white px-3.5 py-2.5 text-[16px] sm:text-[14.5px]"
         />
         {state.fieldErrors?.email && (
           <p id="signup-email-error" className="mt-1.5 text-meta text-destructive">

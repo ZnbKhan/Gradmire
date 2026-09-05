@@ -32,7 +32,7 @@ export default async function LoginPage({
   return (
     <>
       <SiteHeader />
-      <main id="main" className="px-7 py-20">
+      <main id="main" className="gutter py-20">
         <div className="mx-auto max-w-[42ch]">
           <span className="eyebrow">Applicant sign in</span>
           <h1 className="mb-3 mt-3 text-[clamp(28px,3.6vw,38px)] font-semibold">

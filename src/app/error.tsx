@@ -20,7 +20,7 @@ export default function GlobalError({
   }, [error]);
 
   return (
-    <main id="main" className="px-7 py-28">
+    <main id="main" className="gutter py-28">
       <div className="mx-auto max-w-[620px] text-center">
         <p className="eyebrow justify-center">Something broke</p>
         <h1 className="mt-5 font-display text-[38px] leading-[1.1] tracking-tight text-ink">

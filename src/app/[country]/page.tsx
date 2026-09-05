@@ -71,7 +71,7 @@ export default async function DestinationPage({
     return (
       <>
         <SiteHeader />
-        <main id="main" className="px-7 py-24">
+        <main id="main" className="gutter py-24">
           <div className="mx-auto max-w-[52ch] text-center">
             <div aria-hidden="true" className="mb-6 text-5xl">
               {destination.flagEmoji}
@@ -111,7 +111,7 @@ export default async function DestinationPage({
     <>
       <SiteHeader />
       <main id="main">
-        <section className="px-7 pb-12 pt-16">
+        <section className="gutter pb-12 pt-16">
           <Container>
             <span className="eyebrow">Study destination</span>
             <h1 className="my-4 max-w-[16ch] text-[clamp(34px,4.6vw,54px)] font-semibold leading-[1.06]">
@@ -128,7 +128,7 @@ export default async function DestinationPage({
         {hubs.length > 0 && (
         <section
           id="courses"
-          className="bg-ink px-7 py-[70px] text-paper [--perf-bg:var(--ink)]"
+          className="bg-ink gutter py-[70px] text-paper [--perf-bg:var(--ink)]"
         >
           <Container>
             <div className="mb-10">

@@ -77,7 +77,7 @@ export function LoginForm({ nextPath }: { nextPath?: string }) {
           placeholder="you@email.com"
           aria-invalid={status === "error" || undefined}
           aria-describedby={error ? "login-error" : undefined}
-          className="w-full rounded-lg border border-line bg-white px-3.5 py-2.5 text-[14.5px]"
+          className="w-full rounded-lg border border-line bg-white px-3.5 py-2.5 text-[16px] sm:text-[14.5px]"
         />
       </div>
 

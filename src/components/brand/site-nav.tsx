@@ -152,10 +152,10 @@ export function SiteNav({
   // (Written without the utility name so Tailwind stops emitting the class.)
   return (
     <header className="sticky top-0 z-50 border-b border-line bg-paper">
-      <Container className="mx-auto flex items-center justify-between px-7 py-4">
+      <Container className="gutter mx-auto flex items-center justify-between gap-3 py-4">
         <Link
           href="/"
-          className="flex items-center gap-2.5 font-display text-[21px] font-semibold text-ink"
+          className="flex shrink-0 items-center gap-2.5 font-display text-[21px] font-semibold text-ink"
         >
           <span aria-hidden="true" className="h-[9px] w-[9px] rounded-full bg-coral" />
           Gradmire
@@ -285,8 +285,11 @@ export function SiteNav({
           >
             {signedIn ? "My applications" : "Sign in"}
           </Link>
-          <Cta href="/contact" size="md">
-            Book consultation
+          {/* The full label does not fit beside the logo and the menu button
+              on a 360px screen, so the phone gets the short form. */}
+          <Cta href="/contact" size="md" className="shrink-0">
+            <span className="sm:hidden">Book</span>
+            <span className="hidden sm:inline">Book consultation</span>
             <ArrowRight size={14} aria-hidden="true" />
           </Cta>
 
@@ -296,7 +299,7 @@ export function SiteNav({
             aria-expanded={open}
             aria-controls="mobile-nav"
             aria-label={open ? "Close menu" : "Open menu"}
-            className="rounded-md p-2 text-ink transition-colors hover:bg-paper-dim lg:hidden"
+            className="-mr-2 flex h-11 w-11 shrink-0 items-center justify-center rounded-md text-ink transition-colors hover:bg-paper-dim lg:hidden"
           >
             {open ? <X size={20} aria-hidden="true" /> : <Menu size={20} aria-hidden="true" />}
           </button>
@@ -319,11 +322,18 @@ export function SiteNav({
           A collapsed grid row still contains focusable links, so `inert`
           takes them out of the tab order and the a11y tree — the job the
           `hidden` attribute used to do.
+
+          The padding goes with it. A `0fr` track still reserves its min-content
+          height and padding counts toward that, which left a 32px strip of the
+          closed menu bleeding under the header on every page.
         */}
         <nav
           aria-label="Mobile"
           inert={!open}
-          className="flex min-h-0 flex-col px-7 pb-6 pt-2"
+          className={cn(
+            "gutter flex min-h-0 flex-col",
+            open ? "pb-6 pt-2" : "py-0",
+          )}
         >
           {nav.destinations.length > 0 && (
             <MobileSection
@@ -337,7 +347,7 @@ export function SiteNav({
                     key={d.slug}
                     href={`/${d.slug}`}
                     onClick={() => setOpen(false)}
-                    className="flex items-center gap-2.5 py-2 text-ui text-ink"
+                    className="flex items-center gap-2.5 py-3 text-ui text-ink"
                   >
                     {d.flagEmoji && <span aria-hidden="true">{d.flagEmoji}</span>}
                     {d.name}
@@ -348,7 +358,7 @@ export function SiteNav({
                 ) : (
                   <span
                     key={d.slug}
-                    className="flex items-center gap-2.5 py-2 text-ui text-ink-soft"
+                    className="flex items-center gap-2.5 py-3 text-ui text-ink-soft"
                   >
                     {d.flagEmoji && (
                       <span aria-hidden="true" className="opacity-60">
@@ -377,12 +387,12 @@ export function SiteNav({
                     key={hub.slug}
                     href={hub.href}
                     onClick={() => setOpen(false)}
-                    className="block py-2 text-ui text-ink"
+                    className="block py-3 text-ui text-ink"
                   >
                     {hub.name}
                   </Link>
                 ) : (
-                  <span key={hub.slug} className="block py-2 text-ui text-ink-soft">
+                  <span key={hub.slug} className="block py-3 text-ui text-ink-soft">
                     {hub.name}{" "}
                     <span className="font-mono text-micro uppercase tracking-wider">
                       In research
@@ -403,7 +413,7 @@ export function SiteNav({
                 key={tool.href}
                 href={tool.href}
                 onClick={() => setOpen(false)}
-                className="block py-2 text-ui text-ink"
+                className="block py-3 text-ui text-ink"
               >
                 {tool.label}
               </Link>

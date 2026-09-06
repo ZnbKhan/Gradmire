@@ -1,0 +1,164 @@
+import type { Config } from "tailwindcss"
+
+const config = {
+  darkMode: ["class"],
+  content: [
+    './pages/**/*.{ts,tsx}',
+    './components/**/*.{ts,tsx}',
+    './app/**/*.{ts,tsx}',
+    './src/**/*.{ts,tsx}',
+	],
+  prefix: "",
+  theme: {
+    container: {
+      center: true,
+      padding: "2rem",
+      screens: {
+        "2xl": "1400px",
+      },
+    },
+    extend: {
+      colors: {
+        ink: {
+          DEFAULT: "hsl(var(--ink))",
+          2: "hsl(var(--ink-2))",
+          3: "hsl(var(--ink-3))",
+          soft: "hsl(var(--ink-soft))",
+        },
+        paper: {
+          DEFAULT: "hsl(var(--paper))",
+          dim: "hsl(var(--paper-dim))",
+        },
+        line: "hsl(var(--line))",
+        coral: {
+          DEFAULT: "hsl(var(--coral))",
+          text: "hsl(var(--coral-text))",
+          dim: "hsl(var(--coral-dim))",
+        },
+        gold: "hsl(var(--gold))",
+        brandgreen: {
+          DEFAULT: "hsl(var(--brand-green))",
+          dim: "hsl(var(--brand-green-dim))",
+        },
+        warning: {
+          DEFAULT: "hsl(var(--warning))",
+          foreground: "hsl(var(--warning-foreground))",
+          "on-dark": "hsl(var(--warning-on-dark))",
+        },
+        success: {
+          DEFAULT: "hsl(var(--success))",
+          foreground: "hsl(var(--success-foreground))",
+          "on-dark": "hsl(var(--success-on-dark))",
+        },
+        border: "hsl(var(--border))",
+        input: "hsl(var(--input))",
+        ring: "hsl(var(--ring))",
+        background: "hsl(var(--background))",
+        foreground: "hsl(var(--foreground))",
+        primary: {
+          DEFAULT: "hsl(var(--primary))",
+          foreground: "hsl(var(--primary-foreground))",
+        },
+        secondary: {
+          DEFAULT: "hsl(var(--secondary))",
+          foreground: "hsl(var(--secondary-foreground))",
+        },
+        destructive: {
+          DEFAULT: "hsl(var(--destructive))",
+          foreground: "hsl(var(--destructive-foreground))",
+        },
+        muted: {
+          DEFAULT: "hsl(var(--muted))",
+          foreground: "hsl(var(--muted-foreground))",
+        },
+        accent: {
+          DEFAULT: "hsl(var(--accent))",
+          foreground: "hsl(var(--accent-foreground))",
+        },
+        popover: {
+          DEFAULT: "hsl(var(--popover))",
+          foreground: "hsl(var(--popover-foreground))",
+        },
+        card: {
+          DEFAULT: "hsl(var(--card))",
+          foreground: "hsl(var(--card-foreground))",
+        },
+      },
+      /*
+       * The de-facto type scale, promoted from arbitrary values. These sizes
+       * were already in use — text-[13.5px] alone appeared 35 times — but
+       * were declared nowhere, so every new component re-guessed them.
+       *
+       * Deliberately named outside Tailwind's own scale. Redefining `sm` or
+       * `base` here would silently restyle every shadcn primitive that uses
+       * `text-sm` (button, badge, table, ...), so the defaults are left alone
+       * and these sit beside them.
+       *
+       * Size only, no paired line-height: `text-[13.5px]` never set one, so
+       * adding one here would silently reflow every line these replace.
+       */
+      fontSize: {
+        micro: "10px",
+        mini: "11px",
+        meta: "12.5px",
+        body: "13.5px",
+        ui: "14px",
+        lede: "15px",
+      },
+      fontFamily: {
+        display: ["var(--font-display)", "Georgia", "serif"],
+        sans: ["var(--font-body)", "system-ui", "sans-serif"],
+        mono: ["var(--font-mono)", "ui-monospace", "monospace"],
+      },
+      boxShadow: {
+        card: "0 1px 0 rgb(16 20 46 / 0.05), 0 12px 24px -16px rgb(16 20 46 / 0.25)",
+        pass: "0 20px 40px -24px rgb(0 0 0 / 0.6)",
+        board: "0 30px 60px -25px rgb(16 20 46 / 0.55)",
+      },
+      borderRadius: {
+        pill: "999px",
+        lg: "var(--radius)",
+        md: "calc(var(--radius) - 2px)",
+        sm: "calc(var(--radius) - 4px)",
+      },
+      /*
+       * Motion vocabulary. Tailwind's default easing is a symmetric
+       * ease-in-out, which makes hover states feel like they hesitate before
+       * they start. Interface motion should leave immediately and settle
+       * gently, so the default here is a decelerating curve and every
+       * transition in the app inherits it without naming a class.
+       */
+      transitionTimingFunction: {
+        DEFAULT: "cubic-bezier(0, 0, 0.2, 1)",
+      },
+      transitionDuration: {
+        // Hover, colour, focus — fast enough to feel instant.
+        DEFAULT: "150ms",
+        // Panels and disclosures, which move further and need to be followed.
+        panel: "200ms",
+      },
+      keyframes: {
+        "pulse-dot": {
+          "0%, 100%": { opacity: "1" },
+          "50%": { opacity: "0.25" },
+        },
+        "accordion-down": {
+          from: { height: "0" },
+          to: { height: "var(--radix-accordion-content-height)" },
+        },
+        "accordion-up": {
+          from: { height: "var(--radix-accordion-content-height)" },
+          to: { height: "0" },
+        },
+      },
+      animation: {
+        "pulse-dot": "pulse-dot 1.6s ease-in-out infinite",
+        "accordion-down": "accordion-down 0.2s ease-out",
+        "accordion-up": "accordion-up 0.2s ease-out",
+      },
+    },
+  },
+  plugins: [require("tailwindcss-animate")],
+} satisfies Config
+
+export default config

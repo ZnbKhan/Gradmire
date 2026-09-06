@@ -1,0 +1,381 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * Gradmire — departure-board visual system.
+ * Palette and type roles are the client-approved direction in
+ * /design-reference. Brand tokens are the source of truth; the shadcn
+ * semantic tokens below are mapped onto them so existing UI primitives
+ * inherit the identity without being rewritten.
+ */
+
+@layer base {
+  :root {
+    /* ---- Brand tokens (Navy & Sky Blue Premium Palette) ---- */
+    /* Navy #11446A — sophisticated primary */
+    --ink: 206 72% 13%;
+    --ink-2: 206 70% 22%;
+    --ink-3: 206 65% 32%;
+    --paper: 210 40% 98%;
+    --paper-dim: 210 35% 94%;
+    --line: 210 25% 88%;
+
+    /* Sky Blue #298DC6 — energetic accent */
+    --coral: 206 64% 52%;
+    --coral-text: 206 70% 42%;
+    --coral-dim: 206 50% 90%;
+
+    /* Warm Cream — supporting accent */
+    --cream: 37 100% 90%;
+    --cream-dark: 37 80% 76%;
+
+    /* Supporting colors */
+    --gold: 42 63% 48%;
+    --brand-green: 160 61% 27%;
+    --brand-green-dim: 148 32% 90%;
+
+    --ink-soft: 206 35% 45%;
+
+    /* Perforation fill for boarding-pass cards. Each section that hosts a
+       pass overrides this to its own background so the notches read as holes. */
+    --perf-bg: var(--paper);
+
+    /* ---- shadcn semantic layer, mapped onto the brand ---- */
+    --background: var(--paper);
+    --foreground: var(--ink);
+    --card: 0 0% 100%;
+    --card-foreground: var(--ink);
+    --popover: 0 0% 100%;
+    --popover-foreground: var(--ink);
+    --primary: var(--ink);
+    --primary-foreground: var(--paper);
+    --secondary: var(--paper-dim);
+    --secondary-foreground: var(--ink);
+    --muted: var(--paper-dim);
+    --muted-foreground: var(--ink-soft);
+    --accent: var(--coral-dim);
+    --accent-foreground: var(--coral-text);
+    --destructive: 0 72% 42%;
+    --destructive-foreground: 0 0% 100%;
+    --border: var(--line);
+    --input: var(--line);
+    --ring: var(--coral);
+    --radius: 0.875rem;
+
+    --warning: 38 92% 40%;
+    --warning-foreground: 30 80% 18%;
+    --success: var(--brand-green);
+    --success-foreground: 0 0% 100%;
+
+    /* Status text on a permanently-dark surface (the footer). The plain
+       --success/--warning cuts are tuned for contrast against paper and go
+       nearly invisible on ink, so they cannot be reused there. */
+    --success-on-dark: 148 60% 73%;
+    --warning-on-dark: 37 86% 69%;
+  }
+
+  .dark {
+    /* Dark mode navy & sky blue */
+    --paper: 206 50% 8%;
+    --paper-dim: 206 48% 12%;
+    --line: 206 35% 25%;
+    --ink: 210 35% 96%;
+    --ink-soft: 206 20% 70%;
+    --coral: 206 68% 62%;
+    --coral-text: 206 70% 70%;
+    --coral-dim: 206 50% 22%;
+    --gold: 42 70% 62%;
+    --brand-green: 160 45% 45%;
+    --brand-green-dim: 160 30% 18%;
+
+    --perf-bg: var(--paper);
+
+    --background: var(--paper);
+    --foreground: var(--ink);
+    --card: 206 48% 12%;
+    --card-foreground: var(--ink);
+    --popover: 206 48% 12%;
+    --popover-foreground: var(--ink);
+    --primary: var(--ink);
+    --primary-foreground: 206 50% 8%;
+    --secondary: 206 40% 18%;
+    --secondary-foreground: var(--ink);
+    --muted: 206 40% 18%;
+    --muted-foreground: var(--ink-soft);
+    --accent: var(--coral-dim);
+    --accent-foreground: var(--coral-text);
+    --destructive: 0 62% 52%;
+    --destructive-foreground: 0 0% 100%;
+    --border: var(--line);
+    --input: var(--line);
+    --ring: var(--coral);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "cv02", "cv03", "cv04";
+  }
+
+  h1, h2, h3, h4 {
+    @apply font-display;
+    text-wrap: balance;
+  }
+
+  /* Premium typography with size-specific tracking */
+  h1 {
+    @apply text-4xl sm:text-5xl;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+  }
+
+  h2 {
+    @apply text-3xl sm:text-4xl;
+    letter-spacing: -0.015em;
+    line-height: 1.2;
+  }
+
+  h3 {
+    @apply text-2xl;
+    letter-spacing: -0.01em;
+    line-height: 1.3;
+  }
+
+  h4 {
+    @apply text-lg;
+    line-height: 1.4;
+  }
+
+  body {
+    line-height: 1.6;
+    letter-spacing: 0;
+  }
+
+  /*
+   * The prototype shipped with no focus styles at all. This is the floor:
+   * every interactive element gets a visible ring, keyboard-only.
+   */
+  :focus-visible {
+    @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
+    border-radius: 3px;
+  }
+
+  /* Figures line up in the fee, ranking and salary tables. */
+  table, .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+@layer components {
+  /* ---- Apple Design: Interactive Feedback ---- */
+
+  /* Premium button with immediate response on press */
+  button, [role="button"], a[href] {
+    @apply transition-all duration-100;
+  }
+
+  button:active,
+  [role="button"]:active {
+    @apply scale-[0.97] opacity-90;
+  }
+
+  button:focus-visible,
+  [role="button"]:focus-visible {
+    @apply outline-none ring-2 ring-offset-2;
+  }
+
+  /* Hover feedback without motion (respects reduced-motion) */
+  button:hover:not(:active),
+  [role="button"]:hover:not(:active),
+  a:hover {
+    @apply opacity-75 transition-opacity duration-200;
+  }
+
+  /* Premium primary button */
+  .btn-primary {
+    @apply bg-coral text-white rounded-full px-6 py-3 font-medium;
+    @apply hover:bg-coral-text active:scale-[0.97];
+    @apply transition-all duration-100;
+    box-shadow: 0 4px 12px -2px rgba(41, 141, 198, 0.3);
+  }
+
+  .btn-primary:hover {
+    box-shadow: 0 6px 16px -2px rgba(41, 141, 198, 0.4);
+  }
+
+  /* Premium secondary button */
+  .btn-secondary {
+    @apply border-2 border-ink text-ink rounded-full px-6 py-3 font-medium;
+    @apply hover:bg-ink hover:text-white active:scale-[0.97];
+    @apply transition-all duration-100;
+  }
+
+  /* The site-wide horizontal gutter. Padding stays on the section rather than
+     on Container, because sections own their background and need the padding
+     outside the column — so without this class the one measurement every page
+     shares would again be spread across ~30 hand-written copies.
+     20px on phones so a 360px screen doesn't spend 56px of itself on margins. */
+  .gutter {
+    @apply px-5 sm:px-7;
+  }
+
+  /*
+   * Right-edge fade marking a horizontally scrollable region, and hiding
+   * itself once scrolled to the end. Two layers: a background-attachment:local
+   * pair that scrolls away with the content, over a scroll-fixed pair that
+   * covers them at rest. Without it the wide tables read as clipped rather
+   * than scrollable.
+   */
+  .scroll-x-hint {
+    background:
+      linear-gradient(to right, hsl(var(--paper)), transparent) left center /
+        24px 100% no-repeat local,
+      linear-gradient(to left, hsl(var(--paper)), transparent) right center /
+        24px 100% no-repeat local,
+      radial-gradient(farthest-side at 0 50%, rgba(16, 20, 46, 0.14), transparent)
+        left center / 14px 100% no-repeat scroll,
+      radial-gradient(
+          farthest-side at 100% 50%,
+          rgba(16, 20, 46, 0.14),
+          transparent
+        )
+        right center / 14px 100% no-repeat scroll;
+  }
+
+  /* Mono eyebrow used above every section heading. */
+  .eyebrow {
+    @apply flex items-center gap-2.5 font-mono text-meta font-medium uppercase tracking-[0.14em] text-coral-text;
+  }
+  .eyebrow::before {
+    content: "";
+    @apply inline-block h-[7px] w-[7px] shrink-0 rounded-full bg-coral;
+  }
+
+  /*
+   * Boarding-pass perforation. The notches are filled from --perf-bg rather
+   * than a hardcoded colour so a pass can sit on any section background.
+   */
+  .perforation {
+    @apply relative h-0 border-t-2 border-dashed border-line;
+  }
+  .perforation::before,
+  .perforation::after {
+    content: "";
+    @apply absolute h-[18px] w-[18px] rounded-full;
+    top: -9px;
+    background: hsl(var(--perf-bg));
+  }
+  .perforation::before { left: -9px; }
+  .perforation::after { right: -9px; }
+
+  /* ---- Premium Materials & Depth ---- */
+
+  /* Translucent floating surfaces (glass effect) */
+  .glass {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(15px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .dark .glass {
+    background: rgba(17, 68, 106, 0.75);
+    backdrop-filter: blur(15px) saturate(180%);
+    border: 1px solid rgba(41, 141, 198, 0.15);
+  }
+
+  /* Someone asking the OS for less transparency still gets the card's
+     depth and grouping — just as a solid surface instead of a blurred one. */
+  @media (prefers-reduced-transparency: reduce) {
+    .glass {
+      background: rgb(255, 255, 255);
+      backdrop-filter: none;
+    }
+
+    .dark .glass {
+      background: rgb(19, 44, 63);
+      backdrop-filter: none;
+    }
+  }
+
+  /* Premium card with shadow depth */
+  .card-premium {
+    @apply rounded-2xl bg-card p-6;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 12px 24px -16px rgba(0, 0, 0, 0.15);
+    @apply transition-all duration-300;
+  }
+
+  .card-premium:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12), 0 20px 40px -16px rgba(0, 0, 0, 0.2);
+    @apply translate-y-[-2px];
+  }
+
+  /* Brand gradient (Navy to Sky Blue ramp) */
+  .gradient-primary {
+    background-image: linear-gradient(
+      135deg,
+      hsl(var(--ink)) 0%,
+      hsl(var(--ink-2)) 40%,
+      hsl(var(--coral)) 100%
+    );
+  }
+
+  /* ---- Spring Animation Setup (for Motion/Framer Motion) ---- */
+  /* Entrance animation states */
+  [data-animate-spring] {
+    @apply will-change-transform;
+  }
+
+  /* Smooth scroll behavior */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/*
+ * Entrance-animation starting state, for the components in
+ * components/motion. Declared here rather than applied by the animation
+ * because an effect cannot run before the first paint — hiding these in
+ * JavaScript would show the finished layout and then blank it.
+ *
+ * Gated behind `.js`, added by the inline script in the root layout, so a
+ * visitor without JavaScript is served the page unhidden rather than empty.
+ */
+.js [data-reveal],
+.js [data-reveal-group] > * {
+  opacity: 0;
+}
+
+/*
+ * The global block above neutralises transitions, but these elements are
+ * hidden by a rule rather than moved by one, so reduced motion has to put
+ * them back or the section never appears at all.
+ */
+@media (prefers-reduced-motion: reduce) {
+  .js [data-reveal],
+  .js [data-reveal-group] > * {
+    opacity: 1;
+  }
+}

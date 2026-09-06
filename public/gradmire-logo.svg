@@ -1,0 +1,33 @@
+<svg viewBox="0 0 300 120" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+  <!-- Navy brand color -->
+  <defs>
+    <style>
+      .gradmire-text {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        font-size: 56px;
+        font-weight: 700;
+        fill: #11446A;
+        letter-spacing: -1px;
+      }
+    </style>
+  </defs>
+
+  <!-- Plane icon (top-left) -->
+  <g transform="translate(10, 15)">
+    <path d="M 35 5 L 50 35 L 40 40 L 25 25 L 15 45 L 10 43 L 20 20 L 5 20 Z"
+          fill="none" stroke="#11446A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+
+  <!-- Gradmire text -->
+  <text x="70" y="65" class="gradmire-text">Gradmire</text>
+
+  <!-- Graduation cap icon (top-right after text) -->
+  <g transform="translate(270, 22)">
+    <!-- Cap board -->
+    <rect x="0" y="0" width="28" height="4" rx="1" fill="#11446A"/>
+    <!-- Cap top -->
+    <path d="M 2 4 L 14 -8 L 26 4" fill="#11446A" stroke="#11446A" stroke-width="2" stroke-linejoin="round"/>
+    <!-- Tassel -->
+    <line x1="14" y1="0" x2="14" y2="12" stroke="#11446A" stroke-width="2"/>
+  </g>
+</svg>

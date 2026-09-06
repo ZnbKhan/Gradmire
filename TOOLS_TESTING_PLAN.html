@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gradmire Tools: Testing & Improvement Plan</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; line-height: 1.6; color: #333; background: #f5f5f5; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 40px 20px; }
+        header { background: linear-gradient(135deg, #1a3a52 0%, #2a5a7f 100%); color: white; padding: 40px; border-radius: 8px; margin-bottom: 40px; }
+        h1 { font-size: 2.5em; margin-bottom: 10px; }
+        .subtitle { font-size: 1.1em; opacity: 0.9; }
+        .tool-section { background: white; padding: 30px; margin-bottom: 30px; border-radius: 8px; border-left: 5px solid #ff6b35; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .tool-section h2 { color: #1a3a52; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+        .tool-icon { font-size: 1.5em; }
+        .status { display: inline-block; padding: 6px 12px; border-radius: 20px; font-size: 0.9em; font-weight: 600; margin-bottom: 20px; }
+        .status.working { background: #d4edda; color: #155724; }
+        .status.partial { background: #fff3cd; color: #856404; }
+        .status.needs-work { background: #f8d7da; color: #721c24; }
+        .subsection { margin-bottom: 25px; padding: 20px; background: #f9f9f9; border-radius: 6px; border-left: 3px solid #666; }
+        .subsection h3 { color: #2a5a7f; margin-bottom: 12px; font-size: 1.2em; }
+        .subsection ul { margin-left: 20px; }
+        .subsection li { margin-bottom: 8px; }
+        .enhancement { background: #e3f2fd; padding: 15px; margin: 10px 0; border-radius: 6px; border-left: 3px solid #2196f3; }
+        .enhancement strong { color: #1565c0; }
+        .data-table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+        .data-table th { background: #2a5a7f; color: white; padding: 12px; text-align: left; }
+        .data-table td { padding: 10px 12px; border-bottom: 1px solid #ddd; }
+        .data-table tr:nth-child(even) { background: #f9f9f9; }
+        .feature-badge { display: inline-block; background: #e8f5e9; color: #2e7d32; padding: 6px 12px; border-radius: 12px; margin: 5px; font-size: 0.9em; }
+        .priority-high { color: #d32f2f; font-weight: 600; }
+        .priority-medium { color: #f57c00; font-weight: 600; }
+        .priority-low { color: #388e3c; font-weight: 600; }
+        .summary-box { background: linear-gradient(135deg, #e8f5e9 0%, #f1f8e9 100%); padding: 25px; border-radius: 8px; border-left: 5px solid #4caf50; margin: 30px 0; }
+        .summary-box h3 { color: #2e7d32; margin-bottom: 15px; }
+        .action-item { background: white; padding: 15px; margin: 10px 0; border-radius: 6px; border-left: 4px solid #ff9800; }
+        .action-item .action-title { font-weight: 600; color: #e65100; }
+        .action-item .action-desc { color: #666; margin-top: 8px; font-size: 0.95em; }
+        code { background: #f0f0f0; padding: 2px 6px; border-radius: 3px; font-family: 'Courier New', monospace; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🛠️ Gradmire Tools: Complete Testing & Improvement Plan</h1>
+            <p class="subtitle">Systematic testing, data enhancement, features, and UI/UX improvements for all 4 tools</p>
+        </header>
+
+        <!-- TOOL 1: COURSE FINDER -->
+        <div class="tool-section">
+            <h2><span class="tool-icon">🔍</span> Tool 1: Course Finder</h2>
+            <span class="status partial">PARTIAL - Needs Data</span>
+
+            <div class="subsection">
+                <h3>✅ Current Status</h3>
+                <ul>
+                    <li><strong>Structure:</strong> 5-step quiz fully implemented</li>
+                    <li><strong>Step 1:</strong> Subject selection (should show 9 course categories)</li>
+                    <li><strong>Step 2:</strong> Grade/qualifications selection ✓</li>
+                    <li><strong>Step 3:</strong> Budget range selection ✓</li>
+                    <li><strong>Step 4:</strong> Destination selection ✓</li>
+                    <li><strong>Step 5:</strong> Priority selection ✓</li>
+                    <li><strong>Results Page:</strong> Shows personalized recommendations</li>
+                    <li><strong>Issue Found:</strong> Course options not displaying on Step 1</li>
+                </ul>
+            </div>
+
+            <div class="subsection">
+                <h3>🔧 Needed Fixes</h3>
+                <div class="enhancement">
+                    <strong>Priority: HIGH</strong> - Ensure courseHubs data is properly loaded and passed to client component
+                </div>
+                <div class="enhancement">
+                    <strong>Priority: HIGH</strong> - Display course icons with course names (currently only shows text)
+                </div>
+                <div class="enhancement">
+                    <strong>Priority: MEDIUM</strong> - Add course descriptions on hover/selection
+                </div>
+            </div>
+
+            <div class="subsection">
+                <h3>✨ Feature Enhancements</h3>
+                <ul>
+                    <li><strong>Interactive Cards:</strong> Make course selections more visual with icons and descriptions</li>
+                    <li><strong>Progress Tracking:</strong> Save progress to localStorage so users can resume</li>
+                    <li><strong>Smart Matching:</strong> Show match score (85% match, 92% match) based on answers</li>
+                    <li><strong>Recommendation Explanations:</strong> Why this course matches your profile</li>
+                    <li><strong>Alternative Suggestions:</strong> Show 2-3 alternatives if perfect match not available</li>
+                    <li><strong>Direct Enrollment Link:</strong> Link to application page for each recommendation</li>
+                    <li><strong>Comparison Option:</strong> "Compare with another course" button to jump to Comparator tool</li>
+                    <li><strong>Email Results:</strong> Send quiz results to email</li>
+                </ul>
+            </div>
+
+            <div class="subsection">
+                <h3>📊 Additional Data Needed</h3>
+                <ul>
+                    <li>Subject icons are referenced but may need proper lucide-react icons</li>
+                    <li>University counts per course hub (e.g., "6 universities" in Business & Management)</li>
+                    <li>Average salary ranges for display on results</li>
+                    <li>Career paths for each discipline</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- TOOL 2: ROI CALCULATOR -->
+        <div class="tool-section">
+            <h2><span class="tool-icon">💰</span> Tool 2: ROI Calculator</h2>
+            <span class="status partial">PARTIAL - Missing Calculations</span>
+
+            <div class="subsection">
+                <h3>✅ Current Status</h3>
+                <ul>
+                    <li><strong>Destination Selection:</strong> Available countries shown ✓</li>
+                    <li><strong>Course Selection:</strong> Courses available to select ✓</li>
+                    <li><strong>Display Data:</strong> Shows tuition and living costs</li>
+                    <li><strong>Calculations:</strong> Not visible in results</li>
+                    <li><strong>Issue:</strong> ROI calculations not displaying (payback period, total cost, salary)</li>
+                </ul>
+            </div>
+
+            <div class="subsection">
+                <h3>🔧 Needed Fixes</h3>
+                <div class="enhancement">
+                    <strong>Priority: HIGH</strong> - Display calculated ROI metrics (payback period, total investment, expected salary)
+                </div>
+                <div class="enhancement">
+                    <strong>Priority: HIGH</strong> - Add visual breakdown (pie chart) of tuition vs living costs
+                </div>
+                <div class="enhancement">
+                    <strong>Priority: MEDIUM</strong> - Ensure all course data has salary ranges filled in
+                </div>
+            </div>
+
+            <div class="subsection">
+                <h3>✨ Feature Enhancements</h3>
+                <ul>
+                    <li><strong>Visual Charts:</strong> Pie chart showing cost breakdown (tuition 70%, living 30%)</li>
+                    <li><strong>ROI Comparison:</strong> Compare ROI across multiple courses</li>
+                    <li><strong>Salary Growth Chart:</strong> Show 5-year salary projection post-graduation</li>
+                    <li><strong>Break-even Calculator:</strong> "You'll break even in X months"</li>
+                    <li><strong>Scholarship Impact:</strong> "If you get a 50% scholarship, payback time = ..."</li>
+                    <li><strong>Loan Calculator:</strong> Calculate monthly payments if student loans needed</li>
+                    <li><strong>Cost Comparison:</strong> "Cost in US vs UK vs Canada"</li>
+                    <li><strong>Export PDF:</strong> Save calculation as PDF report</li>
+                    <li><strong>Historical Data:</strong> Show average salary progression after 1yr, 3yr, 5yr</li>
+                </ul>
+            </div>
+
+            <div class="subsection">
+                <h3>📊 Data Required per Course</h3>
+                <table class="data-table">
+                    <tr>
+                        <th>Field</th>
+                        <th>Current Status</th>
+                        <th>Needed For</th>
+                    </tr>
+                    <tr>
+                        <td><code>tuitionMin/Max</code></td>
+                        <td>✓ Available</td>
+                        <td>Total cost calculation</td>
+                    </tr>
+                    <tr>
+                        <td><code>livingCostMin/Max</code></td>
+                        <td>✓ Available</td>
+                        <td>Monthly expense calc</td>
+                    </tr>
+                    <tr>
+                        <td><code>salaryMin/Max</code></td>
+                        <td>⚠️ Partial</td>
+                        <td>ROI & payback period</td>
+                    </tr>
+                    <tr>
+                        <td><code>currency</code></td>
+                        <td>✓ Available</td>
+                        <td>Display formatting</td>
+                    </tr>
+                    <tr>
+                        <td>Salary progression (1yr, 3yr, 5yr)</td>
+                        <td>❌ Missing</td>
+                        <td>Growth projections</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- TOOL 3: COURSE COMPARATOR -->
+        <div class="tool-section">
+            <h2><span class="tool-icon">⚖️</span> Tool 3: Course Comparator</h2>
+            <span class="status working">WORKING - Good Features</span>
+
+            <div class="subsection">
+                <h3>✅ Current Status</h3>
+                <ul>
+                    <li><strong>Course Selection:</strong> Add/remove up to 3 courses ✓</li>
+                    <li><strong>Comparison Table:</strong> Side-by-side display ✓</li>
+                    <li><strong>Data Shown:</strong> Tuition, living costs, salary, sectors, universities, ATAS</li>
+                    <li><strong>Max Courses:</strong> 3 course limit enforced ✓</li>
+                    <li><strong>Status:</strong> This tool is working well</li>
+                </ul>
+            </div>
+
+            <div class="subsection">
+                <h3>✨ Feature Enhancements</h3>
+                <ul>
+                    <li><strong>Visual Comparison:</strong> Add colored badges (Green ✓ for best, Yellow ⚠️ for average)</li>
+                    <li><strong>Filter by Criteria:</strong> Filter courses by budget, salary, or job sector</li>
+                    <li><strong>Highlight Best:</strong> Highlight best value, best salary, best universities</li>
+                    <li><strong>Mobile Comparison:</strong> Stack comparison vertically on mobile (currently horizontal scroll)</li>
+                    <li><strong>Add Custom Weight:</strong> Weight criteria (salary 50%, cost 30%, ranking 20%)</li>
+                    <li><strong>Export Comparison:</strong> Save as PDF or CSV</li>
+                    <li><strong>Add 4th/5th Course:</strong> Allow comparing up to 5 courses</li>
+                    <li><strong>Filter by Skills:</strong> Show courses aligned with specific career skills</li>
+                    <li><strong>Visa Comparison:</strong> Compare visa terms across courses</li>
+                </ul>
+            </div>
+
+            <div class="subsection">
+                <h3>📊 Additional Data to Display</h3>
+                <ul>
+                    <li>University rankings within the course discipline</li>
+                    <li>Employment rate post-graduation</li>
+                    <li>Industry placement opportunity</li>
+                    <li>Alumni network size</li>
+                    <li>Scholarship availability</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- TOOL 4: DEADLINE TRACKER -->
+        <div class="tool-section">
+            <h2><span class="tool-icon">📅</span> Tool 4: Deadline Tracker</h2>
+            <span class="status working">WORKING - Enhancement Ready</span>
+
+            <div class="subsection">
+                <h3>✅ Current Status</h3>
+                <ul>
+                    <li><strong>Course Selection:</strong> Checkbox to select multiple courses ✓</li>
+                    <li><strong>Persistent Storage:</strong> Uses localStorage to save selections ✓</li>
+                    <li><strong>Deadline Display:</strong> Shows application deadlines grouped by course ✓</li>
+                    <li><strong>Warnings:</strong> Displays warning messages for late deadlines ✓</li>
+                    <li><strong>Status:</strong> This tool is working well</li>
+                </ul>
+            </div>
+
+            <div class="subsection">
+                <h3>✨ Feature Enhancements</h3>
+                <ul>
+                    <li><strong>Email Reminders:</strong> Send email reminder 2 weeks before deadline</li>
+                    <li><strong>Calendar Integration:</strong> Export to Google Calendar / iCal</li>
+                    <li><strong>Countdown Timer:</strong> Show "15 days until deadline" in red</li>
+                    <li><strong>Priority Flagging:</strong> Mark deadlines as urgent/high priority</li>
+                    <li><strong>Application Status:</strong> Track (Not started → In progress → Submitted)</li>
+                    <li><strong>Document Checklist:</strong> What documents needed for each application</li>
+                    <li><strong>Timeline View:</strong> Calendar grid showing all deadlines</li>
+                    <li><strong>Notification Badges:</strong> Browser notifications 24 hours before</li>
+                    <li><strong>Deadline Comparison:</strong> Which course has earliest deadline</li>
+                    <li><strong>Notes Per Deadline:</strong> Add personal notes to each deadline</li>
+                </ul>
+            </div>
+
+            <div class="subsection">
+                <h3>📊 Additional Data Needed</h3>
+                <ul>
+                    <li>Multiple application rounds (Round 1, Round 2, etc.)</li>
+                    <li>Deadline types (Regular, UCAS, International, etc.)</li>
+                    <li>Required documents per deadline</li>
+                    <li>ATAS clearance timeline (if required)</li>
+                    <li>Document preparation time estimates</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- SUMMARY & ACTION PLAN -->
+        <div class="summary-box">
+            <h3>📌 Executive Summary & Action Plan</h3>
+            <p><strong>Overall Status:</strong> 2 tools working well, 2 need critical data fixes</p>
+
+            <div class="action-item">
+                <div class="action-title">Phase 1: CRITICAL FIXES (Week 1)</div>
+                <div class="action-desc">
+                    ✓ Fix Course Finder data loading (show all 9 courses)<br>
+                    ✓ Display ROI calculations properly<br>
+                    ✓ Ensure all course data has complete salary info<br>
+                    ✓ Test all 4 tools end-to-end
+                </div>
+            </div>
+
+            <div class="action-item">
+                <div class="action-title">Phase 2: DATA ENRICHMENT (Week 1-2)</div>
+                <div class="action-desc">
+                    ✓ Add salary progression data (1yr, 3yr, 5yr)<br>
+                    ✓ Add employer/company data per course<br>
+                    ✓ Add university rankings per subject<br>
+                    ✓ Add scholarship information<br>
+                    ✓ Add employment rates post-grad
+                </div>
+            </div>
+
+            <div class="action-item">
+                <div class="action-title">Phase 3: FEATURE ENHANCEMENTS (Week 2-3)</div>
+                <div class="action-desc">
+                    ✓ Add charts/visualizations (ROI, cost breakdown)<br>
+                    ✓ Add email reminders for deadlines<br>
+                    ✓ Add calendar export functionality<br>
+                    ✓ Add comparison filters<br>
+                    ✓ Add progress tracking & status updates
+                </div>
+            </div>
+
+            <div class="action-item">
+                <div class="action-title">Phase 4: UI/UX POLISH (Week 3)</div>
+                <div class="action-desc">
+                    ✓ Improve mobile responsiveness<br>
+                    ✓ Add progress indicators<br>
+                    ✓ Add visual badges & highlights<br>
+                    ✓ Improve form design<br>
+                    ✓ Add loading states & animations
+                </div>
+            </div>
+        </div>
+
+        <!-- DETAILED RECOMMENDATIONS -->
+        <div class="tool-section">
+            <h2>🎯 Prioritized Recommendations</h2>
+
+            <div class="subsection">
+                <h3><span class="priority-high">Priority: HIGH</span> - Must Fix (Next 2 days)</h3>
+                <ol style="margin-left: 20px;">
+                    <li><strong>Load and Display Course Options:</strong> Fix Course Finder Step 1 to show all 9 courses with icons</li>
+                    <li><strong>Display ROI Calculations:</strong> Show payback period, total investment, expected salary in ROI Calculator</li>
+                    <li><strong>Complete Salary Data:</strong> Ensure all 9 course hubs have min/max salary ranges</li>
+                    <li><strong>Test All Tools End-to-End:</strong> Verify each tool works from start to finish</li>
+                </ol>
+            </div>
+
+            <div class="subsection">
+                <h3><span class="priority-medium">Priority: MEDIUM</span> - Should Add (Next 1 week)</h3>
+                <ol style="margin-left: 20px;">
+                    <li>Add salary progression data to each course hub</li>
+                    <li>Add visual charts to ROI Calculator (pie chart for cost breakdown)</li>
+                    <li>Add email reminder functionality to Deadline Tracker</li>
+                    <li>Add filter options to Course Comparator</li>
+                    <li>Add more detailed course descriptions and career paths</li>
+                </ol>
+            </div>
+
+            <div class="subsection">
+                <h3><span class="priority-low">Priority: LOW</span> - Nice to Have (Future)</h3>
+                <ol style="margin-left: 20px;">
+                    <li>Calendar export (Google Calendar, iCal)</li>
+                    <li>PDF/CSV export functionality</li>
+                    <li>Browser notifications</li>
+                    <li>Application status tracking UI</li>
+                    <li>Advanced filtering & sorting options</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

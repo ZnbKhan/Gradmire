@@ -30,12 +30,12 @@ const config = {
           dim: "hsl(var(--paper-dim))",
         },
         line: "hsl(var(--line))",
-        coral: {
-          DEFAULT: "hsl(var(--coral))",
-          text: "hsl(var(--coral-text))",
-          dim: "hsl(var(--coral-dim))",
+        navy: "hsl(var(--navy))",
+        sky: {
+          DEFAULT: "hsl(var(--sky))",
+          text: "hsl(var(--sky-text))",
+          dim: "hsl(var(--sky-dim))",
         },
-        gold: "hsl(var(--gold))",
         brandgreen: {
           DEFAULT: "hsl(var(--brand-green))",
           dim: "hsl(var(--brand-green-dim))",

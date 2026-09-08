@@ -152,7 +152,7 @@ export default async function CourseHubPage({
                   }`}
                 >
                   <dt className="text-white/70">{label}</dt>
-                  <dd className="font-semibold text-gold">{value}</dd>
+                  <dd className="font-semibold text-sky">{value}</dd>
                 </div>
               ))}
             </dl>
@@ -213,7 +213,7 @@ export default async function CourseHubPage({
                         </td>
                         <td className="border-b border-line px-4 py-3.5">
                           {u.subjectRank && (
-                            <span className="rounded-pill bg-coral-dim px-2.5 py-1 font-mono text-mini font-semibold text-coral-text">
+                            <span className="rounded-pill bg-sky-dim px-2.5 py-1 font-mono text-mini font-semibold text-sky-text">
                               {u.subjectRank}
                             </span>
                           )}
@@ -259,15 +259,15 @@ export default async function CourseHubPage({
               <div className="mt-8 space-y-3">
                 {hub.deadlines.map((d) => (
                   <div key={d.id}>
-                    <div className="flex items-start gap-3.5 rounded-2xl bg-gold px-5 py-4 text-ui font-semibold text-ink">
+                    <div className="flex items-start gap-3.5 rounded-2xl bg-sky px-5 py-4 text-ui font-semibold text-ink">
                       <CalendarDays size={20} className="mt-0.5 shrink-0" aria-hidden="true" />
                       <span>
                         {d.label}: {d.detail}
                       </span>
                     </div>
                     {d.warning && (
-                      <p className="mt-2 flex items-start gap-2 rounded-lg border-l-[3px] border-coral bg-coral-dim px-4 py-3 text-body text-ink">
-                        <AlertTriangle size={16} className="mt-0.5 shrink-0 text-coral-text" aria-hidden="true" />
+                      <p className="mt-2 flex items-start gap-2 rounded-lg border-l-[3px] border-sky bg-sky-dim px-4 py-3 text-body text-ink">
+                        <AlertTriangle size={16} className="mt-0.5 shrink-0 text-sky-text" aria-hidden="true" />
                         {d.warning}
                       </p>
                     )}
@@ -322,7 +322,7 @@ export default async function CourseHubPage({
                   {hub.visaNotes.map((n) => (
                     <li
                       key={n}
-                      className="rounded-r-lg border-l-[3px] border-gold bg-white/10 px-4 py-3 text-ui"
+                      className="rounded-r-lg border-l-[3px] border-sky bg-white/10 px-4 py-3 text-ui"
                     >
                       {n}
                     </li>

@@ -24,6 +24,7 @@ import { TOOLS, COMPANY_LINKS } from "@/config/site";
 import { createClient } from "@/lib/supabase/client";
 import type { Navigation } from "@/lib/nav";
 import { cn } from "@/lib/utils";
+import { Logo } from "@/components/brand/logo";
 import { Container } from "@/components/ui/container";
 import { Cta } from "@/components/ui/cta";
 
@@ -42,7 +43,7 @@ const TOOL_ICONS: Record<string, LucideIcon> = {
 };
 
 const triggerCls =
-  "group flex items-center gap-1 rounded-pill px-3 py-2 text-[14.5px] font-medium text-ink outline-none transition-colors hover:text-coral-text data-[state=open]:text-coral-text";
+  "group flex items-center gap-1 rounded-pill px-3 py-2 text-[14.5px] font-medium text-ink outline-none transition-colors hover:text-sky-text data-[state=open]:text-sky-text";
 
 /**
  * Whether someone is signed in, resolved in the browser.
@@ -106,7 +107,7 @@ function NavMenu({
     return (
       <Link
         href={fallbackHref}
-        className="rounded-pill px-3 py-2 text-[14.5px] font-medium text-ink transition-colors hover:text-coral-text"
+        className="rounded-pill px-3 py-2 text-[14.5px] font-medium text-ink transition-colors hover:text-sky-text"
       >
         {label}
       </Link>
@@ -153,12 +154,11 @@ export function SiteNav({
   return (
     <header className="sticky top-0 z-50 border-b border-line bg-paper">
       <Container className="gutter mx-auto flex items-center justify-between gap-3 py-4">
-        <Link
-          href="/"
-          className="flex shrink-0 items-center gap-2.5 font-display text-[21px] font-semibold text-ink"
-        >
-          <span aria-hidden="true" className="h-[9px] w-[9px] rounded-full bg-coral" />
-          Gradmire
+        <Link href="/" className="flex shrink-0 items-center" aria-label="Gradmire — home">
+          {/* The mark is wider than the wordmark it replaced, so it steps down
+              on the narrowest screens to keep the CTA and the menu button on
+              the same row at 360px. */}
+          <Logo className="h-[23px] sm:h-[26px]" />
         </Link>
 
         <nav aria-label="Main" className="hidden items-center gap-[6px] lg:flex">
@@ -250,7 +250,7 @@ export function SiteNav({
                     <Icon
                       size={17}
                       aria-hidden="true"
-                      className="mt-0.5 shrink-0 text-coral-text"
+                      className="mt-0.5 shrink-0 text-sky-text"
                     />
                     <span className="flex-1">
                       <span className="block font-medium text-ink">{tool.label}</span>
@@ -266,13 +266,13 @@ export function SiteNav({
 
           <Link
             href="/about"
-            className="rounded-pill px-3 py-2 text-[14.5px] font-medium text-ink transition-colors hover:text-coral-text"
+            className="rounded-pill px-3 py-2 text-[14.5px] font-medium text-ink transition-colors hover:text-sky-text"
           >
             About
           </Link>
           <Link
             href="/faq"
-            className="rounded-pill px-3 py-2 text-[14.5px] font-medium text-ink transition-colors hover:text-coral-text"
+            className="rounded-pill px-3 py-2 text-[14.5px] font-medium text-ink transition-colors hover:text-sky-text"
           >
             FAQ
           </Link>
@@ -281,7 +281,7 @@ export function SiteNav({
         <div className="flex items-center gap-2">
           <Link
             href={signedIn ? "/portal" : "/login"}
-            className="hidden rounded-pill px-4 py-2.5 text-ui font-medium text-ink transition-colors hover:text-coral-text sm:inline-flex"
+            className="hidden rounded-pill px-4 py-2.5 text-ui font-medium text-ink transition-colors hover:text-sky-text sm:inline-flex"
           >
             {signedIn ? "My applications" : "Sign in"}
           </Link>
@@ -433,7 +433,7 @@ export function SiteNav({
           <Link
             href={signedIn ? "/portal" : "/login"}
             onClick={() => setOpen(false)}
-            className="py-3.5 text-lede font-medium text-coral-text"
+            className="py-3.5 text-lede font-medium text-sky-text"
           >
             {signedIn ? "My applications" : "Sign in"}
           </Link>

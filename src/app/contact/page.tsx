@@ -51,7 +51,7 @@ export default async function ContactPage() {
                 ["No cost to you", "Our consultations are free. We're paid by partner universities once you enrol."],
               ].map(([term, def]) => (
                 <div key={term}>
-                  <dt className="font-mono text-mini uppercase tracking-[0.1em] text-coral-text">
+                  <dt className="font-mono text-mini uppercase tracking-[0.1em] text-sky-text">
                     {term}
                   </dt>
                   <dd className="mt-1.5 max-w-[44ch] text-ui text-ink-soft">{def}</dd>

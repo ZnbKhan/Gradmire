@@ -28,9 +28,9 @@ export default async function AdminLayout({
         <Container className="mx-auto flex flex-wrap items-center justify-between gap-4 px-7 py-4">
           <div className="flex items-center gap-7">
             <Link href="/admin" className="flex items-center gap-2.5 font-display text-lg font-semibold text-white">
-              <span aria-hidden="true" className="h-2 w-2 rounded-full bg-coral" />
+              <span aria-hidden="true" className="h-2 w-2 rounded-full bg-sky" />
               Gradmire
-              <span className="font-mono text-mini uppercase tracking-[0.14em] text-gold">
+              <span className="font-mono text-mini uppercase tracking-[0.14em] text-sky">
                 Admin
               </span>
             </Link>

@@ -3,6 +3,7 @@ import { NewsletterForm } from "@/components/forms/newsletter-form";
 import { getNavigation } from "@/lib/nav";
 import { TOOLS, COMPANY_LINKS } from "@/config/site";
 import { Container } from "@/components/ui/container";
+import { Logo } from "@/components/brand/logo";
 
 /** How many live course hubs the footer highlights. */
 const FEATURED_HUB_COUNT = 3;
@@ -58,10 +59,9 @@ export async function SiteFooter() {
       <Container className="gutter">
         <div className="grid grid-cols-2 gap-8 border-b border-white/10 py-[60px] md:grid-cols-3 lg:grid-cols-5">
           <div className="col-span-2 lg:col-span-1">
-            <span className="flex items-center gap-2.5 font-display text-[21px] font-semibold text-white">
-              <span aria-hidden="true" className="h-[9px] w-[9px] rounded-full bg-coral" />
-              Gradmire
-            </span>
+            {/* Knocked out in white rather than navy-and-sky: the sky cap sits
+                at 2.78:1 on this background and would vanish. */}
+            <Logo variant="mono" className="h-[26px] text-white" />
             <p className="mt-3 max-w-[30ch] text-body text-paper/60">
               Study abroad, organized by subject — not by flag.
             </p>

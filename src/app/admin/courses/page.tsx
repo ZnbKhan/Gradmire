@@ -33,7 +33,7 @@ export default async function AdminCoursesPage() {
           <li key={hub.id} className="rounded-2xl border border-line bg-white p-6">
             <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
               <div>
-                <span className="font-mono text-mini uppercase tracking-[0.1em] text-coral-text">
+                <span className="font-mono text-mini uppercase tracking-[0.1em] text-sky-text">
                   {hub.code}
                 </span>
                 <h2 className="text-[18px] font-semibold">{hub.name}</h2>
@@ -45,7 +45,7 @@ export default async function AdminCoursesPage() {
                 </p>
               </div>
               {!hub.dataVerifiedAt && hub.status === "live" && (
-                <span className="rounded-pill bg-coral-dim px-3 py-1.5 font-mono text-mini uppercase tracking-wider text-coral-text">
+                <span className="rounded-pill bg-sky-dim px-3 py-1.5 font-mono text-mini uppercase tracking-wider text-sky-text">
                   Unverified
                 </span>
               )}

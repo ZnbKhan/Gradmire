@@ -3,38 +3,48 @@
 @tailwind utilities;
 
 /*
- * Gradmire — departure-board visual system.
- * Palette and type roles are the client-approved direction in
- * /design-reference. Brand tokens are the source of truth; the shadcn
- * semantic tokens below are mapped onto them so existing UI primitives
- * inherit the identity without being rewritten.
+ * Gradmire — navy + sky visual system.
+ * The palette is the client's brand package: navy #11446A and sky #298DC6,
+ * per GRADMIRE LOGO PRESENTATION.pdf. Brand tokens are the source of truth;
+ * the shadcn semantic tokens below are mapped onto them so existing UI
+ * primitives inherit the identity without being rewritten.
  */
 
 @layer base {
   :root {
-    /* ---- Brand tokens ---- */
-    --ink: 232 48% 12%;
-    --ink-2: 233 48% 18%;
-    --ink-3: 234 46% 27%;
-    --paper: 48 38% 97%;
-    --paper-dim: 46 32% 92%;
-    --line: 47 22% 83%;
-
-    --coral: 12 88% 47%;
-    /*
-     * Coral at #E4390E scores 4.11:1 on paper and 4.29:1 behind white
-     * button text — both below the 4.5:1 AA floor, and it is used almost
-     * entirely at 11–13px. This darker cut clears AA; the brighter one is
-     * reserved for large display type and decorative fills.
+    /* ---- Brand tokens ----
+     * The client's identity: navy #11446A and sky #298DC6, from
+     * GRADMIRE LOGO PRESENTATION.pdf p5. White and black round out the
+     * four-colour palette. Everything below is expressed against those two.
      */
-    --coral-text: 13 95% 37%;
-    --coral-dim: 17 90% 92%;
+    --navy: 206 72% 24%;
 
-    --gold: 42 63% 48%;
-    --brand-green: 160 61% 27%;
-    --brand-green-dim: 148 32% 90%;
+    --ink: 206 40% 10%;
+    --ink-2: 206 55% 17%;
+    --ink-3: var(--navy);
+    --paper: 0 0% 100%;
+    --paper-dim: 206 30% 96%;
+    --line: 206 20% 88%;
 
-    --ink-soft: 232 20% 38%;
+    --sky: 202 66% 47%;
+    /*
+     * Sky at #298DC6 scores 3.67:1 on white — below the 4.5:1 AA floor, and
+     * the accent is used almost entirely at 11-13px. This darker cut clears
+     * AA; the brighter one is reserved for large display type and decorative
+     * fills. Same split the palette has always needed.
+     *
+     * The cut is set by the worst ground it lands on, which is not white:
+     * accent text also sits on --paper-dim (4.81:1) and, in badges, on
+     * --sky-dim (4.73:1). Lightening either of those two, or lifting this
+     * lightness back toward 40%, drops one of them under the floor.
+     */
+    --sky-text: 202 66% 38%;
+    --sky-dim: 202 60% 95%;
+
+    --brand-green: 162 58% 27%;
+    --brand-green-dim: 160 30% 92%;
+
+    --ink-soft: 206 18% 40%;
 
     /* Perforation fill for boarding-pass cards. Each section that hosts a
        pass overrides this to its own background so the notches read as holes. */
@@ -53,37 +63,46 @@
     --secondary-foreground: var(--ink);
     --muted: var(--paper-dim);
     --muted-foreground: var(--ink-soft);
-    --accent: var(--coral-dim);
-    --accent-foreground: var(--coral-text);
+    --accent: var(--sky-dim);
+    --accent-foreground: var(--sky-text);
     --destructive: 0 72% 42%;
     --destructive-foreground: 0 0% 100%;
     --border: var(--line);
-    --input: var(--line);
-    --ring: var(--coral);
+    /*
+     * Not --line. A field's border is the only thing that marks it as a
+     * field — it is white on white otherwise — so WCAG 1.4.11 wants 3:1
+     * against both the page and the tinted cards forms sit in. --line is a
+     * hairline divider at 1.32:1; darkening it to clear that floor would
+     * turn every rule and card edge on the site into a heavy slab. So the
+     * two part company here: dividers stay faint, controls get seen.
+     * 3.48:1 on white, 3.18:1 on --paper-dim.
+     */
+    --input: 206 20% 54%;
+    --ring: var(--sky-text);
     --radius: 0.875rem;
 
-    --warning: 38 92% 40%;
+    --warning: 38 92% 38%;
     --warning-foreground: 30 80% 18%;
     --success: var(--brand-green);
     --success-foreground: 0 0% 100%;
 
     /* Status text on a permanently-dark surface (the footer). The plain
        --success/--warning cuts are tuned for contrast against paper and go
-       nearly invisible on ink, so they cannot be reused there. */
-    --success-on-dark: 148 60% 73%;
+       nearly invisible on navy, so they cannot be reused there. */
+    --success-on-dark: 152 55% 70%;
     --warning-on-dark: 37 86% 69%;
   }
 
   .dark {
-    --paper: 232 40% 9%;
-    --paper-dim: 233 38% 13%;
-    --line: 233 25% 24%;
-    --ink: 45 30% 96%;
-    --ink-soft: 235 15% 68%;
-    --coral: 12 88% 60%;
-    --coral-text: 12 90% 68%;
-    --coral-dim: 12 40% 20%;
-    --gold: 42 70% 62%;
+    --paper: 206 42% 8%;
+    --paper-dim: 206 38% 12%;
+    --line: 206 24% 24%;
+    --ink: 200 25% 96%;
+    --ink-soft: 206 14% 68%;
+    --navy: 206 60% 40%;
+    --sky: 202 70% 62%;
+    --sky-text: 202 72% 70%;
+    --sky-dim: 202 42% 20%;
     --brand-green: 160 45% 45%;
     --brand-green-dim: 160 30% 18%;
 
@@ -91,23 +110,23 @@
 
     --background: var(--paper);
     --foreground: var(--ink);
-    --card: 233 38% 13%;
+    --card: 206 38% 12%;
     --card-foreground: var(--ink);
-    --popover: 233 38% 13%;
+    --popover: 206 38% 12%;
     --popover-foreground: var(--ink);
     --primary: var(--ink);
-    --primary-foreground: 232 40% 9%;
-    --secondary: 233 30% 18%;
+    --primary-foreground: 206 42% 8%;
+    --secondary: 206 30% 17%;
     --secondary-foreground: var(--ink);
-    --muted: 233 30% 18%;
+    --muted: 206 30% 17%;
     --muted-foreground: var(--ink-soft);
-    --accent: var(--coral-dim);
-    --accent-foreground: var(--coral-text);
+    --accent: var(--sky-dim);
+    --accent-foreground: var(--sky-text);
     --destructive: 0 62% 52%;
     --destructive-foreground: 0 0% 100%;
     --border: var(--line);
-    --input: var(--line);
-    --ring: var(--coral);
+    --input: 206 24% 46%;
+    --ring: var(--sky);
   }
 }
 
@@ -166,11 +185,11 @@
         24px 100% no-repeat local,
       linear-gradient(to left, hsl(var(--paper)), transparent) right center /
         24px 100% no-repeat local,
-      radial-gradient(farthest-side at 0 50%, rgba(16, 20, 46, 0.14), transparent)
+      radial-gradient(farthest-side at 0 50%, rgba(17, 68, 106, 0.16), transparent)
         left center / 14px 100% no-repeat scroll,
       radial-gradient(
           farthest-side at 100% 50%,
-          rgba(16, 20, 46, 0.14),
+          rgba(17, 68, 106, 0.16),
           transparent
         )
         right center / 14px 100% no-repeat scroll;
@@ -178,11 +197,11 @@
 
   /* Mono eyebrow used above every section heading. */
   .eyebrow {
-    @apply flex items-center gap-2.5 font-mono text-meta font-medium uppercase tracking-[0.14em] text-coral-text;
+    @apply flex items-center gap-2.5 font-mono text-meta font-medium uppercase tracking-[0.14em] text-sky-text;
   }
   .eyebrow::before {
     content: "";
-    @apply inline-block h-[7px] w-[7px] shrink-0 rounded-full bg-coral;
+    @apply inline-block h-[7px] w-[7px] shrink-0 rounded-full bg-sky;
   }
 
   /*
@@ -206,14 +225,14 @@
    * Brand gradient. Used by the course-finder progress bar and the ROI
    * summary card, both of which referenced this class before it existed —
    * the bar rendered with no fill and the card rendered white-on-white.
-   * Same ink → coral ramp as the destination tiles on the homepage.
+   * Same ink → sky ramp as the destination tiles on the homepage.
    */
   .gradient-primary {
     background-image: linear-gradient(
       135deg,
       hsl(var(--ink)) 0%,
-      hsl(var(--ink-3)) 55%,
-      hsl(var(--coral)) 100%
+      hsl(var(--navy)) 55%,
+      hsl(var(--sky)) 100%
     );
   }
 }

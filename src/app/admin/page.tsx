@@ -55,7 +55,7 @@ export default async function AdminOverview() {
       </div>
 
       {unverified.length > 0 && (
-        <div className="mb-10 rounded-2xl border-l-[3px] border-coral bg-coral-dim px-5 py-4">
+        <div className="mb-10 rounded-2xl border-l-[3px] border-sky bg-sky-dim px-5 py-4">
           <h2 className="mb-1 text-lede font-semibold">
             {unverified.length} live {unverified.length === 1 ? "hub carries" : "hubs carry"} unverified figures
           </h2>

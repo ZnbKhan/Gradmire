@@ -132,7 +132,7 @@ export default async function DestinationPage({
         >
           <Container>
             <div className="mb-10">
-              <span className="eyebrow !text-gold before:!bg-gold">Browse by course</span>
+              <span className="eyebrow !text-sky before:!bg-sky">Browse by course</span>
               <h2 className="mt-2.5 text-[clamp(26px,3vw,36px)] font-semibold text-white">
                 {hubs.length} subject hubs
               </h2>

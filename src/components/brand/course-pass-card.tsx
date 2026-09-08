@@ -31,7 +31,7 @@ export function CoursePassCard({
         <span
           className={cn(
             "mb-2.5 block font-mono text-mini uppercase tracking-[0.1em]",
-            isStub ? "text-ink-soft" : "text-coral-text",
+            isStub ? "text-ink-soft" : "text-sky-text",
           )}
         >
           {code}
@@ -56,7 +56,7 @@ export function CoursePassCard({
           </span>
         </div>
         {!isStub && (
-          <span className="flex h-[34px] w-[34px] shrink-0 items-center justify-center rounded-full bg-ink text-white transition-colors group-hover:bg-coral">
+          <span className="flex h-[34px] w-[34px] shrink-0 items-center justify-center rounded-full bg-ink text-white transition-colors group-hover:bg-navy">
             <ArrowRight size={15} aria-hidden="true" />
           </span>
         )}

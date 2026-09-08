@@ -34,7 +34,7 @@ function Field({
   return (
     <div>
       <label htmlFor={id} className="mb-1.5 block text-body font-medium text-ink">
-        {label} {required && <span className="text-coral-text">*</span>}
+        {label} {required && <span className="text-sky-text">*</span>}
       </label>
       <input
         id={id}
@@ -61,7 +61,7 @@ function Field({
 function SubmitButton() {
   const { pending } = useFormStatus();
   return (
-    <CtaButton type="submit" disabled={pending} variant="coral" block>
+    <CtaButton type="submit" disabled={pending} variant="accent" block>
       {pending ? "Booking…" : "Book free consultation"}
       {!pending && <ArrowRight size={15} aria-hidden="true" />}
     </CtaButton>

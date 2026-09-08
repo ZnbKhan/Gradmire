@@ -22,10 +22,16 @@ const ctaVariants = cva(
   {
     variants: {
       variant: {
-        /** Default. Ink that warms to coral. */
-        primary: "bg-ink text-paper hover:bg-coral",
-        /** For when the CTA must win against a busy section. */
-        coral: "bg-coral text-white hover:bg-ink",
+        /** Default. Ink that lifts to brand navy. */
+        primary: "bg-ink text-paper hover:bg-navy",
+        /**
+         * For when the CTA must win against a busy section.
+         *
+         * Filled with the bright sky and labelled in ink, not white: white on
+         * #298DC6 is 3.67:1 and fails AA, while ink on it clears at 5.4:1.
+         * The hover swaps to the darker sky cut, which does carry white.
+         */
+        accent: "bg-sky text-ink hover:bg-sky-text hover:text-white",
         /** Secondary next to a primary. */
         outline:
           "border-[1.5px] border-ink text-ink hover:bg-ink hover:text-paper",

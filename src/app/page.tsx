@@ -70,7 +70,7 @@ export default async function HomePage() {
               <span className="eyebrow">Study abroad, reordered</span>
               <h1 className="my-[18px] max-w-[15ch] text-[clamp(34px,4.6vw,58px)] font-semibold leading-[1.05]">
                 Find your course. Then find{" "}
-                <em className="font-medium italic text-coral">the UK</em> around it.
+                <em className="font-medium italic text-sky">the UK</em> around it.
               </h1>
               <p className="mb-[30px] max-w-[46ch] text-[17.5px] text-ink-soft">
                 Most platforms start with &ldquo;pick a country.&rdquo; We start with what
@@ -80,8 +80,8 @@ export default async function HomePage() {
               <div className="mb-[34px] flex flex-wrap gap-3.5">
                 <Cta
                   href="#courses"
-                  variant="coral"
-                  className="shadow-[0_10px_22px_-10px_rgba(228,57,14,0.55)]"
+                  variant="accent"
+                  className="shadow-[0_10px_22px_-10px_rgba(41,141,198,0.55)]"
                 >
                   Find my course
                   <ArrowRight size={15} aria-hidden="true" />
@@ -142,7 +142,7 @@ export default async function HomePage() {
                   <Link
                     key={d.id}
                     href={`/${d.slug}`}
-                    className="group relative flex min-h-[290px] flex-col justify-end overflow-hidden rounded-2xl bg-gradient-to-br from-ink via-ink-3 to-coral p-6 text-white shadow-card"
+                    className="group relative flex min-h-[290px] flex-col justify-end overflow-hidden rounded-2xl bg-gradient-to-br from-ink via-navy to-sky-text p-6 text-white shadow-card"
                   >
                     <span className="absolute right-5 top-5 flex h-16 w-16 rotate-[9deg] items-center justify-center rounded-full border-2 border-white/50 text-center font-mono text-[9.5px] uppercase leading-tight tracking-[0.06em] text-white/80">
                       {d.stampLabel}
@@ -202,7 +202,7 @@ export default async function HomePage() {
           <Container>
             <Reveal group className="mb-10 flex flex-wrap items-end justify-between gap-6">
               <div>
-                <span className="eyebrow !text-gold before:!bg-gold">
+                <span className="eyebrow !text-sky before:!bg-sky">
                   Browse by course
                 </span>
                 <h2 className="mt-2.5 max-w-[20ch] text-[clamp(26px,3vw,36px)] font-semibold text-white">
@@ -259,7 +259,7 @@ export default async function HomePage() {
         <section className="gutter pb-[90px] pt-5">
           <Container>
             <Reveal className="relative overflow-hidden rounded-3xl bg-ink px-8 py-14 text-center">
-              <span className="eyebrow justify-center !text-gold before:!bg-gold">
+              <span className="eyebrow justify-center !text-sky before:!bg-sky">
                 Ready when you are
               </span>
               <h2 className="mx-auto mb-4 mt-3 max-w-[16ch] text-[clamp(28px,3.6vw,42px)] font-semibold text-white">
@@ -273,7 +273,7 @@ export default async function HomePage() {
                 <Cta
                   href="/contact"
                   variant="onDark"
-                  className="hover:bg-gold hover:text-white"
+                  className="hover:bg-sky-text hover:text-white"
                 >
                   Book free consultation
                   <ArrowRight size={15} aria-hidden="true" />

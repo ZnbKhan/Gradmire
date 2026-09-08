@@ -39,7 +39,7 @@ function StageTrack({ stage }: { stage: string }) {
             aria-current={active ? "step" : undefined}
             className={`rounded-lg border px-3 py-2.5 text-[12px] ${
               active
-                ? "border-coral bg-coral-dim font-semibold text-coral-text"
+                ? "border-sky bg-sky-dim font-semibold text-sky-text"
                 : done
                   ? "border-brandgreen/30 bg-brandgreen-dim text-ink"
                   : "border-line bg-white text-ink-soft"
@@ -125,7 +125,7 @@ export default async function PortalPage() {
                   <StageTrack stage={app.stage} />
 
                   {app.applicantNote && (
-                    <p className="mt-5 rounded-r-lg border-l-[3px] border-gold bg-paper-dim px-4 py-3 text-ui">
+                    <p className="mt-5 rounded-r-lg border-l-[3px] border-sky bg-paper-dim px-4 py-3 text-ui">
                       {app.applicantNote}
                     </p>
                   )}

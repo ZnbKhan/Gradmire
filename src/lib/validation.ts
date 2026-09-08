@@ -34,3 +34,21 @@ export const newsletterSchema = z.object({
   courseHubSlug: z.string().trim().max(120).optional().or(z.literal("")),
   website: z.string().max(0).optional(),
 });
+
+export const signupSchema = z.object({
+  fullName: z
+    .string()
+    .trim()
+    .min(2, "Enter your full name")
+    .max(120, "That name is too long"),
+  email: z
+    .string()
+    .trim()
+    .toLowerCase()
+    .email("Enter an email address we can reply to")
+    .max(255),
+  /** Hidden field. Bots fill it in; humans never see it. */
+  website: z.string().max(0, "Rejected").optional(),
+});
+
+export type SignupInput = z.infer<typeof signupSchema>;

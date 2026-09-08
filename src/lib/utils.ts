@@ -1,5 +1,20 @@
 import { clsx, type ClassValue } from "clsx";
-import { twMerge } from "tailwind-merge";
+import { extendTailwindMerge } from "tailwind-merge";
+
+/**
+ * The brand type scale shares the `text-` prefix with text colours, and
+ * tailwind-merge can only tell them apart for sizes it already knows. Left
+ * unregistered it reads `text-ui` as a colour, so `cn("text-paper", "text-ui")`
+ * drops the colour and renders ink-on-ink. Keep this list in sync with
+ * `fontSize` in tailwind.config.ts.
+ */
+const twMerge = extendTailwindMerge({
+  extend: {
+    classGroups: {
+      "font-size": [{ text: ["micro", "mini", "meta", "body", "ui", "lede"] }],
+    },
+  },
+});
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));

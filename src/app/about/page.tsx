@@ -20,7 +20,7 @@ export const metadata: Metadata = {
 
 function AboutPageContent() {
   return (
-    <div className="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
+    <div className="mx-auto max-w-4xl gutter py-16">
       {/* Hero */}
       <div className="text-center mb-16">
         <Badge variant="outline" className="mb-4">
@@ -119,7 +119,7 @@ function AboutPageContent() {
                 <p className="mt-2 text-sm text-muted-foreground">
                   {person.desc}
                 </p>
-                <p className="mt-2 text-[10px] uppercase tracking-wider text-muted-foreground/50">
+                <p className="mt-2 text-micro uppercase tracking-wider text-muted-foreground/50">
                   Placeholder profile
                 </p>
               </CardContent>

@@ -25,16 +25,11 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { getAllCountries } from "@/data/countries";
 import type { CourseHub } from "@/data/courses";
+import { PRIMARY_DESTINATION } from "@/config/site";
 
 const iconMap: Record<string, React.ElementType> = {
   Briefcase, Cpu, Wrench, Heart, Scale, PenTool, TrendingUp, Brain,
 };
-
-const subjectOptions = [
-  { value: "business", label: "Business & Management", icon: "Briefcase" },
-  { value: "cs", label: "Computer Science, AI & Data Science", icon: "Cpu" },
-  { value: "engineering", label: "Engineering & Technology", icon: "Wrench" },
-];
 
 const gradeOptions = [
   { value: "first", label: "First Class (70%+) or GPA 3.7+" },
@@ -65,28 +60,18 @@ type Answers = {
   priority: string;
 };
 
+/**
+ * `answers.subject` is a hub slug directly — the quiz's radio options are
+ * generated from the same `hubs` list this matches against, so there is no
+ * separate label-to-slug table to keep in sync as hubs are added or renamed.
+ */
 function matchCourses(answers: Answers, hubs: CourseHub[]): CourseHub[] {
-  const allHubs = hubs;
-  const slugMap: Record<string, string> = {
-    business: "business-management",
-    cs: "computer-science-ai-data-science",
-    engineering: "engineering-technology",
-  };
+  const matched = hubs.filter((h) => h.slug === answers.subject);
 
-  const targetSlug = slugMap[answers.subject];
-  const matched = allHubs.filter((h) => h.slug === targetSlug);
+  // No match (or the quiz was skipped): fall back to the first two hubs.
+  if (matched.length === 0) return hubs.slice(0, 2);
 
-  // If subject doesn't match, recommend based on priority
-  if (matched.length === 0) {
-    // Fallback: recommend top 2 by salary if career-focused
-    if (answers.priority === "career") {
-      return allHubs.slice(0, 2);
-    }
-    return allHubs.slice(0, 2);
-  }
-
-  // Add a secondary recommendation
-  const secondary = allHubs.find((h) => h.slug !== targetSlug);
+  const secondary = hubs.find((h) => h.slug !== answers.subject);
   const results = [...matched];
   if (secondary) results.push(secondary);
 
@@ -95,18 +80,25 @@ function matchCourses(answers: Answers, hubs: CourseHub[]): CourseHub[] {
 
 const TOTAL_STEPS = 5;
 
+const initialAnswers: Answers = {
+  subject: "",
+  grade: "",
+  budget: "",
+  destinations: [PRIMARY_DESTINATION],
+  priority: "",
+};
+
 export default function CourseFinderPage({ hubs }: { hubs: CourseHub[] }) {
   const [step, setStep] = useState(0);
-  const [answers, setAnswers] = useState<Answers>({
-    subject: "",
-    grade: "",
-    budget: "",
-    destinations: ["uk"],
-    priority: "",
-  });
+  const [answers, setAnswers] = useState<Answers>(initialAnswers);
   const [showResults, setShowResults] = useState(false);
 
-  // V1 ships the UK only.
+  // Live hubs only — a stub has no content to recommend into yet.
+  const subjectOptions = hubs
+    .filter((h) => !h.isStub)
+    .map((h) => ({ value: h.slug, label: h.name, icon: h.icon }));
+
+  // V1 ships one destination live at a time.
   const countries = getAllCountries().filter((c) => c.live);
 
   const canProceed = () => {
@@ -134,7 +126,7 @@ export default function CourseFinderPage({ hubs }: { hubs: CourseHub[] }) {
 
   if (showResults) {
     return (
-      <div className="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-3xl gutter py-16">
         <div className="text-center mb-10">
           <div className="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10 mb-4">
             <Target className="h-8 w-8 text-primary" />
@@ -149,7 +141,10 @@ export default function CourseFinderPage({ hubs }: { hubs: CourseHub[] }) {
           {results.map((course) => {
             const Icon = iconMap[course.icon] || BookOpen;
             return (
-              <Card key={course.slug} className="transition-all hover:shadow-lg">
+              <Card
+                key={course.slug}
+                className="transition-shadow duration-150 ease-out hover:shadow-lg"
+              >
                 <CardContent className="p-6">
                   <div className="flex items-start gap-4">
                     <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-primary/10">
@@ -190,7 +185,7 @@ export default function CourseFinderPage({ hubs }: { hubs: CourseHub[] }) {
             <ArrowLeft className="h-4 w-4" />
             Back
           </Button>
-          <Button variant="outline" onClick={() => { setStep(0); setShowResults(false); setAnswers({ subject: "", grade: "", budget: "", destinations: ["uk"], priority: "" }); }}>
+          <Button variant="outline" onClick={() => { setStep(0); setShowResults(false); setAnswers(initialAnswers); }}>
             Start Over
           </Button>
           <Button asChild className="gap-2">
@@ -205,7 +200,7 @@ export default function CourseFinderPage({ hubs }: { hubs: CourseHub[] }) {
   }
 
   return (
-    <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 lg:px-8">
+    <div className="mx-auto max-w-2xl gutter py-16">
       <div className="text-center mb-10">
         <Badge variant="outline" className="mb-4">
           <Search className="mr-1.5 h-3.5 w-3.5" />
@@ -223,10 +218,15 @@ export default function CourseFinderPage({ hubs }: { hubs: CourseHub[] }) {
           <span>Step {step + 1} of {TOTAL_STEPS}</span>
           <span>{Math.round(((step + 1) / TOTAL_STEPS) * 100)}%</span>
         </div>
-        <div className="h-2 rounded-full bg-muted">
+        {/*
+          Scaled rather than resized: animating `width` reflowed the bar on
+          every frame, where a transform is composited. The track is
+          `overflow-hidden` so the rounded ends stay rounded under scale.
+        */}
+        <div className="h-2 overflow-hidden rounded-full bg-muted">
           <div
-            className="h-2 rounded-full gradient-primary transition-all duration-500"
-            style={{ width: `${((step + 1) / TOTAL_STEPS) * 100}%` }}
+            className="h-2 origin-left rounded-full gradient-primary transition-transform duration-500 ease-out"
+            style={{ transform: `scaleX(${(step + 1) / TOTAL_STEPS})` }}
           />
         </div>
       </div>

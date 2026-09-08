@@ -5,6 +5,7 @@ import { eq } from "drizzle-orm";
 import { db, schema } from "@/db";
 import { consultationSchema, newsletterSchema } from "@/lib/validation";
 import { rateLimit } from "@/lib/rate-limit";
+import { CONTACT_EMAIL } from "@/config/site";
 
 export type FormState = {
   ok: boolean;
@@ -92,8 +93,7 @@ export async function submitConsultation(
     console.error("[consultation] failed to store lead", error);
     return {
       ok: false,
-      message:
-        "We couldn't save that just now. Email hello@gradmire.com and we'll pick it up directly.",
+      message: `We couldn't save that just now. Email ${CONTACT_EMAIL} and we'll pick it up directly.`,
     };
   }
 }

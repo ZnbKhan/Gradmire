@@ -1,13 +1,19 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowRight } from "lucide-react";
 import { SiteHeader } from "@/components/brand/site-header";
 import { SiteFooter } from "@/components/brand/site-footer";
 import { CoursePassCard } from "@/components/brand/course-pass-card";
 import { getDestination, getDestinations, getCourseHubs } from "@/lib/queries";
+import { optionalContent } from "@/lib/safe-query";
 import { isDatabaseConfigured } from "@/db";
+import { PRIMARY_DESTINATION } from "@/config/site";
+import { Container } from "@/components/ui/container";
+import { Cta } from "@/components/ui/cta";
 
+// Next requires route segment config to be a literal it can statically
+// extract, so this cannot reference CONTENT_REVALIDATE_SECONDS directly.
+// Keep it equal to that constant in @/config/site.
 export const revalidate = 3600;
 
 export async function generateStaticParams() {
@@ -53,10 +59,19 @@ export default async function DestinationPage({
    * content and are excluded from indexing.
    */
   if (destination.status !== "live") {
+    const primary = await getDestination(PRIMARY_DESTINATION);
+    const primaryHubs = primary
+      ? await optionalContent(
+          "coming-soon teaser hubs",
+          () => getCourseHubs(primary.slug),
+          [],
+        )
+      : [];
+
     return (
       <>
         <SiteHeader />
-        <main id="main" className="px-7 py-24">
+        <main id="main" className="gutter py-24">
           <div className="mx-auto max-w-[52ch] text-center">
             <div aria-hidden="true" className="mb-6 text-5xl">
               {destination.flagEmoji}
@@ -65,18 +80,20 @@ export default async function DestinationPage({
             <h1 className="mb-4 mt-3 text-[clamp(30px,4vw,44px)] font-semibold">
               {destination.name} guides are in research
             </h1>
-            <p className="mb-8 text-[16px] text-ink-soft">
-              We build one destination at a time so each subject guide carries real
-              ranking, fee and deadline data rather than a directory listing. The
-              United Kingdom is live now with eight subject hubs.
-            </p>
-            <Link
-              href="/uk"
-              className="inline-flex items-center gap-2 rounded-pill bg-ink px-6 py-3.5 text-[15px] font-semibold text-paper transition-colors hover:bg-coral"
-            >
-              Explore UK courses
-              <ArrowRight size={15} aria-hidden="true" />
-            </Link>
+            {primary && (
+              <p className="mb-8 text-[16px] text-ink-soft">
+                We build one destination at a time so each subject guide carries
+                real ranking, fee and deadline data rather than a directory
+                listing. {primary.name} is live now with {primaryHubs.length}{" "}
+                subject {primaryHubs.length === 1 ? "hub" : "hubs"}.
+              </p>
+            )}
+            {primary && (
+              <Cta href={`/${primary.slug}`}>
+                Explore {primary.name} courses
+                <ArrowRight size={15} aria-hidden="true" />
+              </Cta>
+            )}
           </div>
         </main>
         <SiteFooter />
@@ -84,14 +101,18 @@ export default async function DestinationPage({
     );
   }
 
-  const hubs = await getCourseHubs(country);
+  const hubs = await optionalContent(
+    `${country} course hubs`,
+    () => getCourseHubs(country),
+    [],
+  );
 
   return (
     <>
       <SiteHeader />
       <main id="main">
-        <section className="px-7 pb-12 pt-16">
-          <div className="mx-auto max-w-[1180px]">
+        <section className="gutter pb-12 pt-16">
+          <Container>
             <span className="eyebrow">Study destination</span>
             <h1 className="my-4 max-w-[16ch] text-[clamp(34px,4.6vw,54px)] font-semibold leading-[1.06]">
               Study in the {destination.name}
@@ -101,16 +122,17 @@ export default async function DestinationPage({
               subject-level rankings, real fee ranges, deadline windows and graduate
               salary bands.
             </p>
-          </div>
+          </Container>
         </section>
 
+        {hubs.length > 0 && (
         <section
           id="courses"
-          className="bg-ink px-7 py-[70px] text-paper [--perf-bg:var(--ink)]"
+          className="bg-ink gutter py-[70px] text-paper [--perf-bg:var(--ink)]"
         >
-          <div className="mx-auto max-w-[1180px]">
+          <Container>
             <div className="mb-10">
-              <span className="eyebrow !text-gold before:!bg-gold">Browse by course</span>
+              <span className="eyebrow !text-sky before:!bg-sky">Browse by course</span>
               <h2 className="mt-2.5 text-[clamp(26px,3vw,36px)] font-semibold text-white">
                 {hubs.length} subject hubs
               </h2>
@@ -122,14 +144,15 @@ export default async function DestinationPage({
                   code={hub.code}
                   name={hub.name}
                   description={hub.oneLiner}
-                  universityCount={hub.universities.length}
+                  universityCount={hub.universityCount}
                   isStub={hub.status === "stub"}
                   href={`/${country}/courses/${hub.slug}`}
                 />
               ))}
             </div>
-          </div>
+          </Container>
         </section>
+        )}
       </main>
       <SiteFooter />
     </>

@@ -1,7 +1,7 @@
 import "server-only";
 import { redirect } from "next/navigation";
 import { eq } from "drizzle-orm";
-import { createClient } from "@/lib/supabase/server";
+import { getSessionUser } from "@/lib/supabase/server";
 import { db, schema } from "@/db";
 
 /**
@@ -10,11 +10,7 @@ import { db, schema } from "@/db";
  * grant access on its own.
  */
 export async function requireStaff() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
+  const user = await getSessionUser();
   if (!user?.email) redirect("/login?next=/admin");
 
   const member = await db.query.staff.findFirst({

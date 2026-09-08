@@ -6,7 +6,12 @@ import { SiteHeader } from "@/components/brand/site-header";
 import { SiteFooter } from "@/components/brand/site-footer";
 import { getCourseHub, getAllHubPaths, formatRange } from "@/lib/queries";
 import { isDatabaseConfigured } from "@/db";
+import { Container } from "@/components/ui/container";
+import { Cta } from "@/components/ui/cta";
 
+// Next requires route segment config to be a literal it can statically
+// extract, so this cannot reference CONTENT_REVALIDATE_SECONDS directly.
+// Keep it equal to that constant in @/config/site.
 export const revalidate = 3600;
 
 export async function generateStaticParams() {
@@ -24,7 +29,9 @@ export async function generateMetadata({
   const hub = await getCourseHub(country, slug);
   if (!hub) return {};
 
-  const tuition = formatRange(hub.tuitionMin, hub.tuitionMax, { suffix: "/year" });
+  const tuition = formatRange(hub.tuitionMin, hub.tuitionMax, hub.currency, {
+    suffix: "/year",
+  });
   return {
     title: `${hub.name} in the ${hub.destination.name}`,
     description:
@@ -38,7 +45,7 @@ export async function generateMetadata({
 function Stat({ label, value }: { label: string; value: string }) {
   return (
     <div className="rounded-2xl border border-line bg-white p-5">
-      <span className="mb-2 block font-mono text-[11px] uppercase tracking-[0.07em] text-ink-soft">
+      <span className="mb-2 block font-mono text-mini uppercase tracking-[0.07em] text-ink-soft">
         {label}
       </span>
       <span className="font-display text-[22px] font-semibold">{value}</span>
@@ -55,12 +62,16 @@ export default async function CourseHubPage({
   const hub = await getCourseHub(country, slug);
   if (!hub) notFound();
 
-  const tuition = formatRange(hub.tuitionMin, hub.tuitionMax, { compact: true });
-  const living = formatRange(hub.livingCostMin, hub.livingCostMax, {
+  const tuition = formatRange(hub.tuitionMin, hub.tuitionMax, hub.currency, {
+    compact: true,
+  });
+  const living = formatRange(hub.livingCostMin, hub.livingCostMax, hub.currency, {
     compact: true,
     suffix: "/mo",
   });
-  const salary = formatRange(hub.salaryMin, hub.salaryMax, { compact: true });
+  const salary = formatRange(hub.salaryMin, hub.salaryMax, hub.currency, {
+    compact: true,
+  });
   const ielts =
     hub.ieltsMin && hub.ieltsMax && hub.ieltsMin !== hub.ieltsMax
       ? `${hub.ieltsMin}–${hub.ieltsMax}`
@@ -77,7 +88,7 @@ export default async function CourseHubPage({
     return (
       <>
         <SiteHeader />
-        <main id="main" className="px-7 py-24">
+        <main id="main" className="gutter py-24">
           <div className="mx-auto max-w-[52ch] text-center">
             <span className="eyebrow justify-center">Guide in research</span>
             <h1 className="mb-4 mt-3 text-[clamp(30px,4vw,44px)] font-semibold">
@@ -87,13 +98,10 @@ export default async function CourseHubPage({
               {hub.oneLiner} We&rsquo;re still verifying rankings, fees and deadlines
               for this subject — we publish a hub only once the figures are sourced.
             </p>
-            <Link
-              href="/contact"
-              className="inline-flex items-center gap-2 rounded-pill bg-ink px-6 py-3.5 text-[15px] font-semibold text-paper transition-colors hover:bg-coral"
-            >
+            <Cta href="/contact">
               Talk to a counselor anyway
               <ArrowRight size={15} aria-hidden="true" />
-            </Link>
+            </Cta>
           </div>
         </main>
         <SiteFooter />
@@ -108,7 +116,7 @@ export default async function CourseHubPage({
         {/* Boarding-pass stub breadcrumb */}
         <nav
           aria-label="Breadcrumb"
-          className="border-b border-dashed border-line px-7 py-5"
+          className="border-b border-dashed border-line gutter py-5"
         >
           <ol className="mx-auto flex max-w-[1180px] items-center gap-2.5 font-mono text-xs uppercase tracking-[0.06em] text-ink-soft">
             <li><Link href="/" className="hover:text-ink">Gradmire</Link></li>
@@ -119,8 +127,8 @@ export default async function CourseHubPage({
           </ol>
         </nav>
 
-        <section className="px-7 pb-11 pt-12">
-          <div className="mx-auto grid max-w-[1180px] items-end gap-11 lg:grid-cols-[1.5fr_1fr]">
+        <section className="gutter pb-11 pt-12">
+          <Container className="mx-auto grid items-end gap-11 lg:grid-cols-[1.5fr_1fr]">
             <div>
               <span className="eyebrow">Course hub · {hub.code}</span>
               <h1 className="my-4 text-[clamp(32px,4vw,50px)] font-semibold leading-[1.06]">
@@ -139,32 +147,32 @@ export default async function CourseHubPage({
               ].map(([label, value], i, arr) => (
                 <div
                   key={label}
-                  className={`flex items-center justify-between gap-4 py-2.5 text-[12.5px] ${
+                  className={`flex items-center justify-between gap-4 py-2.5 text-meta ${
                     i < arr.length - 1 ? "border-b border-dashed border-white/15" : ""
                   }`}
                 >
                   <dt className="text-white/70">{label}</dt>
-                  <dd className="font-semibold text-gold">{value}</dd>
+                  <dd className="font-semibold text-sky">{value}</dd>
                 </div>
               ))}
             </dl>
-          </div>
+          </Container>
         </section>
 
         {hub.overview && (
-          <section className="px-7 pb-4">
-            <div className="mx-auto max-w-[1180px]">
+          <section className="gutter pb-4">
+            <Container>
               <p className="max-w-[68ch] text-[16px] leading-relaxed text-ink-soft">
                 {hub.overview}
               </p>
-            </div>
+            </Container>
           </section>
         )}
 
         {/* Universities */}
         {hub.universities.length > 0 && (
-          <section className="px-7 py-11">
-            <div className="mx-auto max-w-[1180px]">
+          <section className="gutter py-11">
+            <Container>
               <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
                 <h2 className="text-[26px] font-semibold">
                   Top universities for {hub.name.split(" ")[0]}
@@ -173,7 +181,13 @@ export default async function CourseHubPage({
                   Subject-ranked, not overall rank
                 </span>
               </div>
-              <div className="overflow-x-auto rounded-2xl border border-line">
+              {/* tabIndex: the only way to scroll this region by keyboard. */}
+              <div
+                tabIndex={0}
+                role="region"
+                aria-label={`Top universities for ${hub.name}`}
+                className="scroll-x-hint overflow-x-auto rounded-2xl border border-line"
+              >
                 <table className="w-full min-w-[560px] border-collapse text-sm">
                   <thead>
                     <tr>
@@ -181,7 +195,7 @@ export default async function CourseHubPage({
                         <th
                           key={h}
                           scope="col"
-                          className="border-b border-ink bg-white px-4 py-3 text-left font-mono text-[11px] font-medium uppercase tracking-[0.08em] text-ink-soft"
+                          className="border-b border-ink bg-white px-4 py-3 text-left font-mono text-mini font-medium uppercase tracking-[0.08em] text-ink-soft"
                         >
                           {h}
                         </th>
@@ -199,7 +213,7 @@ export default async function CourseHubPage({
                         </td>
                         <td className="border-b border-line px-4 py-3.5">
                           {u.subjectRank && (
-                            <span className="rounded-pill bg-coral-dim px-2.5 py-1 font-mono text-[11px] font-semibold text-coral-text">
+                            <span className="rounded-pill bg-sky-dim px-2.5 py-1 font-mono text-mini font-semibold text-sky-text">
                               {u.subjectRank}
                             </span>
                           )}
@@ -210,17 +224,17 @@ export default async function CourseHubPage({
                 </table>
               </div>
               {hub.sources && hub.sources.length > 0 && (
-                <p className="mt-3 font-mono text-[11px] uppercase tracking-wide text-ink-soft">
+                <p className="mt-3 font-mono text-mini uppercase tracking-wide text-ink-soft">
                   {hub.sources[0].label}
                 </p>
               )}
-            </div>
+            </Container>
           </section>
         )}
 
         {/* Fees & entry */}
-        <section className="px-7 py-11">
-          <div className="mx-auto max-w-[1180px]">
+        <section className="gutter py-11">
+          <Container>
             <h2 className="mb-6 text-[26px] font-semibold">Fees &amp; entry requirements</h2>
             <div className="grid gap-10 lg:grid-cols-2">
               <div className="grid gap-4 sm:grid-cols-2">
@@ -245,15 +259,15 @@ export default async function CourseHubPage({
               <div className="mt-8 space-y-3">
                 {hub.deadlines.map((d) => (
                   <div key={d.id}>
-                    <div className="flex items-start gap-3.5 rounded-2xl bg-gold px-5 py-4 text-[14px] font-semibold text-ink">
+                    <div className="flex items-start gap-3.5 rounded-2xl bg-sky px-5 py-4 text-ui font-semibold text-ink">
                       <CalendarDays size={20} className="mt-0.5 shrink-0" aria-hidden="true" />
                       <span>
                         {d.label}: {d.detail}
                       </span>
                     </div>
                     {d.warning && (
-                      <p className="mt-2 flex items-start gap-2 rounded-lg border-l-[3px] border-coral bg-coral-dim px-4 py-3 text-[13.5px] text-ink">
-                        <AlertTriangle size={16} className="mt-0.5 shrink-0 text-coral-text" aria-hidden="true" />
+                      <p className="mt-2 flex items-start gap-2 rounded-lg border-l-[3px] border-sky bg-sky-dim px-4 py-3 text-body text-ink">
+                        <AlertTriangle size={16} className="mt-0.5 shrink-0 text-sky-text" aria-hidden="true" />
                         {d.warning}
                       </p>
                     )}
@@ -261,18 +275,18 @@ export default async function CourseHubPage({
                 ))}
               </div>
             )}
-          </div>
+          </Container>
         </section>
 
         {/* Careers */}
-        <section className="px-7 py-11">
-          <div className="mx-auto max-w-[1180px]">
+        <section className="gutter py-11">
+          <Container>
             <div className="rounded-3xl bg-ink p-9 text-white">
               <h2 className="text-[26px] font-semibold text-white">Career outcomes</h2>
               <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
                 {salary && (
                   <div className="rounded-2xl border border-white/15 bg-white/5 p-5">
-                    <span className="mb-2 block font-mono text-[11px] uppercase tracking-[0.07em] text-white/60">
+                    <span className="mb-2 block font-mono text-mini uppercase tracking-[0.07em] text-white/60">
                       Starting salary
                     </span>
                     <span className="font-display text-[22px] font-semibold">{salary}</span>
@@ -280,7 +294,7 @@ export default async function CourseHubPage({
                 )}
                 {hub.topSectors && hub.topSectors.length > 0 && (
                   <div className="rounded-2xl border border-white/15 bg-white/5 p-5 sm:col-span-1 lg:col-span-3">
-                    <span className="mb-2 block font-mono text-[11px] uppercase tracking-[0.07em] text-white/60">
+                    <span className="mb-2 block font-mono text-mini uppercase tracking-[0.07em] text-white/60">
                       Top hiring sectors
                     </span>
                     <span className="font-display text-[16px]">
@@ -295,7 +309,7 @@ export default async function CourseHubPage({
                   {hub.commonEmployers.map((e) => (
                     <li
                       key={e}
-                      className="rounded-pill bg-white/10 px-3.5 py-2 font-mono text-[12.5px]"
+                      className="rounded-pill bg-white/10 px-3.5 py-2 font-mono text-meta"
                     >
                       {e}
                     </li>
@@ -308,7 +322,7 @@ export default async function CourseHubPage({
                   {hub.visaNotes.map((n) => (
                     <li
                       key={n}
-                      className="rounded-r-lg border-l-[3px] border-gold bg-white/10 px-4 py-3 text-[14px]"
+                      className="rounded-r-lg border-l-[3px] border-sky bg-white/10 px-4 py-3 text-ui"
                     >
                       {n}
                     </li>
@@ -316,29 +330,26 @@ export default async function CourseHubPage({
                 </ul>
               )}
             </div>
-          </div>
+          </Container>
         </section>
 
         {/* CTA */}
-        <section className="px-7 pb-20 pt-4">
-          <div className="mx-auto max-w-[1180px]">
+        <section className="gutter pb-20 pt-4">
+          <Container>
             <div className="rounded-3xl bg-brandgreen p-10 text-center text-white">
               <h2 className="mb-2.5 text-[28px] font-semibold text-white">
                 Get a shortlist for {hub.name}
               </h2>
-              <p className="mx-auto mb-6 max-w-[46ch] text-[15px] text-white/85">
+              <p className="mx-auto mb-6 max-w-[46ch] text-lede text-white/85">
                 Free 20-minute consultation with a counselor who specializes in this
                 subject.
               </p>
-              <Link
-                href={`/contact?course=${hub.slug}`}
-                className="inline-flex items-center gap-2 rounded-pill bg-white px-6 py-3.5 text-[15px] font-semibold text-ink transition-transform hover:-translate-y-0.5"
-              >
+              <Cta href={`/contact?course=${hub.slug}`} variant="onDark">
                 Book free consultation
                 <ArrowRight size={15} aria-hidden="true" />
-              </Link>
+              </Cta>
             </div>
-          </div>
+          </Container>
         </section>
       </main>
       <SiteFooter />

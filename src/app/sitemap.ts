@@ -1,19 +1,25 @@
 import type { MetadataRoute } from "next";
 import { getAllHubPaths, getDestinations } from "@/lib/queries";
+import { SITE_URL, TOOLS, COMPANY_LINKS } from "@/config/site";
 
-const base = process.env.NEXT_PUBLIC_SITE_URL ?? "https://gradmire.com";
+const base = SITE_URL;
+
+/** Static, always-indexable routes — pulled from the same config the nav renders. */
+const STATIC_PATHS = [
+  "",
+  ...COMPANY_LINKS.map((l) => l.href),
+  ...TOOLS.map((t) => t.href),
+];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const [destinations, hubs] = await Promise.all([getDestinations(), getAllHubPaths()]);
 
-  const staticRoutes = ["", "/about", "/faq", "/contact", "/tools/course-finder", "/tools/roi-calculator", "/tools/comparator", "/tools/deadline-tracker"].map(
-    (path) => ({
-      url: `${base}${path}`,
-      lastModified: new Date(),
-      changeFrequency: "weekly" as const,
-      priority: path === "" ? 1 : 0.7,
-    }),
-  );
+  const staticRoutes = STATIC_PATHS.map((path) => ({
+    url: `${base}${path}`,
+    lastModified: new Date(),
+    changeFrequency: "weekly" as const,
+    priority: path === "" ? 1 : 0.7,
+  }));
 
   // Only live destinations and published hubs belong in the sitemap.
   const destinationRoutes = destinations

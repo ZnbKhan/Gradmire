@@ -1,8 +1,10 @@
 import "server-only";
 import { cache } from "react";
 import { unstable_cache } from "next/cache";
-import { asc, eq, and } from "drizzle-orm";
+import { asc, eq, and, inArray, sql } from "drizzle-orm";
 import { db, schema } from "@/db";
+import { formatMoneyRange } from "@/lib/money";
+import { CONTENT_REVALIDATE_SECONDS } from "@/config/site";
 
 /**
  * Content reads are cached at two levels:
@@ -13,7 +15,7 @@ import { db, schema } from "@/db";
  */
 
 export const CONTENT_TAG = "content";
-const REVALIDATE_SECONDS = 3600;
+const REVALIDATE_SECONDS = CONTENT_REVALIDATE_SECONDS;
 
 export type HubWithChildren = Awaited<ReturnType<typeof getCourseHub>>;
 
@@ -42,21 +44,39 @@ export const getDestination = cache((slug: string) =>
 /** Every hub for a destination, live and stub, in display order. */
 export const getCourseHubs = cache((destinationSlug: string) =>
   unstable_cache(
-    async () => {
-      const destination = await db.query.destinations.findFirst({
-        where: eq(schema.destinations.slug, destinationSlug),
-        columns: { id: true },
-      });
-      if (!destination) return [];
-
-      return db.query.courseHubs.findMany({
-        where: eq(schema.courseHubs.destinationId, destination.id),
+    async () =>
+      // One round trip. This was three sequential queries — look up the
+      // destination id, then the hubs, then a separate count aggregate — so
+      // every cache miss paid three round trips to Supabase. The destination
+      // is now matched by subquery and the count comes back as a correlated
+      // aggregate. A missing destination simply yields no rows.
+      db.query.courseHubs.findMany({
+        where: inArray(
+          schema.courseHubs.destinationId,
+          db
+            .select({ id: schema.destinations.id })
+            .from(schema.destinations)
+            .where(eq(schema.destinations.slug, destinationSlug)),
+        ),
         orderBy: [asc(schema.courseHubs.sortOrder)],
         with: {
+          // Only the top-ranked one is rendered, but the *count* below is
+          // taken from an aggregate — reading `universities.length` here
+          // would report 1 for every hub.
           universities: { orderBy: [asc(schema.universities.sortOrder)], limit: 1 },
         },
-      });
-    },
+        extras: {
+          // The inner table is aliased by hand. Interpolating
+          // `schema.universities.courseHubId` here would be rewritten to the
+          // *outer* alias, producing `courseHubs.course_hub_id` — a column
+          // that does not exist.
+          universityCount: sql<number>`(
+            select count(*)::int
+            from "universities" "uc"
+            where "uc"."course_hub_id" = ${schema.courseHubs.id}
+          )`.as("university_count"),
+        },
+      }),
     ["course-hubs", destinationSlug],
     { tags: [CONTENT_TAG], revalidate: REVALIDATE_SECONDS },
   )(),
@@ -65,24 +85,28 @@ export const getCourseHubs = cache((destinationSlug: string) =>
 export const getCourseHub = cache((destinationSlug: string, hubSlug: string) =>
   unstable_cache(
     async () => {
-      const destination = await db.query.destinations.findFirst({
-        where: eq(schema.destinations.slug, destinationSlug),
-      });
-      if (!destination) return null;
-
+      // One round trip, where this was two. The destination is matched by
+      // subquery and comes back through its own relation rather than from a
+      // prior lookup, so the shape (`hub.destination`) is unchanged.
       const hub = await db.query.courseHubs.findFirst({
         where: and(
-          eq(schema.courseHubs.destinationId, destination.id),
           eq(schema.courseHubs.slug, hubSlug),
+          inArray(
+            schema.courseHubs.destinationId,
+            db
+              .select({ id: schema.destinations.id })
+              .from(schema.destinations)
+              .where(eq(schema.destinations.slug, destinationSlug)),
+          ),
         ),
         with: {
+          destination: true,
           universities: { orderBy: [asc(schema.universities.sortOrder)] },
           deadlines: { orderBy: [asc(schema.deadlines.sortOrder)] },
         },
       });
-      if (!hub) return null;
 
-      return { ...hub, destination };
+      return hub ?? null;
     },
     ["course-hub", destinationSlug, hubSlug],
     { tags: [CONTENT_TAG], revalidate: REVALIDATE_SECONDS },
@@ -113,40 +137,17 @@ export const getAllHubPaths = cache(
   ),
 );
 
-/** Rows for the departures board: live hubs first, stubs marked "soon". */
-export const getBoardRows = cache((destinationSlug: string) =>
-  unstable_cache(
-    async () => {
-      const hubs = await getCourseHubs(destinationSlug);
-      return hubs.slice(0, 6).map((h) => ({
-        code: h.code,
-        subject: h.name,
-        topUniversity:
-          h.status === "live"
-            ? h.universities[0]?.name ?? "—"
-            : "— guide in progress",
-        status: h.status === "live" ? ("open" as const) : ("soon" as const),
-      }));
-    },
-    ["board-rows", destinationSlug],
-    { tags: [CONTENT_TAG], revalidate: REVALIDATE_SECONDS },
-  )(),
-);
-
-/** Formats a stored integer range the way the content spec writes it. */
+/**
+ * Formats a stored integer range the way the content spec writes it.
+ *
+ * `currency` comes from the owning course hub, not a default, so a hub
+ * priced in dollars never renders in sterling.
+ */
 export function formatRange(
   min: number | null,
   max: number | null,
-  opts: { currency?: string; suffix?: string; compact?: boolean } = {},
+  currency: string,
+  opts: { suffix?: string; compact?: boolean } = {},
 ) {
-  if (min == null && max == null) return null;
-  const { currency = "£", suffix = "", compact = false } = opts;
-  const fmt = (n: number) =>
-    compact && n >= 1000
-      ? `${currency}${(n / 1000).toFixed(n % 1000 === 0 ? 0 : 1)}k`
-      : `${currency}${n.toLocaleString("en-GB")}`;
-  if (min != null && max != null && min !== max) {
-    return `${fmt(min)}–${fmt(max)}${suffix}`;
-  }
-  return `${fmt((min ?? max)!)}${suffix}`;
+  return formatMoneyRange({ min, max, currency }, opts);
 }

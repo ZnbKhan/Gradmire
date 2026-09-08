@@ -30,12 +30,12 @@ const config = {
           dim: "hsl(var(--paper-dim))",
         },
         line: "hsl(var(--line))",
-        coral: {
-          DEFAULT: "hsl(var(--coral))",
-          text: "hsl(var(--coral-text))",
-          dim: "hsl(var(--coral-dim))",
+        navy: "hsl(var(--navy))",
+        sky: {
+          DEFAULT: "hsl(var(--sky))",
+          text: "hsl(var(--sky-text))",
+          dim: "hsl(var(--sky-dim))",
         },
-        gold: "hsl(var(--gold))",
         brandgreen: {
           DEFAULT: "hsl(var(--brand-green))",
           dim: "hsl(var(--brand-green-dim))",
@@ -43,10 +43,12 @@ const config = {
         warning: {
           DEFAULT: "hsl(var(--warning))",
           foreground: "hsl(var(--warning-foreground))",
+          "on-dark": "hsl(var(--warning-on-dark))",
         },
         success: {
           DEFAULT: "hsl(var(--success))",
           foreground: "hsl(var(--success-foreground))",
+          "on-dark": "hsl(var(--success-on-dark))",
         },
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -82,10 +84,31 @@ const config = {
           foreground: "hsl(var(--card-foreground))",
         },
       },
+      /*
+       * The de-facto type scale, promoted from arbitrary values. These sizes
+       * were already in use — text-[13.5px] alone appeared 35 times — but
+       * were declared nowhere, so every new component re-guessed them.
+       *
+       * Deliberately named outside Tailwind's own scale. Redefining `sm` or
+       * `base` here would silently restyle every shadcn primitive that uses
+       * `text-sm` (button, badge, table, ...), so the defaults are left alone
+       * and these sit beside them.
+       *
+       * Size only, no paired line-height: `text-[13.5px]` never set one, so
+       * adding one here would silently reflow every line these replace.
+       */
+      fontSize: {
+        micro: "10px",
+        mini: "11px",
+        meta: "12.5px",
+        body: "13.5px",
+        ui: "14px",
+        lede: "15px",
+      },
       fontFamily: {
-        display: ["var(--font-display)", "Georgia", "serif"],
-        sans: ["var(--font-body)", "system-ui", "sans-serif"],
-        mono: ["var(--font-mono)", "ui-monospace", "monospace"],
+        display: ["var(--font-poppins)", "system-ui", "sans-serif"],
+        sans: ["var(--font-poppins)", "system-ui", "sans-serif"],
+        mono: ["var(--font-poppins)", "system-ui", "sans-serif"],
       },
       boxShadow: {
         card: "0 1px 0 rgb(16 20 46 / 0.05), 0 12px 24px -16px rgb(16 20 46 / 0.25)",
@@ -97,6 +120,22 @@ const config = {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
+      },
+      /*
+       * Motion vocabulary. Tailwind's default easing is a symmetric
+       * ease-in-out, which makes hover states feel like they hesitate before
+       * they start. Interface motion should leave immediately and settle
+       * gently, so the default here is a decelerating curve and every
+       * transition in the app inherits it without naming a class.
+       */
+      transitionTimingFunction: {
+        DEFAULT: "cubic-bezier(0, 0, 0.2, 1)",
+      },
+      transitionDuration: {
+        // Hover, colour, focus — fast enough to feel instant.
+        DEFAULT: "150ms",
+        // Panels and disclosures, which move further and need to be followed.
+        panel: "200ms",
       },
       keyframes: {
         "pulse-dot": {

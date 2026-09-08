@@ -14,7 +14,7 @@ function SubmitButton() {
     <button
       type="submit"
       disabled={pending}
-      className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-coral text-white transition-colors hover:bg-coral/90 disabled:opacity-60"
+      className="flex h-11 w-11 shrink-0 sm:h-9 sm:w-9 items-center justify-center rounded-full bg-sky-text text-white transition-colors hover:bg-navy disabled:opacity-60"
       aria-label="Subscribe"
     >
       <ArrowRight size={15} aria-hidden="true" />
@@ -37,7 +37,7 @@ export function NewsletterForm({ className }: { className?: string }) {
           type="email"
           required
           placeholder="you@email.com"
-          className="min-w-0 flex-1 rounded-pill border border-white/20 bg-white/5 px-4 py-2 text-[13.5px] text-white placeholder:text-white/40"
+          className="min-w-0 flex-1 rounded-pill border border-white/40 bg-white/5 px-4 py-2 text-[16px] text-white sm:text-body placeholder:text-white/40"
         />
         {/* Honeypot — hidden from people, tempting to bots. */}
         <input
@@ -54,8 +54,8 @@ export function NewsletterForm({ className }: { className?: string }) {
         <p
           role="status"
           className={cn(
-            "mt-2 text-[12.5px]",
-            state.ok ? "text-[#8fe3b6]" : "text-[#f4c06a]",
+            "mt-2 text-meta",
+            state.ok ? "text-success-on-dark" : "text-warning-on-dark",
           )}
         >
           {state.message}

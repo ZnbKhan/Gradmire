@@ -12,11 +12,25 @@ export type CourseHub = {
   oneLiner: string;
   overview?: string;
   universities?: University[];
+  /** ISO 4217 code. Only reliably present on DB-backed hubs — see tool-data.ts. */
+  currency?: string;
+  /**
+   * Raw figures behind `tuitionRange`, for anything that does arithmetic
+   * (the ROI calculator) rather than just displaying the range. Regex-
+   * parsing the formatted string back into numbers is what this replaces —
+   * that broke silently the moment the format or currency symbol changed.
+   */
+  tuitionMin?: number;
+  tuitionMax?: number;
   tuitionRange?: string;
+  livingCostMin?: number;
+  livingCostMax?: number;
   livingCosts?: string;
   entryRequirements?: string[];
   applicationDeadlines?: { label: string; detail: string }[];
   deadlineWarning?: string;
+  salaryMin?: number;
+  salaryMax?: number;
   medianSalaryRange?: string;
   topSectors?: string[];
   commonEmployers?: string[];

@@ -1,14 +1,15 @@
 import { desc, asc } from "drizzle-orm";
 import { db, schema } from "@/db";
-import { ActionForm } from "@/components/admin/action-form";
+import { ActionForm, FieldLabel } from "@/components/admin/action-form";
 import { updateApplicationStage, createApplication } from "@/lib/actions/admin";
 import { STAGES, stageLabel } from "@/lib/stages";
+import { currentIntake } from "@/config/site";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Applications" };
 
 const inputCls =
-  "w-full rounded-lg border border-line bg-white px-3 py-2 text-[13.5px]";
+  "w-full rounded-lg border border-line bg-white px-3 py-2 text-body";
 
 export default async function ApplicationsPage() {
   const [applications, hubs] = await Promise.all([
@@ -20,6 +21,7 @@ export default async function ApplicationsPage() {
     db.query.courseHubs.findMany({
       orderBy: [asc(schema.courseHubs.sortOrder)],
       columns: { id: true, name: true },
+      limit: 200,
     }),
   ]);
 
@@ -36,27 +38,27 @@ export default async function ApplicationsPage() {
         <ActionForm action={createApplication} submitLabel="Create application">
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             <div>
-              <label htmlFor="new-fullName" className="mb-1 block text-[12.5px] font-medium">Applicant name</label>
+              <FieldLabel htmlFor="new-fullName">Applicant name</FieldLabel>
               <input id="new-fullName" name="fullName" required className={inputCls} placeholder="Priya Sharma" />
             </div>
             <div>
-              <label htmlFor="new-email" className="mb-1 block text-[12.5px] font-medium">Applicant email</label>
+              <FieldLabel htmlFor="new-email">Applicant email</FieldLabel>
               <input id="new-email" name="email" type="email" required className={inputCls} placeholder="priya@email.com" />
             </div>
             <div>
-              <label htmlFor="new-intake" className="mb-1 block text-[12.5px] font-medium">Intake</label>
-              <input id="new-intake" name="intake" className={inputCls} placeholder="September 2026" />
+              <FieldLabel htmlFor="new-intake">Intake</FieldLabel>
+              <input id="new-intake" name="intake" className={inputCls} placeholder={currentIntake()} />
             </div>
             <div>
-              <label htmlFor="new-university" className="mb-1 block text-[12.5px] font-medium">University</label>
+              <FieldLabel htmlFor="new-university">University</FieldLabel>
               <input id="new-university" name="universityName" required className={inputCls} placeholder="University of Warwick" />
             </div>
             <div>
-              <label htmlFor="new-programme" className="mb-1 block text-[12.5px] font-medium">Programme</label>
+              <FieldLabel htmlFor="new-programme">Programme</FieldLabel>
               <input id="new-programme" name="programmeName" required className={inputCls} placeholder="MSc Business Analytics" />
             </div>
             <div>
-              <label htmlFor="new-hub" className="mb-1 block text-[12.5px] font-medium">Subject hub</label>
+              <FieldLabel htmlFor="new-hub">Subject hub</FieldLabel>
               <select id="new-hub" name="courseHubId" defaultValue="" className={inputCls}>
                 <option value="">None</option>
                 {hubs.map((h) => (
@@ -69,7 +71,7 @@ export default async function ApplicationsPage() {
       </section>
 
       {applications.length === 0 ? (
-        <p className="rounded-2xl border border-dashed border-line bg-white p-10 text-center text-[14px] text-ink-soft">
+        <p className="rounded-2xl border border-dashed border-line bg-white p-10 text-center text-ui text-ink-soft">
           No applications yet.
         </p>
       ) : (
@@ -78,15 +80,15 @@ export default async function ApplicationsPage() {
             <li key={app.id} className="rounded-2xl border border-line bg-white p-5">
               <div className="mb-4 flex flex-wrap items-start justify-between gap-4">
                 <div>
-                  <span className="font-mono text-[11px] uppercase tracking-[0.1em] text-ink-soft">
+                  <span className="font-mono text-mini uppercase tracking-[0.1em] text-ink-soft">
                     {app.reference}
                   </span>
                   <h2 className="text-[17px] font-semibold">{app.programmeName}</h2>
-                  <p className="text-[13.5px] text-ink-soft">
+                  <p className="text-body text-ink-soft">
                     {app.universityName} · {app.applicant.fullName ?? app.applicant.email}
                   </p>
                 </div>
-                <span className="rounded-pill bg-ink px-3 py-1.5 font-mono text-[11px] uppercase tracking-wider text-paper">
+                <span className="rounded-pill bg-ink px-3 py-1.5 font-mono text-mini uppercase tracking-wider text-paper">
                   {stageLabel(app.stage)}
                 </span>
               </div>
@@ -95,7 +97,7 @@ export default async function ApplicationsPage() {
                 <input type="hidden" name="applicationId" value={app.id} />
                 <div className="grid gap-3 sm:grid-cols-3">
                   <div>
-                    <label htmlFor={`stage-${app.id}`} className="mb-1 block text-[12.5px] font-medium">Stage</label>
+                    <FieldLabel htmlFor={`stage-${app.id}`}>Stage</FieldLabel>
                     <select id={`stage-${app.id}`} name="stage" defaultValue={app.stage} className={inputCls}>
                       {STAGES.map((s) => (
                         <option key={s.key} value={s.key}>{s.label}</option>
@@ -104,15 +106,15 @@ export default async function ApplicationsPage() {
                     </select>
                   </div>
                   <div>
-                    <label htmlFor={`note-${app.id}`} className="mb-1 block text-[12.5px] font-medium">
+                    <FieldLabel htmlFor={`note-${app.id}`}>
                       Timeline note
-                    </label>
+                    </FieldLabel>
                     <input id={`note-${app.id}`} name="note" className={inputCls} placeholder="Offer letter received" />
                   </div>
                   <div>
-                    <label htmlFor={`anote-${app.id}`} className="mb-1 block text-[12.5px] font-medium">
+                    <FieldLabel htmlFor={`anote-${app.id}`}>
                       Note to applicant
-                    </label>
+                    </FieldLabel>
                     <input
                       id={`anote-${app.id}`}
                       name="applicantNote"

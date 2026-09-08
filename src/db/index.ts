@@ -33,17 +33,21 @@ function getDb() {
     globalForDb.gradmireDb ??
     postgres(connectionString, {
       prepare: false,
-      max: 10,
+      // Serverless functions each hold their own pool, so keep it small and
+      // let Supavisor do the real pooling. Override for other runtimes.
+      max: Number(process.env.DATABASE_POOL_MAX ?? 10),
       idle_timeout: 20,
       connect_timeout: 10,
     });
 
   const instance = drizzle(client, { schema });
 
-  if (process.env.NODE_ENV !== "production") {
-    globalForDb.gradmireDb = client;
-    globalForDb.gradmireDrizzle = instance;
-  }
+  // Memoized in every environment, production included. Caching only in dev
+  // meant each property access on the proxy below built a fresh pool — a new
+  // TLS handshake to Supabase per query, and sockets that were never closed.
+  globalForDb.gradmireDb = client;
+  globalForDb.gradmireDrizzle = instance;
+
   return instance;
 }
 
